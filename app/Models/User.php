@@ -37,4 +37,9 @@ class User extends Authenticatable
     protected $casts = [
         'email_verified_at' => 'datetime',
     ];
+
+    public function complex()
+    {
+        return $this->hasOne('App\Models\SportComplex', 'sc_creater_id', 'user_id');
+    }
 }

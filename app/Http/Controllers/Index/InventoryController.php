@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Index;
 
 use App\Http\Controllers\Controller;
 use App\Models\Inventory;
+use Exception;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class InventoryController extends Controller
 {
@@ -15,8 +17,7 @@ class InventoryController extends Controller
      */
     public function index()
     {
-        $inventories = Inventory::all();
-        return $inventories;
+        //
     }
 
     /**
@@ -37,7 +38,26 @@ class InventoryController extends Controller
      */
     public function store(Request $request)
     {
-        //
+        $validatedData = $request->validate([
+            "inv_name" => "required",
+            "inv_cost" => "required"
+        ]);
+
+        try {
+            Inventory::create([
+            'inv_complex_id' => Auth::user()->complex()->first()->sc_id,
+            'inv_name' => $request->inv_name,
+            'inv_cost' => $request->inv_cost
+            ]);
+
+            return response()->json([
+            'status' => true,
+            'message' => 'Успешно сохранено!'
+            ]);
+        } catch (Exception $e) {
+            report($e);
+            return $e->getMessage();
+        }
     }
 
     /**
@@ -69,9 +89,17 @@ class InventoryController extends Controller
      * @param  \App\Models\Inventory  $inventory
      * @return \Illuminate\Http\Response
      */
-    public function update(Request $request, Inventory $inventory)
+    public function update(Request $request)
     {
-        //
+        $inventory = Inventory::updateOrCreate(
+                ['inv_id' => $request->inv_id],
+                [
+                    'inv_name' => $request->inv_name,
+                    'inv_cost' => $request->inv_cost,
+                    'inv_is_active' => $request->inv_is_active == false || $request->inv_is_active == '0' ? 0 : 1,
+                ]);
+
+        return response()->json(['status' => true, 'content' => $inventory]);
     }
 
     /**

@@ -20,23 +20,28 @@ Route::middleware(['web'])->group(function() {
     Route::get('media_content/{file_name}', 'MediaController@getContentImage')->where('file_name', '.*');
     Route::post('content_image', 'MediaController@storeContentImage');
     Route::get('city/{locale}', 'LocalizationCityController@index');
+    //For Vue
+    Route::get('/helpers', 'HelperController@informations');
+    Route::get('/inventory', 'HelperController@inventory');
 });
 
 Route::middleware(['web'])->namespace('Index')->group(function() {
     Route::get('/', 'IndexController@index');
     Route::get('news', 'NewsController@index');
     Route::get('news/{news}', 'NewsController@showById');
-    Route::get('sport-type/{sporttype}', 'CourtController@showById');
+    Route::get('sport-type/{sporttype}', 'ComplexController@showById');
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
     Route::get('login', 'AuthController@loginPage')->name('login');
-
-    Route::get('inventory', 'InventoryController@all');
 
     Route::middleware(['auth'])->group(function() {
         Route::get('logout', 'AuthController@logout');
         Route::get('profile', 'AuthController@profile');
         Route::get('add-complex', 'ComplexController@create');
         Route::post('store-complex', 'ComplexController@store');
+        Route::post('store-inventory', 'InventoryController@store');
+        Route::post('update-inventory', 'InventoryController@update');
+        Route::post('store-court', 'CourtController@store');
+        Route::post('update-court', 'CourtController@update');
     });
 });

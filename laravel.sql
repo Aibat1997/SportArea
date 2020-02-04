@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Хост: 127.0.0.1
--- Время создания: Янв 29 2020 г., 08:47
+-- Время создания: Фев 04 2020 г., 07:44
 -- Версия сервера: 10.3.16-MariaDB
 -- Версия PHP: 7.3.6
 
@@ -192,6 +192,14 @@ CREATE TABLE `infrastructures` (
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
 
+--
+-- Дамп данных таблицы `infrastructures`
+--
+
+INSERT INTO `infrastructures` (`inf_id`, `inf_name`, `inf_sort_num`, `created_at`, `updated_at`) VALUES
+(1, 'Тренер', 1, '2020-02-03 19:12:18', '2020-02-03 19:12:18'),
+(2, 'Туалет', 2, '2020-02-03 19:12:28', '2020-02-03 19:12:28');
+
 -- --------------------------------------------------------
 
 --
@@ -207,6 +215,14 @@ CREATE TABLE `inventories` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `inventories`
+--
+
+INSERT INTO `inventories` (`inv_id`, `inv_complex_id`, `inv_name`, `inv_cost`, `inv_is_active`, `created_at`, `updated_at`) VALUES
+(1, 1, 'Test', 5000, 1, NULL, '2020-02-03 19:21:55'),
+(2, 1, 'Тест', 2000, 0, '2020-02-03 16:49:52', '2020-02-03 17:16:40');
 
 -- --------------------------------------------------------
 
@@ -453,10 +469,10 @@ CREATE TABLE `sport_complexes` (
   `sc_work_time_weekday` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sc_work_time_weekend` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sc_phone` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sc_show_phone` varchar(6) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sc_show_phone` tinyint(1) NOT NULL,
   `sc_description` text COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sc_accept_applications` varchar(6) COLLATE utf8mb4_unicode_ci NOT NULL,
-  `sc_is_closed` varchar(6) COLLATE utf8mb4_unicode_ci NOT NULL,
+  `sc_accept_applications` tinyint(1) NOT NULL,
+  `sc_is_closed` tinyint(1) NOT NULL,
   `sc_image` varchar(191) COLLATE utf8mb4_unicode_ci NOT NULL,
   `sc_raiting` double NOT NULL DEFAULT 0,
   `created_at` timestamp NULL DEFAULT NULL,
@@ -468,11 +484,7 @@ CREATE TABLE `sport_complexes` (
 --
 
 INSERT INTO `sport_complexes` (`sc_id`, `sc_city_id`, `sc_sport_type_id`, `sc_creater_id`, `sc_name`, `sc_addres`, `sc_map`, `sc_work_time_weekday`, `sc_work_time_weekend`, `sc_phone`, `sc_show_phone`, `sc_description`, `sc_accept_applications`, `sc_is_closed`, `sc_image`, `sc_raiting`, `created_at`, `updated_at`) VALUES
-(1, 1, 1, 1, 'adsadg', 'sdfgsdfg', NULL, 'sdfgsdfg', 'sdfgsdfg', '654654654646', '0', 'sdfgsdfgsdfg', '0', '0', 'asdfasdf', 0, '2020-01-29 06:20:07', '2020-01-29 06:20:07'),
-(31, 2, 1, 1, 'asdfasdf', 'asdfasdf', NULL, 'asdfasdf', 'asdfasdf', '64646546546465', '0', 'asdfasdfasdf', '0', '0', 'asdfasd', 0, '2020-01-29 06:32:20', '2020-01-29 06:33:44'),
-(32, 2, 1, 1, 'asdfasdf', 'asdfasdf', NULL, 'asdfasdf', 'asdfasdf', '5465464', '0', 'asdfasdfadsf', '0', '0', 'asdfasd', 0, '2020-01-29 06:35:36', '2020-01-29 06:35:36'),
-(33, 2, 1, 1, 'asdfasdf', 'asdfasdf', NULL, 'asdfasdf', 'asdfasdf', '5465464', '0', 'asdfasdfadsf', '0', '0', 'asdfasd', 0, '2020-01-29 06:36:07', '2020-01-29 06:36:07'),
-(34, 2, 1, 1, 'asdfasdf', 'asdfasdf', NULL, 'asdfasdf', 'asdfasdf', '5465464', '0', 'asdfasdfadsf', '0', '0', 'asdfasd', 0, '2020-01-29 06:40:01', '2020-01-29 06:40:01');
+(1, 2, 1, 1, 'sadfasdf asdfasdf', 'asdfasdf asdfasdf', NULL, '46:54 - 65:46', '54:65 - 46:54', '+7 (465) 465-46-54', 0, 'asdfasdf', 0, 0, '/media/2020/02/01/091002243000.jpg', 0, '2020-02-01 09:10:02', '2020-02-03 04:31:25');
 
 -- --------------------------------------------------------
 
@@ -509,6 +521,14 @@ CREATE TABLE `type_coverages` (
   `created_at` timestamp NULL DEFAULT NULL,
   `updated_at` timestamp NULL DEFAULT NULL
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+
+--
+-- Дамп данных таблицы `type_coverages`
+--
+
+INSERT INTO `type_coverages` (`tc_id`, `tc_name`, `tc_sort_num`, `created_at`, `updated_at`) VALUES
+(1, 'газон', 1, '2020-02-03 18:34:16', '2020-02-03 18:34:16'),
+(2, 'асфальт', 2, '2020-02-03 18:34:25', '2020-02-03 18:34:25');
 
 -- --------------------------------------------------------
 
@@ -767,13 +787,13 @@ ALTER TABLE `failed_jobs`
 -- AUTO_INCREMENT для таблицы `infrastructures`
 --
 ALTER TABLE `infrastructures`
-  MODIFY `inf_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `inf_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `inventories`
 --
 ALTER TABLE `inventories`
-  MODIFY `inv_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `inv_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `migrations`
@@ -815,7 +835,7 @@ ALTER TABLE `roles`
 -- AUTO_INCREMENT для таблицы `sport_complexes`
 --
 ALTER TABLE `sport_complexes`
-  MODIFY `sc_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=35;
+  MODIFY `sc_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=2;
 
 --
 -- AUTO_INCREMENT для таблицы `sport_types`
@@ -827,7 +847,7 @@ ALTER TABLE `sport_types`
 -- AUTO_INCREMENT для таблицы `type_coverages`
 --
 ALTER TABLE `type_coverages`
-  MODIFY `tc_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT;
+  MODIFY `tc_id` bigint(20) UNSIGNED NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=3;
 
 --
 -- AUTO_INCREMENT для таблицы `users`

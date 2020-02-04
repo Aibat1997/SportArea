@@ -10,9 +10,8 @@ use App\Models\SportComplex;
 
 class CourtController extends Controller
 {
-    public function showById(Request $request, SportTypes $sporttype)
+    public function store(Request $request)
     {
-        $complexes = $sporttype->complexes()->get();
-        return view('index.sport-inside', compact('complexes'));
+        dd($request->all());
     }
 }

@@ -7,7 +7,6 @@
 // });
 
 Route::namespace('Api')->group(function() {
-    Route::get('helpers', 'HelperController@city');
-    Route::post('add-complex', 'ComplexController@store');
+    
 });
 

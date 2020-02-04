@@ -2,13 +2,13 @@
 
 namespace App\Http\Controllers\Index;
 
-use App\Http\Controllers\Api\Response;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Models\SportComplex;
+use App\Models\SportTypes;
 use Illuminate\Support\Facades\Auth;
 use App\Http\Helpers;
-use Illuminate\Support\Facades\Validator;
+use Exception;
 
 class ComplexController extends Controller
 {
@@ -17,13 +17,17 @@ class ComplexController extends Controller
         return view('index.complex-create');
     }
 
+    public function showById(Request $request, SportTypes $sporttype)
+    {
+        $complexes = $sporttype->complexes()->get();
+        return view('index.sport-inside', compact('complexes'));
+    }
+
     public function store(Request $request)
     {
-        $response = new Response();
-        $roles = [
+        $validatedData = $request->validate([
             "sc_city_id" => "required",
             "sc_sport_type_id" => "required",
-            "sc_creater_id" => "required",
             "sc_name" => "required",
             "sc_addres" => "required",
             "sc_work_time_weekday" => "required",
@@ -33,39 +37,42 @@ class ComplexController extends Controller
             "sc_description" => "required",
             "sc_accept_applications" => "required",
             "sc_is_closed" => "required",
-            "sc_image" => "required",
-        ];
-        $validator = Validator::make($request->all(), $roles);
+            "sc_image" => "required"
+        ]);
 
-        if ($validator->fails()) {
-            $error = $validator->errors()->first();
-            $response->message = $error;
-            return $response->json();
-        }
         try {
-            if ($request->hasFile('image')) {
-                $result = Helpers::storeImg('image', 'image', $request);
+            if ($request->hasFile('sc_image')) {
+                $result = Helpers::storeImg('sc_image', 'image', $request);
+            }else {
+                $result = $request->sc_image;
             }
-            SportComplex::create([
-                'sc_city_id' => $request->city,
-                'sc_sport_type_id' => $request->sport_type,
-                'sc_creater_id' => $request->user_id,
-                'sc_name' => $request->name,
-                'sc_addres' => $request->address,
-                'sc_work_time_weekday' => $request->time_weekday,
-                'sc_work_time_weekend' => $request->time_weekend,
-                'sc_phone' => $request->phone,
-                'sc_show_phone' => $request->show_phone,
-                'sc_description' => $request->description,
-                'sc_accept_applications' => $request->accept_application,
-                'sc_is_closed' => $request->close_complex,
+
+            $complex = SportComplex::updateOrCreate(
+                ['sc_creater_id' => Auth::user()->user_id],
+                [
+                'sc_city_id' => $request->sc_city_id,
+                'sc_sport_type_id' => $request->sc_sport_type_id,
+                'sc_name' => $request->sc_name,
+                'sc_addres' => $request->sc_addres,
+                'sc_work_time_weekday' => $request->sc_work_time_weekday,
+                'sc_work_time_weekend' => $request->sc_work_time_weekend,
+                'sc_phone' => $request->sc_phone,
+                'sc_show_phone' => $request->sc_show_phone == 'false' || $request->sc_show_phone == '0' ? 0 : 1,
+                'sc_description' => $request->sc_description,
+                'sc_accept_applications' => $request->sc_accept_applications == 'false' || $request->sc_accept_applications == '0' ? 0 : 1,
+                'sc_is_closed' => $request->sc_is_closed == 'false' || $request->sc_is_closed == '0' ? 0 : 1,
                 'sc_image' => $result
+                ]
+            );
+
+            return response()->json([
+                'status' => true,
+                'message' => 'Успешно сохранено!',
+                'content' => $complex->sc_id
             ]);
-            $response->status = true;
-            $response->message = 'Успешно сохранено';
-        } catch (\Exception $e) {
-            $response->message = $e->getMessage();
+        } catch (Exception $e) {
+            report($e);
+            return $e->getMessage();
         }
-        return $response->json();
     }
 }

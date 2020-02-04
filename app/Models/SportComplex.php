@@ -9,6 +9,14 @@ class SportComplex extends Model
     protected $primaryKey = 'sc_id';
     protected $guarded = [];
 
+    protected $attributes = [
+        'sc_city_id' => "default",
+        'sc_sport_type_id' => "default",
+        'sc_show_phone' => false,
+        'sc_accept_applications' => false,
+        'sc_is_closed' => false
+    ];
+
     public function sporttype()
     {
         return $this->belongsTo('App\Models\SportTypes');
@@ -17,5 +25,10 @@ class SportComplex extends Model
     public function courts()
     {
         return $this->hasMany('App\Models\Courts');
+    }
+
+    public function inventories()
+    {
+        return $this->hasMany('App\Models\Inventory', 'inv_complex_id', 'sc_id');
     }
 }

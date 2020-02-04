@@ -250,9 +250,17 @@ button a:hover, button a:focus {
   align-items:flex-end;
   justify-content: space-between;
 }
+.d-flex-justify-start{
+  display: flex;
+  align-items:flex-start;
+  justify-content: space-between;
+}
 section a:hover, section a:focus {
   text-decoration: none;
   color: inherit;
+}
+.add-invent-modal{
+  left: 0;
 }
 
 @font-face {

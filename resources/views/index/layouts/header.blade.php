@@ -64,7 +64,7 @@
                         </li>
                     </ul>
                     <button class="btn-plain bordered call-menu visible-xs">
-                        <img src="img/icon/Union.png" alt="">
+                        <img src="/index/img/icon/Union.png" alt="">
                     </button>
                 @endauth
 

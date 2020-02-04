@@ -84,6 +84,9 @@
 
     <script src="/js/app.js"></script>
     <script src="/index/js/libs.min.js"></script>
+    <script type="text/javascript" src="/index/js/moment.min.js"></script>
+    <script type="text/javascript" src="/index/js/daterangepicker.js"></script>
+    <script type="text/javascript" src="/index/js/jquery.datetimepicker.full.min.js"></script>
     <script src="/index/js/bootstrap-slider.min.js"></script>
     <script src="/index/js/common.js"></script>
     <script src="/js/index.js"></script>
