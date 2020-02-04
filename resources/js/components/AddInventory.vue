@@ -1,11 +1,16 @@
 <template>
   <div>
     <!-- Showed -->
-    <form action="#">
+    <form>
       <div class="form-item-half d-flex-justify-start">
         <div class="edit-cover">
-          <a href="#tab-4" data-toggle="tab" class="btn-plain add-call invent-add">
-            <img src="/index/img/icon/plus-grey.png" alt />Добавить инвентар
+          <a
+            href="#tab-4"
+            data-toggle="tab"
+            class="btn-plain add-call invent-add"
+            @click="clearInventory"
+          >
+            <img src="/index/img/icon/plus-grey.png" />Добавить инвентар
           </a>
         </div>
         <label class="date-label" v-if="inventories">
@@ -23,7 +28,7 @@
                 {{ inventory.inv_name }} -
                 <span>{{ inventory.inv_cost }}</span>
               </p>
-              <button class="btn-plain invent-edit">
+              <button class="btn-plain invent-edit" @click="editInventory(inventory)">
                 <i class="icon book-edit"></i>
               </button>
             </div>
@@ -40,7 +45,7 @@
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <form action="#">
+      <form>
         <div class="error-box" v-if="errors">
           <ul>
             <li v-for="(key,error) in errors">{{error}} : {{ key[0] }}</li>
@@ -59,7 +64,7 @@
             <i class="icon i-tg"></i>
           </label>
         </div>
-        <button class="btn-plain btn-blue" @click.prevent="sendNew" type="submit">Сохранить</button>
+        <button class="btn-plain btn-blue" @click.prevent="sendNew">Сохранить</button>
       </form>
     </div>
     <div class="question-popup edit-invent-modal">
@@ -69,20 +74,36 @@
           <i class="fas fa-times"></i>
         </button>
       </div>
-      <form action="#">
+      <form>
+        <div class="error-box" v-if="errors">
+          <ul>
+            <li v-for="(key,error) in errors">{{error}} : {{ key[0] }}</li>
+          </ul>
+        </div>
+        <div class="error-box success-box" v-if="seccsess_msg">{{ seccsess_msg }}</div>
         <div class="inventar-label d-flex">
           <div class="checkbox-cover">
-            <input type="checkbox" class="ios8-switch checkbox-attr" id="checkbox-106" />
+            <input
+              type="checkbox"
+              class="ios8-switch checkbox-attr"
+              v-model="inventory.inv_is_active"
+              id="checkbox-106"
+            />
             <label for="checkbox-106"></label>
-            <input type="text" placeholder="Инвентар" class="input-attr" />
+            <input
+              type="text"
+              placeholder="Инвентар"
+              v-model="inventory.inv_name"
+              class="input-attr"
+            />
           </div>
           <label class="price-current">
-            <input type="text" placeholder="Цена" class="input-attr" />
+            <input type="text" placeholder="Цена" v-model="inventory.inv_cost" class="input-attr" />
             <i class="icon i-tg"></i>
           </label>
         </div>
         <div class="inventar-label d-flex">
-          <button class="btn-plain btn-blue" type="submit">Сохранить</button>
+          <button class="btn-plain btn-blue" @click.prevent="updateCurrentInventory">Сохранить</button>
         </div>
       </form>
     </div>
@@ -106,19 +127,31 @@ export default {
     };
   },
   created() {
-    this.getAllInventories();
+    axios.get("/inventory").then(response => {
+      this.inventories = response.data;
+    });
   },
   methods: {
-    getAllInventories() {
-      axios.get("/inventory").then(response => {
-        this.inventories = response.data;
-      });
+    clearInventory() {
+      this.inventory = {};
+    },
+    editInventory(element) {
+      this.inventory = element;
     },
     sendNew() {
+      this.postInventory("/store-inventory", this.inventory);
+    },
+    activateInventory(inventory) {
+      this.postInventory("/update-inventory", inventory);
+    },
+    updateCurrentInventory() {
+      this.postInventory("/update-inventory", this.inventory);
+    },
+    postInventory(url, value) {
       axios
-        .post("/store-inventory", this.inventory)
+        .post(url, value)
         .then(response => {
-          this.getAllInventories();
+          this.inventories = response.data.content;
           this.seccsess_msg = response.data.message;
           this.errors = null;
         })
@@ -126,12 +159,6 @@ export default {
           this.seccsess_msg = "";
           this.errors = error.response.data.errors;
         });
-    },
-    activateInventory(inventory) {
-      axios.post("/update-inventory", inventory).then(response => {
-        this.getAllInventories();
-        console.log(response.data);
-      });
     }
   }
 };
@@ -148,5 +175,17 @@ export default {
   color: white;
   font-size: 14px;
   margin-bottom: 3px;
+}
+.edit-invent-modal {
+  left: 0;
+}
+.edit-invent-modal .checkbox-cover {
+  background: #ffffff;
+  border: none;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  margin-bottom: 0;
+  padding: 0;
+  width: 49%;
 }
 </style>   

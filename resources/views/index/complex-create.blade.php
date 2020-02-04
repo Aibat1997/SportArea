@@ -18,7 +18,7 @@
 </section>
 @endsection
 @section('js')
-<script defer>
+<script>
     $('.select').on('click', function () {
         $(this).find('.arrow-select').toggleClass('arrow-up')
     });

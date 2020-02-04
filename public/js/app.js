@@ -2185,6 +2185,27 @@ __webpack_require__.r(__webpack_exports__);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 /* harmony default export */ __webpack_exports__["default"] = ({
   data: function data() {
     return {
@@ -2200,36 +2221,38 @@ __webpack_require__.r(__webpack_exports__);
     };
   },
   created: function created() {
-    this.getAllInventories();
+    var _this = this;
+
+    axios.get("/inventory").then(function (response) {
+      _this.inventories = response.data;
+    });
   },
   methods: {
-    getAllInventories: function getAllInventories() {
-      var _this = this;
-
-      axios.get("/inventory").then(function (response) {
-        _this.inventories = response.data;
-      });
+    clearInventory: function clearInventory() {
+      this.inventory = {};
+    },
+    editInventory: function editInventory(element) {
+      this.inventory = element;
     },
     sendNew: function sendNew() {
+      this.postInventory("/store-inventory", this.inventory);
+    },
+    activateInventory: function activateInventory(inventory) {
+      this.postInventory("/update-inventory", inventory);
+    },
+    updateCurrentInventory: function updateCurrentInventory() {
+      this.postInventory("/update-inventory", this.inventory);
+    },
+    postInventory: function postInventory(url, value) {
       var _this2 = this;
 
-      axios.post("/store-inventory", this.inventory).then(function (response) {
-        _this2.getAllInventories();
-
+      axios.post(url, value).then(function (response) {
+        _this2.inventories = response.data.content;
         _this2.seccsess_msg = response.data.message;
         _this2.errors = null;
       })["catch"](function (error) {
         _this2.seccsess_msg = "";
         _this2.errors = error.response.data.errors;
-      });
-    },
-    activateInventory: function activateInventory(inventory) {
-      var _this3 = this;
-
-      axios.post("/update-inventory", inventory).then(function (response) {
-        _this3.getAllInventories();
-
-        console.log(response.data);
       });
     }
   }
@@ -7103,7 +7126,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.error-box {\r\n  background-color: #e43027;\r\n  color: white;\r\n  padding: 15px;\r\n  border-radius: 5px;\r\n  margin-bottom: 20px;\n}\n.error-box ul li {\r\n  color: white;\r\n  font-size: 14px;\r\n  margin-bottom: 3px;\n}\r\n", ""]);
+exports.push([module.i, "\n.error-box {\r\n  background-color: #e43027;\r\n  color: white;\r\n  padding: 15px;\r\n  border-radius: 5px;\r\n  margin-bottom: 20px;\n}\n.error-box ul li {\r\n  color: white;\r\n  font-size: 14px;\r\n  margin-bottom: 3px;\n}\n.edit-invent-modal {\r\n  left: 0;\n}\n.edit-invent-modal .checkbox-cover {\r\n  background: #ffffff;\r\n  border: none;\r\n  border-radius: 3px;\r\n  margin-bottom: 0;\r\n  padding: 0;\r\n  width: 49%;\n}\r\n", ""]);
 
 // exports
 
@@ -39867,9 +39890,22 @@ var render = function() {
   var _h = _vm.$createElement
   var _c = _vm._self._c || _h
   return _c("div", [
-    _c("form", { attrs: { action: "#" } }, [
+    _c("form", [
       _c("div", { staticClass: "form-item-half d-flex-justify-start" }, [
-        _vm._m(0),
+        _c("div", { staticClass: "edit-cover" }, [
+          _c(
+            "a",
+            {
+              staticClass: "btn-plain add-call invent-add",
+              attrs: { href: "#tab-4", "data-toggle": "tab" },
+              on: { click: _vm.clearInventory }
+            },
+            [
+              _c("img", { attrs: { src: "/index/img/icon/plus-grey.png" } }),
+              _vm._v("Добавить инвентар\n        ")
+            ]
+          )
+        ]),
         _vm._v(" "),
         _vm.inventories
           ? _c(
@@ -39940,7 +39976,18 @@ var render = function() {
                       _c("span", [_vm._v(_vm._s(inventory.inv_cost))])
                     ]),
                     _vm._v(" "),
-                    _vm._m(1, true)
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn-plain invent-edit",
+                        on: {
+                          click: function($event) {
+                            return _vm.editInventory(inventory)
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "icon book-edit" })]
+                    )
                   ])
                 ])
               }),
@@ -39951,9 +39998,9 @@ var render = function() {
     ]),
     _vm._v(" "),
     _c("div", { staticClass: "question-popup add-invent-modal" }, [
-      _vm._m(2),
+      _vm._m(0),
       _vm._v(" "),
-      _c("form", { attrs: { action: "#" } }, [
+      _c("form", [
         _vm.errors
           ? _c("div", { staticClass: "error-box" }, [
               _c(
@@ -40028,7 +40075,6 @@ var render = function() {
           "button",
           {
             staticClass: "btn-plain btn-blue",
-            attrs: { type: "submit" },
             on: {
               click: function($event) {
                 $event.preventDefault()
@@ -40041,40 +40087,152 @@ var render = function() {
       ])
     ]),
     _vm._v(" "),
-    _vm._m(3),
+    _c("div", { staticClass: "question-popup edit-invent-modal" }, [
+      _vm._m(1),
+      _vm._v(" "),
+      _c("form", [
+        _vm.errors
+          ? _c("div", { staticClass: "error-box" }, [
+              _c(
+                "ul",
+                _vm._l(_vm.errors, function(key, error) {
+                  return _c("li", [
+                    _vm._v(_vm._s(error) + " : " + _vm._s(key[0]))
+                  ])
+                }),
+                0
+              )
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _vm.seccsess_msg
+          ? _c("div", { staticClass: "error-box success-box" }, [
+              _vm._v(_vm._s(_vm.seccsess_msg))
+            ])
+          : _vm._e(),
+        _vm._v(" "),
+        _c("div", { staticClass: "inventar-label d-flex" }, [
+          _c("div", { staticClass: "checkbox-cover" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.inventory.inv_is_active,
+                  expression: "inventory.inv_is_active"
+                }
+              ],
+              staticClass: "ios8-switch checkbox-attr",
+              attrs: { type: "checkbox", id: "checkbox-106" },
+              domProps: {
+                checked: Array.isArray(_vm.inventory.inv_is_active)
+                  ? _vm._i(_vm.inventory.inv_is_active, null) > -1
+                  : _vm.inventory.inv_is_active
+              },
+              on: {
+                change: function($event) {
+                  var $$a = _vm.inventory.inv_is_active,
+                    $$el = $event.target,
+                    $$c = $$el.checked ? true : false
+                  if (Array.isArray($$a)) {
+                    var $$v = null,
+                      $$i = _vm._i($$a, $$v)
+                    if ($$el.checked) {
+                      $$i < 0 &&
+                        _vm.$set(
+                          _vm.inventory,
+                          "inv_is_active",
+                          $$a.concat([$$v])
+                        )
+                    } else {
+                      $$i > -1 &&
+                        _vm.$set(
+                          _vm.inventory,
+                          "inv_is_active",
+                          $$a.slice(0, $$i).concat($$a.slice($$i + 1))
+                        )
+                    }
+                  } else {
+                    _vm.$set(_vm.inventory, "inv_is_active", $$c)
+                  }
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("label", { attrs: { for: "checkbox-106" } }),
+            _vm._v(" "),
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.inventory.inv_name,
+                  expression: "inventory.inv_name"
+                }
+              ],
+              staticClass: "input-attr",
+              attrs: { type: "text", placeholder: "Инвентар" },
+              domProps: { value: _vm.inventory.inv_name },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.inventory, "inv_name", $event.target.value)
+                }
+              }
+            })
+          ]),
+          _vm._v(" "),
+          _c("label", { staticClass: "price-current" }, [
+            _c("input", {
+              directives: [
+                {
+                  name: "model",
+                  rawName: "v-model",
+                  value: _vm.inventory.inv_cost,
+                  expression: "inventory.inv_cost"
+                }
+              ],
+              staticClass: "input-attr",
+              attrs: { type: "text", placeholder: "Цена" },
+              domProps: { value: _vm.inventory.inv_cost },
+              on: {
+                input: function($event) {
+                  if ($event.target.composing) {
+                    return
+                  }
+                  _vm.$set(_vm.inventory, "inv_cost", $event.target.value)
+                }
+              }
+            }),
+            _vm._v(" "),
+            _c("i", { staticClass: "icon i-tg" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "inventar-label d-flex" }, [
+          _c(
+            "button",
+            {
+              staticClass: "btn-plain btn-blue",
+              on: {
+                click: function($event) {
+                  $event.preventDefault()
+                  return _vm.updateCurrentInventory($event)
+                }
+              }
+            },
+            [_vm._v("Сохранить")]
+          )
+        ])
+      ])
+    ]),
     _vm._v(" "),
     _c("div", { staticClass: "overlay" })
   ])
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "edit-cover" }, [
-      _c(
-        "a",
-        {
-          staticClass: "btn-plain add-call invent-add",
-          attrs: { href: "#tab-4", "data-toggle": "tab" }
-        },
-        [
-          _c("img", {
-            attrs: { src: "/index/img/icon/plus-grey.png", alt: "" }
-          }),
-          _vm._v("Добавить инвентар\n        ")
-        ]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("button", { staticClass: "btn-plain invent-edit" }, [
-      _c("i", { staticClass: "icon book-edit" })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -40091,48 +40249,11 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "question-popup edit-invent-modal" }, [
-      _c("div", { staticClass: "question-popup-head d-flex-justify" }, [
-        _c("h3", [_vm._v("Редактировать инвентар")]),
-        _vm._v(" "),
-        _c("button", { staticClass: "btn-plain close-popup" }, [
-          _c("i", { staticClass: "fas fa-times" })
-        ])
-      ]),
+    return _c("div", { staticClass: "question-popup-head d-flex-justify" }, [
+      _c("h3", [_vm._v("Редактировать инвентар")]),
       _vm._v(" "),
-      _c("form", { attrs: { action: "#" } }, [
-        _c("div", { staticClass: "inventar-label d-flex" }, [
-          _c("div", { staticClass: "checkbox-cover" }, [
-            _c("input", {
-              staticClass: "ios8-switch checkbox-attr",
-              attrs: { type: "checkbox", id: "checkbox-106" }
-            }),
-            _vm._v(" "),
-            _c("label", { attrs: { for: "checkbox-106" } }),
-            _vm._v(" "),
-            _c("input", {
-              staticClass: "input-attr",
-              attrs: { type: "text", placeholder: "Инвентар" }
-            })
-          ]),
-          _vm._v(" "),
-          _c("label", { staticClass: "price-current" }, [
-            _c("input", {
-              staticClass: "input-attr",
-              attrs: { type: "text", placeholder: "Цена" }
-            }),
-            _vm._v(" "),
-            _c("i", { staticClass: "icon i-tg" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "inventar-label d-flex" }, [
-          _c(
-            "button",
-            { staticClass: "btn-plain btn-blue", attrs: { type: "submit" } },
-            [_vm._v("Сохранить")]
-          )
-        ])
+      _c("button", { staticClass: "btn-plain close-popup" }, [
+        _c("i", { staticClass: "fas fa-times" })
       ])
     ])
   }
@@ -54503,8 +54624,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\aibat\Desktop\SportArea\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\aibat\Desktop\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\aibat\Documents\GitHub\SportArea\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\aibat\Documents\GitHub\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
