@@ -134,9 +134,13 @@ export default {
   methods: {
     clearInventory() {
       this.inventory = {};
+      this.seccsess_msg = "";
+      this.errors = null;
     },
     editInventory(element) {
       this.inventory = element;
+      this.seccsess_msg = "";
+      this.errors = null;
     },
     sendNew() {
       this.postInventory("/store-inventory", this.inventory);

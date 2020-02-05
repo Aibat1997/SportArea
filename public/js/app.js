@@ -2230,9 +2230,13 @@ __webpack_require__.r(__webpack_exports__);
   methods: {
     clearInventory: function clearInventory() {
       this.inventory = {};
+      this.seccsess_msg = "";
+      this.errors = null;
     },
     editInventory: function editInventory(element) {
       this.inventory = element;
+      this.seccsess_msg = "";
+      this.errors = null;
     },
     sendNew: function sendNew() {
       this.postInventory("/store-inventory", this.inventory);
@@ -54624,8 +54628,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\aibat\Documents\GitHub\SportArea\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\aibat\Documents\GitHub\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Aibat\Documents\GitHub\SportArea\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Aibat\Documents\GitHub\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })
