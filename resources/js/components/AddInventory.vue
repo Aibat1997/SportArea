@@ -17,7 +17,7 @@
                                 {{ inventory.inv_name }} -
                                 <span>{{ inventory.inv_cost }}</span>
                             </p>
-                            <button class="btn-plain invent-edit" @click="editInventory(inventory)">
+                            <button type="button" class="btn-plain invent-edit" @click="editInventory(inventory)">
                                 <i class="icon book-edit"></i>
                             </button>
                         </div>
@@ -27,10 +27,10 @@
         </form>
 
         <!-- Don't showed -->
-        <div class="question-popup add-invent-modal">
+        <div :class="['question-popup add-invent-modal', {'showed': create_click}]">
             <div class="question-popup-head d-flex-justify">
                 <h3>Добавить инвентар</h3>
-                <button class="btn-plain close-popup">
+                <button type="button" class="btn-plain close-popup" @click="removeShowed">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -48,13 +48,13 @@
                         <i class="icon i-tg"></i>
                     </label>
                 </div>
-                <button class="btn-plain btn-blue" @click.prevent="sendNew">Сохранить</button>
+                <button type="button" class="btn-plain btn-blue" @click.prevent="sendNew">Сохранить</button>
             </form>
         </div>
-        <div class="question-popup edit-invent-modal">
+        <div :class="['question-popup edit-invent-modal', {'showed': edit_click}]">
             <div class="question-popup-head d-flex-justify">
                 <h3>Редактировать инвентар</h3>
-                <button class="btn-plain close-popup">
+                <button type="button" class="btn-plain close-popup" @click="removeShowed">
                     <i class="fas fa-times"></i>
                 </button>
             </div>
@@ -77,11 +77,11 @@
                     </label>
                 </div>
                 <div class="inventar-label d-flex">
-                    <button class="btn-plain btn-blue" @click.prevent="updateCurrentInventory">Сохранить</button>
+                    <button type="button" class="btn-plain btn-blue" @click.prevent="updateCurrentInventory">Сохранить</button>
                 </div>
             </form>
         </div>
-        <div class="overlay"></div>
+        <div :class="['overlay', {'showed': edit_click | create_click}]" @click="removeShowed"></div>
     </div>
 </template>
 
@@ -92,6 +92,8 @@
                 inventories: [],
                 errors: null,
                 seccsess_msg: '',
+                create_click: false,
+                edit_click: false,
                 inventory: {
                     inv_id: null,
                     inv_name: '',
@@ -105,25 +107,24 @@
                 this.inventories = response.data
             })
         },
-        mounted: function () {
-            if (typeof checkboxDropdown === 'function') {
-                checkboxDropdown('.dropdown')
-            }
-            if (typeof commonJs === 'function') {
-                commonJs()
-            }
-        },
         methods: {
+            removeShowed(){
+                this.create_click = false,
+                this.edit_click = false
+            },
             clearInventory () {
-                console.log(this.inventory)
                 this.inventory = {}
                 this.seccsess_msg = ''
-                this.errors = null
+                this.errors = null,
+                this.create_click = true,
+                this.edit_click = false
             },
             editInventory (element) {
                 this.inventory = element
                 this.seccsess_msg = ''
-                this.errors = null
+                this.errors = null,
+                this.create_click = false,
+                this.edit_click = true
             },
             sendNew () {
                 this.postInventory('/store-inventory', this.inventory)
