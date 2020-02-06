@@ -109,9 +109,13 @@
             if (typeof checkboxDropdown === 'function') {
                 checkboxDropdown('.dropdown')
             }
+            if (typeof commonJs === 'function') {
+                commonJs()
+            }
         },
         methods: {
             clearInventory () {
+                console.log(this.inventory)
                 this.inventory = {}
                 this.seccsess_msg = ''
                 this.errors = null
