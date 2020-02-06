@@ -4,9 +4,15 @@
     <div class="col-md-8 col-sm-8">
       <add-inventory></add-inventory>
       <form action="#">
+        <div class="error-box" v-if="errors">
+          <ul>
+            <li v-for="(key,error) in errors">{{error}} : {{ key[0] }}</li>
+          </ul>
+        </div>
+        <div class="error-box success-box" v-if="seccsess_msg">{{ seccsess_msg }}</div>
         <div class="new-object">
           <div class="new-object-head d-flex-justify">
-            <h3>Объект 1</h3>
+            <h3>Объект</h3>
             <button class="btn-plain plus-blue" @click.prevent="submitForm">
               Добавить объект
               <i class="fas fa-plus"></i>
@@ -31,7 +37,7 @@
               <div class="sidebar-item">
                 <label class="select-label select">
                   <select v-model="court.c_open_field">
-                    <option value="default">Тип площадки</option>
+                    <option value>Тип площадки</option>
                     <option value="1">Открытый</option>
                     <option value="0">Закрытый</option>
                   </select>
@@ -41,7 +47,7 @@
               <div class="sidebar-item">
                 <label class="select-label select">
                   <select v-model="court.c_coverage_id">
-                    <option value="default">Тип покрытия</option>
+                    <option value>Тип покрытия</option>
                     <option v-for="item in type_coverages" :value="item.tc_id">{{ item.tc_name }}</option>
                   </select>
                   <i class="fas fa-chevron-down arrow-select"></i>
@@ -114,18 +120,20 @@
                 />
               </label>
             </div>
-            <a href="#" class="btn-plain link-dashed">
-              <img src="/index/img/icon/pen.svg" alt /> Редактировать
-              время, дату, стоимость
-            </a>
           </div>
         </div>
       </form>
       <form action="#">
-        <div class="new-object">
+        <div class="new-object" v-for="court in courts">
+          <div class="error-box" v-if="created_errors">
+            <ul>
+              <li v-for="(key,error) in created_errors">{{error}} : {{ key[0] }}</li>
+            </ul>
+          </div>
+          <div class="error-box success-box" v-if="created_seccsess_msg">{{ created_seccsess_msg }}</div>
           <div class="new-object-head d-flex-justify">
-            <h3>Объект 1</h3>
-            <button class="btn-plain remove-object">
+            <h3>{{ court.c_name }}</h3>
+            <button class="btn-plain remove-object" @click.prevent="deleteCourt(court.c_id)">
               Удалить объект
               <i class="fas fa-minus"></i>
             </button>
@@ -133,7 +141,7 @@
           <div class="new-object-body">
             <div class="form-item-half d-flex-justify">
               <label class="f-item">
-                <input type="text" placeholder="Название объекта" />
+                <input type="text" v-model="court.c_name" placeholder="Название объекта" />
               </label>
               <label class="file-cover">
                 <img src="/index/img/icon/upload.svg" alt />
@@ -144,20 +152,17 @@
             <div class="form-item-half d-flex-justify">
               <div class="sidebar-item">
                 <label class="select-label select">
-                  <select name="#">
-                    <option value>Тип площадки</option>
-                    <option value>Тип площадки 1</option>
-                    <option value>Тип площадки 2</option>
+                  <select v-model="court.c_open_field">
+                    <option value="1">Открытый</option>
+                    <option value="0">Закрытый</option>
                   </select>
                   <i class="fas fa-chevron-down arrow-select"></i>
                 </label>
               </div>
               <div class="sidebar-item">
                 <label class="select-label select">
-                  <select name="#">
-                    <option value>Тип покрытия</option>
-                    <option value>Тип покрытия 1</option>
-                    <option value>Тип покрытия 2</option>
+                  <select v-model="court.c_coverage_id">
+                    <option v-for="item in type_coverages" :value="item.tc_id">{{ item.tc_name }}</option>
                   </select>
                   <i class="fas fa-chevron-down arrow-select"></i>
                 </label>
@@ -165,18 +170,22 @@
             </div>
             <div class="form-item-half d-flex-justify">
               <label class="f-item">
-                <input type="text" placeholder="Стоимость" />
+                <input type="text" v-model="court.c_cost" placeholder="Стоимость" />
               </label>
               <label class="f-item f-item-discount">
-                <input type="text" placeholder="Предоплата" class="discount-price" />
+                <input
+                  type="text"
+                  v-model="court.c_prepayment"
+                  placeholder="Предоплата"
+                  class="discount-price"
+                />
                 <div class="discount-price-cover d-flex">
                   <label class="checkbox-container">
-                    <input type="radio" checked="checked" name="radio" />
+                    <input type="radio" v-model="court.c_prepayment_type" value="1" />
                     <span class="checkmark">тг</span>
                   </label>
-
                   <label class="checkbox-container">
-                    <input type="radio" name="radio" />
+                    <input type="radio" v-model="court.c_prepayment_type" value="0" />
                     <span class="checkmark">%</span>
                   </label>
                 </div>
@@ -186,7 +195,6 @@
               <div class="dropdown-checkbox">
                 <div class="dropdown">
                   <label class="dropdown-label">Инфраструктура</label>
-
                   <div class="dropdown-list">
                     <div class="checkbox">
                       <input
@@ -200,63 +208,38 @@
                         все
                       </label>
                     </div>
-
-                    <div class="checkbox">
+                    <div class="checkbox" v-for="item in infrastructures">
                       <input
                         type="checkbox"
-                        name="dropdown-group"
+                        v-model="court.infrastructury"
                         class="check checkbox-custom"
-                        id="checkbox-custom_011"
+                        :id="'infra_' + item.inf_id"
+                        :value="item.inf_id"
                       />
-                      <label for="checkbox-custom_011" class="checkbox-custom-label">Тренер</label>
-                    </div>
-
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        name="dropdown-group"
-                        class="check checkbox-custom"
-                        id="checkbox-custom_021"
-                      />
-                      <label for="checkbox-custom_021" class="checkbox-custom-label">Освещение</label>
-                    </div>
-
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        name="dropdown-group"
-                        class="check checkbox-custom"
-                        id="checkbox-custom_031"
-                      />
-                      <label for="checkbox-custom_031" class="checkbox-custom-label">Трибуна</label>
-                    </div>
-
-                    <div class="checkbox">
-                      <input
-                        type="checkbox"
-                        name="dropdown-group"
-                        class="check checkbox-custom"
-                        id="checkbox-custom_041"
-                      />
-                      <label for="checkbox-custom_041" class="checkbox-custom-label">Освещение</label>
+                      <label
+                        :for="'infra_' + item.inf_id"
+                        class="checkbox-custom-label"
+                      >{{ item.inf_name }}</label>
                     </div>
                   </div>
                 </div>
               </div>
               <label class="f-item">
-                <input type="text" placeholder="Размер объекта" class="size-mask" />
+                <the-mask
+                  mask="##x##"
+                  :masked="true"
+                  type="text"
+                  v-model="court.c_area"
+                  placeholder="Размер объекта"
+                />
               </label>
             </div>
             <a href="objects-inside.html" class="btn-plain link-dashed">
               <img src="/index/img/icon/pen.svg" alt /> Редактировать
               время, дату, стоимость
             </a>
-            <div class="form-item-half d-flex-justify">
-              <button class="btn-plain btn-greysub">
-                <i class="fas fa-chevron-left"></i> Назад
-              </button>
-              <div class="btn-box d-flex-justify">
-                <button class="btn-plain btn-redsub">Удалить объект</button>
+            <div class="form-item-half">
+              <div class="btn-box">
                 <button class="btn-plain btn-blue" type="submit">Разместить</button>
               </div>
             </div>
@@ -277,15 +260,20 @@ export default {
   },
   data() {
     return {
+      errors: null,
+      seccsess_msg: "",
+      created_errors: null,
+      created_seccsess_msg: "",
       type_coverages: {},
       infrastructures: {},
       images: [],
+      courts: {},
       court: {
         c_name: "",
-        // c_images: [],
         infrastructury: [],
-        c_open_field: "default",
-        c_coverage_id: "default",
+        c_images: [],
+        c_open_field: "",
+        c_coverage_id: "",
         c_cost: "",
         c_prepayment: 0,
         c_prepayment_type: 1,
@@ -297,8 +285,8 @@ export default {
     axios.get("/helpers").then(response => {
       this.type_coverages = response.data.type_coverages;
       this.infrastructures = response.data.infrastructures;
-      this.complex = response.data.complex;
     });
+    this.setCourts();
   },
   computed: {
     status() {
@@ -330,11 +318,32 @@ export default {
         .post("/store-court", formData, {
           headers: { "content-type": "multipart/form-data" }
         })
-        .then(response => {})
+        .then(response => {
+          this.seccsess_msg = response.data.message;
+          this.errors = null;
+          this.court = {};
+          this.setCourts();
+        })
         .catch(error => {
           this.seccsess_msg = "";
           this.errors = error.response.data.errors;
         });
+    },
+    async deleteCourt(courtId) {
+      await axios
+        .post("/delete-court", {"id": courtId})
+        .then(response => {
+          this.setCourts();
+        })
+        .catch(error => {
+          this.created_seccsess_msg = "";
+          this.created_errors = error.response.data.errors;
+        });
+    },
+    setCourts() {
+      axios.get("/courts").then(response => {
+        this.courts = response.data.courts;
+      });
     }
   }
 };

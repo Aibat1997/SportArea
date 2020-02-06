@@ -26,67 +26,7 @@
         $(this).find('.i-star').toggleClass('i-star-red')
     });
     $('.size-mask').inputmask("99X99");
-    $(function () {
-
-        $('.datefilter').daterangepicker({
-            autoUpdateInput: false,
-            locale: {
-                "format": "DD/MM/YYYY",
-                "separator": " - ",
-                "applyLabel": "Применить",
-                "cancelLabel": "Отмена",
-                "fromLabel": "De",
-                "toLabel": "RU",
-                "customRangeLabel": "Custom",
-                "daysOfWeek": [
-                    "Пн",
-                    "Вт",
-                    "Ср",
-                    "Чт",
-                    "Пт",
-                    "Сб",
-                    "Вс"
-                ],
-                "monthNames": [
-                    "Январь",
-                    "Февраль",
-                    "Март",
-                    "Апрель",
-                    "Май",
-                    "Июнь",
-                    "Июль",
-                    "Август",
-                    "Сентябрь",
-                    "Октябрь",
-                    "Ноябрь",
-                    "Декабрь"
-                ],
-                "firstDay": 0
-            }
-        });
-
-        $('.datefilter').on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
-        });
-
-        $('.datefilter').on('cancel.daterangepicker', function (ev, picker) {
-            $(this).val('');
-        });
-
-        $('.single_time').daterangepicker({
-            timePicker: true,
-            timePicker24Hour: true,
-            timePickerIncrement: 1,
-            timePickerSeconds: false,
-            locale: {
-                format: 'HH:mm'
-            }
-        }).on('show.daterangepicker', function (ev, picker) {
-            picker.container.find(".calendar-table").hide();
-        });
-
-    });
-
+    
     function checkboxDropdown(el) {
         var $el = $(el);
 

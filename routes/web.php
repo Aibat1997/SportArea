@@ -23,6 +23,7 @@ Route::middleware(['web'])->group(function() {
     //For Vue
     Route::get('/helpers', 'HelperController@informations');
     Route::get('/inventory', 'HelperController@inventory');
+    Route::get('/courts', 'HelperController@courts');
 });
 
 Route::middleware(['web'])->namespace('Index')->group(function() {
@@ -43,5 +44,6 @@ Route::middleware(['web'])->namespace('Index')->group(function() {
         Route::post('update-inventory', 'InventoryController@update');
         Route::post('store-court', 'CourtController@store');
         Route::post('update-court', 'CourtController@update');
+        Route::post('delete-court', 'CourtController@delete');
     });
 });

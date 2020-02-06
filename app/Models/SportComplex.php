@@ -24,7 +24,7 @@ class SportComplex extends Model
 
     public function courts()
     {
-        return $this->hasMany('App\Models\Courts');
+        return $this->hasMany('App\Models\Courts', 'c_complex_id', 'sc_id');
     }
 
     public function inventories()

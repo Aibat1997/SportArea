@@ -171,7 +171,6 @@ export default {
         .then(response => {
           console.log(response);
           this.$store.commit('changeStatus', response.data.status);
-          this.$store.commit('setComplexId', response.data.content);
           this.seccsess_msg = response.data.message;
           this.errors = null;
         })

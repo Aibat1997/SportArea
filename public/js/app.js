@@ -2056,8 +2056,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                   _this2.$store.commit('changeStatus', response.data.status);
 
-                  _this2.$store.commit('setComplexId', response.data.content);
-
                   _this2.seccsess_msg = response.data.message;
                   _this2.errors = null;
                 })["catch"](function (error) {
@@ -2535,23 +2533,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2561,15 +2542,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
+      errors: null,
+      seccsess_msg: "",
+      created_errors: null,
+      created_seccsess_msg: "",
       type_coverages: {},
       infrastructures: {},
       images: [],
+      courts: {},
       court: {
         c_name: "",
-        // c_images: [],
         infrastructury: [],
-        c_open_field: "default",
-        c_coverage_id: "default",
+        c_images: [],
+        c_open_field: "",
+        c_coverage_id: "",
         c_cost: "",
         c_prepayment: 0,
         c_prepayment_type: 1,
@@ -2583,8 +2569,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     axios.get("/helpers").then(function (response) {
       _this.type_coverages = response.data.type_coverages;
       _this.infrastructures = response.data.infrastructures;
-      _this.complex = response.data.complex;
     });
+    this.setCourts();
   },
   computed: {
     status: function status() {
@@ -2630,7 +2616,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   headers: {
                     "content-type": "multipart/form-data"
                   }
-                }).then(function (response) {})["catch"](function (error) {
+                }).then(function (response) {
+                  _this2.seccsess_msg = response.data.message;
+                  _this2.errors = null;
+                  _this2.court = {};
+
+                  _this2.setCourts();
+                })["catch"](function (error) {
                   _this2.seccsess_msg = "";
                   _this2.errors = error.response.data.errors;
                 });
@@ -2648,7 +2640,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return submitForm;
-    }()
+    }(),
+    deleteCourt: function () {
+      var _deleteCourt = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(courtId) {
+        var _this3 = this;
+
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
+          while (1) {
+            switch (_context2.prev = _context2.next) {
+              case 0:
+                _context2.next = 2;
+                return axios.post("/delete-court", {
+                  "id": courtId
+                }).then(function (response) {
+                  _this3.setCourts();
+                })["catch"](function (error) {
+                  _this3.created_seccsess_msg = "";
+                  _this3.created_errors = error.response.data.errors;
+                });
+
+              case 2:
+              case "end":
+                return _context2.stop();
+            }
+          }
+        }, _callee2);
+      }));
+
+      function deleteCourt(_x) {
+        return _deleteCourt.apply(this, arguments);
+      }
+
+      return deleteCourt;
+    }(),
+    setCourts: function setCourts() {
+      var _this4 = this;
+
+      axios.get("/courts").then(function (response) {
+        _this4.courts = response.data.courts;
+      });
+    }
   }
 });
 
@@ -40294,9 +40327,29 @@ var render = function() {
             _c("add-inventory"),
             _vm._v(" "),
             _c("form", { attrs: { action: "#" } }, [
+              _vm.errors
+                ? _c("div", { staticClass: "error-box" }, [
+                    _c(
+                      "ul",
+                      _vm._l(_vm.errors, function(key, error) {
+                        return _c("li", [
+                          _vm._v(_vm._s(error) + " : " + _vm._s(key[0]))
+                        ])
+                      }),
+                      0
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.seccsess_msg
+                ? _c("div", { staticClass: "error-box success-box" }, [
+                    _vm._v(_vm._s(_vm.seccsess_msg))
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
               _c("div", { staticClass: "new-object" }, [
                 _c("div", { staticClass: "new-object-head d-flex-justify" }, [
-                  _c("h3", [_vm._v("Объект 1")]),
+                  _c("h3", [_vm._v("Объект")]),
                   _vm._v(" "),
                   _c(
                     "button",
@@ -40393,7 +40446,7 @@ var render = function() {
                             }
                           },
                           [
-                            _c("option", { attrs: { value: "default" } }, [
+                            _c("option", { attrs: { value: "" } }, [
                               _vm._v("Тип площадки")
                             ]),
                             _vm._v(" "),
@@ -40447,7 +40500,7 @@ var render = function() {
                             }
                           },
                           [
-                            _c("option", { attrs: { value: "default" } }, [
+                            _c("option", { attrs: { value: "" } }, [
                               _vm._v("Тип покрытия")
                             ]),
                             _vm._v(" "),
@@ -40708,14 +40761,470 @@ var render = function() {
                       ],
                       1
                     )
-                  ]),
-                  _vm._v(" "),
-                  _vm._m(1)
+                  ])
                 ])
               ])
             ]),
             _vm._v(" "),
-            _vm._m(2)
+            _c(
+              "form",
+              { attrs: { action: "#" } },
+              _vm._l(_vm.courts, function(court) {
+                return _c("div", { staticClass: "new-object" }, [
+                  _vm.created_errors
+                    ? _c("div", { staticClass: "error-box" }, [
+                        _c(
+                          "ul",
+                          _vm._l(_vm.created_errors, function(key, error) {
+                            return _c("li", [
+                              _vm._v(_vm._s(error) + " : " + _vm._s(key[0]))
+                            ])
+                          }),
+                          0
+                        )
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _vm.created_seccsess_msg
+                    ? _c("div", { staticClass: "error-box success-box" }, [
+                        _vm._v(_vm._s(_vm.created_seccsess_msg))
+                      ])
+                    : _vm._e(),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "new-object-head d-flex-justify" }, [
+                    _c("h3", [_vm._v(_vm._s(court.c_name))]),
+                    _vm._v(" "),
+                    _c(
+                      "button",
+                      {
+                        staticClass: "btn-plain remove-object",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.deleteCourt(court.c_id)
+                          }
+                        }
+                      },
+                      [
+                        _vm._v("\n            Удалить объект\n            "),
+                        _c("i", { staticClass: "fas fa-minus" })
+                      ]
+                    )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "new-object-body" }, [
+                    _c(
+                      "div",
+                      { staticClass: "form-item-half d-flex-justify" },
+                      [
+                        _c("label", { staticClass: "f-item" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: court.c_name,
+                                expression: "court.c_name"
+                              }
+                            ],
+                            attrs: {
+                              type: "text",
+                              placeholder: "Название объекта"
+                            },
+                            domProps: { value: court.c_name },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(court, "c_name", $event.target.value)
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _vm._m(1, true)
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-item-half d-flex-justify" },
+                      [
+                        _c("div", { staticClass: "sidebar-item" }, [
+                          _c("label", { staticClass: "select-label select" }, [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: court.c_open_field,
+                                    expression: "court.c_open_field"
+                                  }
+                                ],
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      court,
+                                      "c_open_field",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              [
+                                _c("option", { attrs: { value: "1" } }, [
+                                  _vm._v("Открытый")
+                                ]),
+                                _vm._v(" "),
+                                _c("option", { attrs: { value: "0" } }, [
+                                  _vm._v("Закрытый")
+                                ])
+                              ]
+                            ),
+                            _vm._v(" "),
+                            _c("i", {
+                              staticClass: "fas fa-chevron-down arrow-select"
+                            })
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c("div", { staticClass: "sidebar-item" }, [
+                          _c("label", { staticClass: "select-label select" }, [
+                            _c(
+                              "select",
+                              {
+                                directives: [
+                                  {
+                                    name: "model",
+                                    rawName: "v-model",
+                                    value: court.c_coverage_id,
+                                    expression: "court.c_coverage_id"
+                                  }
+                                ],
+                                on: {
+                                  change: function($event) {
+                                    var $$selectedVal = Array.prototype.filter
+                                      .call($event.target.options, function(o) {
+                                        return o.selected
+                                      })
+                                      .map(function(o) {
+                                        var val =
+                                          "_value" in o ? o._value : o.value
+                                        return val
+                                      })
+                                    _vm.$set(
+                                      court,
+                                      "c_coverage_id",
+                                      $event.target.multiple
+                                        ? $$selectedVal
+                                        : $$selectedVal[0]
+                                    )
+                                  }
+                                }
+                              },
+                              _vm._l(_vm.type_coverages, function(item) {
+                                return _c(
+                                  "option",
+                                  { domProps: { value: item.tc_id } },
+                                  [_vm._v(_vm._s(item.tc_name))]
+                                )
+                              }),
+                              0
+                            ),
+                            _vm._v(" "),
+                            _c("i", {
+                              staticClass: "fas fa-chevron-down arrow-select"
+                            })
+                          ])
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-item-half d-flex-justify" },
+                      [
+                        _c("label", { staticClass: "f-item" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: court.c_cost,
+                                expression: "court.c_cost"
+                              }
+                            ],
+                            attrs: { type: "text", placeholder: "Стоимость" },
+                            domProps: { value: court.c_cost },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(court, "c_cost", $event.target.value)
+                              }
+                            }
+                          })
+                        ]),
+                        _vm._v(" "),
+                        _c("label", { staticClass: "f-item f-item-discount" }, [
+                          _c("input", {
+                            directives: [
+                              {
+                                name: "model",
+                                rawName: "v-model",
+                                value: court.c_prepayment,
+                                expression: "court.c_prepayment"
+                              }
+                            ],
+                            staticClass: "discount-price",
+                            attrs: { type: "text", placeholder: "Предоплата" },
+                            domProps: { value: court.c_prepayment },
+                            on: {
+                              input: function($event) {
+                                if ($event.target.composing) {
+                                  return
+                                }
+                                _vm.$set(
+                                  court,
+                                  "c_prepayment",
+                                  $event.target.value
+                                )
+                              }
+                            }
+                          }),
+                          _vm._v(" "),
+                          _c(
+                            "div",
+                            { staticClass: "discount-price-cover d-flex" },
+                            [
+                              _c(
+                                "label",
+                                { staticClass: "checkbox-container" },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: court.c_prepayment_type,
+                                        expression: "court.c_prepayment_type"
+                                      }
+                                    ],
+                                    attrs: { type: "radio", value: "1" },
+                                    domProps: {
+                                      checked: _vm._q(
+                                        court.c_prepayment_type,
+                                        "1"
+                                      )
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        return _vm.$set(
+                                          court,
+                                          "c_prepayment_type",
+                                          "1"
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("span", { staticClass: "checkmark" }, [
+                                    _vm._v("тг")
+                                  ])
+                                ]
+                              ),
+                              _vm._v(" "),
+                              _c(
+                                "label",
+                                { staticClass: "checkbox-container" },
+                                [
+                                  _c("input", {
+                                    directives: [
+                                      {
+                                        name: "model",
+                                        rawName: "v-model",
+                                        value: court.c_prepayment_type,
+                                        expression: "court.c_prepayment_type"
+                                      }
+                                    ],
+                                    attrs: { type: "radio", value: "0" },
+                                    domProps: {
+                                      checked: _vm._q(
+                                        court.c_prepayment_type,
+                                        "0"
+                                      )
+                                    },
+                                    on: {
+                                      change: function($event) {
+                                        return _vm.$set(
+                                          court,
+                                          "c_prepayment_type",
+                                          "0"
+                                        )
+                                      }
+                                    }
+                                  }),
+                                  _vm._v(" "),
+                                  _c("span", { staticClass: "checkmark" }, [
+                                    _vm._v("%")
+                                  ])
+                                ]
+                              )
+                            ]
+                          )
+                        ])
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "div",
+                      { staticClass: "form-item-half d-flex-justify" },
+                      [
+                        _c("div", { staticClass: "dropdown-checkbox" }, [
+                          _c("div", { staticClass: "dropdown" }, [
+                            _c("label", { staticClass: "dropdown-label" }, [
+                              _vm._v("Инфраструктура")
+                            ]),
+                            _vm._v(" "),
+                            _c(
+                              "div",
+                              { staticClass: "dropdown-list" },
+                              [
+                                _vm._m(2, true),
+                                _vm._v(" "),
+                                _vm._l(_vm.infrastructures, function(item) {
+                                  return _c(
+                                    "div",
+                                    { staticClass: "checkbox" },
+                                    [
+                                      _c("input", {
+                                        directives: [
+                                          {
+                                            name: "model",
+                                            rawName: "v-model",
+                                            value: court.infrastructury,
+                                            expression: "court.infrastructury"
+                                          }
+                                        ],
+                                        staticClass: "check checkbox-custom",
+                                        attrs: {
+                                          type: "checkbox",
+                                          id: "infra_" + item.inf_id
+                                        },
+                                        domProps: {
+                                          value: item.inf_id,
+                                          checked: Array.isArray(
+                                            court.infrastructury
+                                          )
+                                            ? _vm._i(
+                                                court.infrastructury,
+                                                item.inf_id
+                                              ) > -1
+                                            : court.infrastructury
+                                        },
+                                        on: {
+                                          change: function($event) {
+                                            var $$a = court.infrastructury,
+                                              $$el = $event.target,
+                                              $$c = $$el.checked ? true : false
+                                            if (Array.isArray($$a)) {
+                                              var $$v = item.inf_id,
+                                                $$i = _vm._i($$a, $$v)
+                                              if ($$el.checked) {
+                                                $$i < 0 &&
+                                                  _vm.$set(
+                                                    court,
+                                                    "infrastructury",
+                                                    $$a.concat([$$v])
+                                                  )
+                                              } else {
+                                                $$i > -1 &&
+                                                  _vm.$set(
+                                                    court,
+                                                    "infrastructury",
+                                                    $$a
+                                                      .slice(0, $$i)
+                                                      .concat(
+                                                        $$a.slice($$i + 1)
+                                                      )
+                                                  )
+                                              }
+                                            } else {
+                                              _vm.$set(
+                                                court,
+                                                "infrastructury",
+                                                $$c
+                                              )
+                                            }
+                                          }
+                                        }
+                                      }),
+                                      _vm._v(" "),
+                                      _c(
+                                        "label",
+                                        {
+                                          staticClass: "checkbox-custom-label",
+                                          attrs: { for: "infra_" + item.inf_id }
+                                        },
+                                        [_vm._v(_vm._s(item.inf_name))]
+                                      )
+                                    ]
+                                  )
+                                })
+                              ],
+                              2
+                            )
+                          ])
+                        ]),
+                        _vm._v(" "),
+                        _c(
+                          "label",
+                          { staticClass: "f-item" },
+                          [
+                            _c("the-mask", {
+                              attrs: {
+                                mask: "##x##",
+                                masked: true,
+                                type: "text",
+                                placeholder: "Размер объекта"
+                              },
+                              model: {
+                                value: court.c_area,
+                                callback: function($$v) {
+                                  _vm.$set(court, "c_area", $$v)
+                                },
+                                expression: "court.c_area"
+                              }
+                            })
+                          ],
+                          1
+                        )
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _vm._m(3, true),
+                    _vm._v(" "),
+                    _vm._m(4, true)
+                  ])
+                ])
+              }),
+              0
+            )
           ],
           1
         )
@@ -40755,9 +41264,50 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("label", { staticClass: "file-cover" }, [
+      _c("img", { attrs: { src: "/index/img/icon/upload.svg", alt: "" } }),
+      _vm._v("\n              Загрузить фотографии объекта\n              "),
+      _c("input", { attrs: { type: "file" } })
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "checkbox" }, [
+      _c("input", {
+        staticClass: "check-all checkbox-custom",
+        attrs: {
+          type: "checkbox",
+          name: "dropdown-group-all",
+          id: "checkbox-main1"
+        }
+      }),
+      _vm._v(" "),
+      _c(
+        "label",
+        {
+          staticClass: "checkbox-custom-label",
+          attrs: { for: "checkbox-main1" }
+        },
+        [
+          _vm._v(
+            "\n                      Выбрать\n                      все\n                    "
+          )
+        ]
+      )
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c(
       "a",
-      { staticClass: "btn-plain link-dashed", attrs: { href: "#" } },
+      {
+        staticClass: "btn-plain link-dashed",
+        attrs: { href: "objects-inside.html" }
+      },
       [
         _c("img", { attrs: { src: "/index/img/icon/pen.svg", alt: "" } }),
         _vm._v(" Редактировать\n            время, дату, стоимость\n          ")
@@ -40768,266 +41318,13 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("form", { attrs: { action: "#" } }, [
-      _c("div", { staticClass: "new-object" }, [
-        _c("div", { staticClass: "new-object-head d-flex-justify" }, [
-          _c("h3", [_vm._v("Объект 1")]),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain remove-object" }, [
-            _vm._v("\n            Удалить объект\n            "),
-            _c("i", { staticClass: "fas fa-minus" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "new-object-body" }, [
-          _c("div", { staticClass: "form-item-half d-flex-justify" }, [
-            _c("label", { staticClass: "f-item" }, [
-              _c("input", {
-                attrs: { type: "text", placeholder: "Название объекта" }
-              })
-            ]),
-            _vm._v(" "),
-            _c("label", { staticClass: "file-cover" }, [
-              _c("img", {
-                attrs: { src: "/index/img/icon/upload.svg", alt: "" }
-              }),
-              _vm._v(
-                "\n              Загрузить фотографии объекта\n              "
-              ),
-              _c("input", { attrs: { type: "file" } })
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-item-half d-flex-justify" }, [
-            _c("div", { staticClass: "sidebar-item" }, [
-              _c("label", { staticClass: "select-label select" }, [
-                _c("select", { attrs: { name: "#" } }, [
-                  _c("option", { attrs: { value: "" } }, [
-                    _vm._v("Тип площадки")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "" } }, [
-                    _vm._v("Тип площадки 1")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "" } }, [
-                    _vm._v("Тип площадки 2")
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("i", { staticClass: "fas fa-chevron-down arrow-select" })
-              ])
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "sidebar-item" }, [
-              _c("label", { staticClass: "select-label select" }, [
-                _c("select", { attrs: { name: "#" } }, [
-                  _c("option", { attrs: { value: "" } }, [
-                    _vm._v("Тип покрытия")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "" } }, [
-                    _vm._v("Тип покрытия 1")
-                  ]),
-                  _vm._v(" "),
-                  _c("option", { attrs: { value: "" } }, [
-                    _vm._v("Тип покрытия 2")
-                  ])
-                ]),
-                _vm._v(" "),
-                _c("i", { staticClass: "fas fa-chevron-down arrow-select" })
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-item-half d-flex-justify" }, [
-            _c("label", { staticClass: "f-item" }, [
-              _c("input", { attrs: { type: "text", placeholder: "Стоимость" } })
-            ]),
-            _vm._v(" "),
-            _c("label", { staticClass: "f-item f-item-discount" }, [
-              _c("input", {
-                staticClass: "discount-price",
-                attrs: { type: "text", placeholder: "Предоплата" }
-              }),
-              _vm._v(" "),
-              _c("div", { staticClass: "discount-price-cover d-flex" }, [
-                _c("label", { staticClass: "checkbox-container" }, [
-                  _c("input", {
-                    attrs: { type: "radio", checked: "checked", name: "radio" }
-                  }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "checkmark" }, [_vm._v("тг")])
-                ]),
-                _vm._v(" "),
-                _c("label", { staticClass: "checkbox-container" }, [
-                  _c("input", { attrs: { type: "radio", name: "radio" } }),
-                  _vm._v(" "),
-                  _c("span", { staticClass: "checkmark" }, [_vm._v("%")])
-                ])
-              ])
-            ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-item-half d-flex-justify" }, [
-            _c("div", { staticClass: "dropdown-checkbox" }, [
-              _c("div", { staticClass: "dropdown" }, [
-                _c("label", { staticClass: "dropdown-label" }, [
-                  _vm._v("Инфраструктура")
-                ]),
-                _vm._v(" "),
-                _c("div", { staticClass: "dropdown-list" }, [
-                  _c("div", { staticClass: "checkbox" }, [
-                    _c("input", {
-                      staticClass: "check-all checkbox-custom",
-                      attrs: {
-                        type: "checkbox",
-                        name: "dropdown-group-all",
-                        id: "checkbox-main1"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "checkbox-custom-label",
-                        attrs: { for: "checkbox-main1" }
-                      },
-                      [
-                        _vm._v(
-                          "\n                      Выбрать\n                      все\n                    "
-                        )
-                      ]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "checkbox" }, [
-                    _c("input", {
-                      staticClass: "check checkbox-custom",
-                      attrs: {
-                        type: "checkbox",
-                        name: "dropdown-group",
-                        id: "checkbox-custom_011"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "checkbox-custom-label",
-                        attrs: { for: "checkbox-custom_011" }
-                      },
-                      [_vm._v("Тренер")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "checkbox" }, [
-                    _c("input", {
-                      staticClass: "check checkbox-custom",
-                      attrs: {
-                        type: "checkbox",
-                        name: "dropdown-group",
-                        id: "checkbox-custom_021"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "checkbox-custom-label",
-                        attrs: { for: "checkbox-custom_021" }
-                      },
-                      [_vm._v("Освещение")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "checkbox" }, [
-                    _c("input", {
-                      staticClass: "check checkbox-custom",
-                      attrs: {
-                        type: "checkbox",
-                        name: "dropdown-group",
-                        id: "checkbox-custom_031"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "checkbox-custom-label",
-                        attrs: { for: "checkbox-custom_031" }
-                      },
-                      [_vm._v("Трибуна")]
-                    )
-                  ]),
-                  _vm._v(" "),
-                  _c("div", { staticClass: "checkbox" }, [
-                    _c("input", {
-                      staticClass: "check checkbox-custom",
-                      attrs: {
-                        type: "checkbox",
-                        name: "dropdown-group",
-                        id: "checkbox-custom_041"
-                      }
-                    }),
-                    _vm._v(" "),
-                    _c(
-                      "label",
-                      {
-                        staticClass: "checkbox-custom-label",
-                        attrs: { for: "checkbox-custom_041" }
-                      },
-                      [_vm._v("Освещение")]
-                    )
-                  ])
-                ])
-              ])
-            ]),
-            _vm._v(" "),
-            _c("label", { staticClass: "f-item" }, [
-              _c("input", {
-                staticClass: "size-mask",
-                attrs: { type: "text", placeholder: "Размер объекта" }
-              })
-            ])
-          ]),
-          _vm._v(" "),
-          _c(
-            "a",
-            {
-              staticClass: "btn-plain link-dashed",
-              attrs: { href: "objects-inside.html" }
-            },
-            [
-              _c("img", { attrs: { src: "/index/img/icon/pen.svg", alt: "" } }),
-              _vm._v(
-                " Редактировать\n            время, дату, стоимость\n          "
-              )
-            ]
-          ),
-          _vm._v(" "),
-          _c("div", { staticClass: "form-item-half d-flex-justify" }, [
-            _c("button", { staticClass: "btn-plain btn-greysub" }, [
-              _c("i", { staticClass: "fas fa-chevron-left" }),
-              _vm._v(" Назад\n            ")
-            ]),
-            _vm._v(" "),
-            _c("div", { staticClass: "btn-box d-flex-justify" }, [
-              _c("button", { staticClass: "btn-plain btn-redsub" }, [
-                _vm._v("Удалить объект")
-              ]),
-              _vm._v(" "),
-              _c(
-                "button",
-                {
-                  staticClass: "btn-plain btn-blue",
-                  attrs: { type: "submit" }
-                },
-                [_vm._v("Разместить")]
-              )
-            ])
-          ])
-        ])
+    return _c("div", { staticClass: "form-item-half" }, [
+      _c("div", { staticClass: "btn-box" }, [
+        _c(
+          "button",
+          { staticClass: "btn-plain btn-blue", attrs: { type: "submit" } },
+          [_vm._v("Разместить")]
+        )
       ])
     ])
   }
@@ -54586,23 +54883,16 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
-    status: false,
-    complex_id: null
+    status: false
   },
   getters: {
     status: function status(state) {
       return state.status;
-    },
-    complexId: function complexId() {
-      return state.complex_id;
     }
   },
   mutations: {
     changeStatus: function changeStatus(state, flag) {
       state.status = flag;
-    },
-    setComplexId: function setComplexId(state, value) {
-      state.status = value;
     }
   },
   actions: {}
