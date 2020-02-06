@@ -2533,6 +2533,125 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2579,8 +2698,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   methods: {
     setImage: function setImage(e) {
-      // for (let i = 0; i < e.target.files.length; i++) {
-      this.images = e.target.files; // }
+      this.images = e.target.files;
+
+      for (var i = 0; i < e.target.files.length; i++) {
+        this.court.c_images.push(e.target.files[i]);
+        console.log(e.target.files[i]);
+      }
     },
     submitForm: function () {
       var _submitForm = _asyncToGenerator(
@@ -2653,7 +2776,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
               case 0:
                 _context2.next = 2;
                 return axios.post("/delete-court", {
-                  "id": courtId
+                  id: courtId
                 }).then(function (response) {
                   _this3.setCourts();
                 })["catch"](function (error) {
@@ -40318,15 +40441,22 @@ var render = function() {
   var _c = _vm._self._c || _h
   return _vm.status
     ? _c("div", [
-        _c("div", { staticClass: "col-md-4 col-sm-4" }),
+        _c("div", { staticClass: "row" }, [
+          _c("div", { staticClass: "col-md-4 col-sm-4" }),
+          _vm._v(" "),
+          _c(
+            "div",
+            { staticClass: "col-md-8 col-sm-8" },
+            [_c("add-inventory")],
+            1
+          )
+        ]),
         _vm._v(" "),
-        _c(
-          "div",
-          { staticClass: "col-md-8 col-sm-8" },
-          [
-            _c("add-inventory"),
+        _c("div", { staticClass: "row" }, [
+          _c("form", { attrs: { action: "#" } }, [
+            _vm._m(0),
             _vm._v(" "),
-            _c("form", { attrs: { action: "#" } }, [
+            _c("div", { staticClass: "col-md-8 col-sm-8" }, [
               _vm.errors
                 ? _c("div", { staticClass: "error-box" }, [
                     _c(
@@ -40363,7 +40493,9 @@ var render = function() {
                       }
                     },
                     [
-                      _vm._v("\n            Добавить объект\n            "),
+                      _vm._v(
+                        "\n                            Добавить объект\n                            "
+                      ),
                       _c("i", { staticClass: "fas fa-plus" })
                     ]
                   )
@@ -40401,8 +40533,9 @@ var render = function() {
                       _c("img", {
                         attrs: { src: "/index/img/icon/upload.svg", alt: "" }
                       }),
+                      _vm._v(" "),
                       _vm._v(
-                        "\n              Загрузить фотографии объекта\n              "
+                        "\n                                Загрузить фотографии объекта\n                                "
                       ),
                       _c("input", {
                         attrs: { type: "file", multiple: "" },
@@ -40508,7 +40641,12 @@ var render = function() {
                               return _c(
                                 "option",
                                 { domProps: { value: item.tc_id } },
-                                [_vm._v(_vm._s(item.tc_name))]
+                                [
+                                  _vm._v(
+                                    _vm._s(item.tc_name) +
+                                      "\n                                        "
+                                  )
+                                ]
                               )
                             })
                           ],
@@ -40658,7 +40796,7 @@ var render = function() {
                           "div",
                           { staticClass: "dropdown-list" },
                           [
-                            _vm._m(0),
+                            _vm._m(1),
                             _vm._v(" "),
                             _vm._l(_vm.infrastructures, function(item) {
                               return _c("div", { staticClass: "checkbox" }, [
@@ -40764,11 +40902,17 @@ var render = function() {
                   ])
                 ])
               ])
-            ]),
+            ])
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "row" }, [
+          _c("form", { attrs: { action: "#" } }, [
+            _vm._m(2),
             _vm._v(" "),
             _c(
-              "form",
-              { attrs: { action: "#" } },
+              "div",
+              { staticClass: "col-md-8 col-sm-8" },
               _vm._l(_vm.courts, function(court) {
                 return _c("div", { staticClass: "new-object" }, [
                   _vm.created_errors
@@ -40787,7 +40931,10 @@ var render = function() {
                   _vm._v(" "),
                   _vm.created_seccsess_msg
                     ? _c("div", { staticClass: "error-box success-box" }, [
-                        _vm._v(_vm._s(_vm.created_seccsess_msg))
+                        _vm._v(
+                          _vm._s(_vm.created_seccsess_msg) +
+                            "\n                    "
+                        )
                       ])
                     : _vm._e(),
                   _vm._v(" "),
@@ -40806,7 +40953,9 @@ var render = function() {
                         }
                       },
                       [
-                        _vm._v("\n            Удалить объект\n            "),
+                        _vm._v(
+                          "\n                            Удалить объект\n                            "
+                        ),
                         _c("i", { staticClass: "fas fa-minus" })
                       ]
                     )
@@ -40843,7 +40992,7 @@ var render = function() {
                           })
                         ]),
                         _vm._v(" "),
-                        _vm._m(1, true)
+                        _vm._m(3, true)
                       ]
                     ),
                     _vm._v(" "),
@@ -40940,7 +41089,12 @@ var render = function() {
                                 return _c(
                                   "option",
                                   { domProps: { value: item.tc_id } },
-                                  [_vm._v(_vm._s(item.tc_name))]
+                                  [
+                                    _vm._v(
+                                      _vm._s(item.tc_name) +
+                                        "\n                                        "
+                                    )
+                                  ]
                                 )
                               }),
                               0
@@ -41105,7 +41259,7 @@ var render = function() {
                               "div",
                               { staticClass: "dropdown-list" },
                               [
-                                _vm._m(2, true),
+                                _vm._m(4, true),
                                 _vm._v(" "),
                                 _vm._l(_vm.infrastructures, function(item) {
                                   return _c(
@@ -41217,21 +41371,92 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._m(3, true),
+                    _vm._m(5, true),
                     _vm._v(" "),
-                    _vm._m(4, true)
+                    _vm._m(6, true)
                   ])
                 ])
               }),
               0
             )
-          ],
-          1
-        )
+          ])
+        ])
       ])
     : _vm._e()
 }
 var staticRenderFns = [
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-4 col-sm-4" }, [
+      _c("div", { staticClass: "images-cover" }, [
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ])
+      ])
+    ])
+  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -41254,7 +41479,7 @@ var staticRenderFns = [
         },
         [
           _vm._v(
-            "\n                      Выбрать\n                      все\n                    "
+            "\n                                                Выбрать\n                                                все\n                                            "
           )
         ]
       )
@@ -41264,9 +41489,83 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
+    return _c("div", { staticClass: "col-md-4 col-sm-4" }, [
+      _c("div", { staticClass: "images-cover" }, [
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ]),
+        _vm._v(" "),
+        _c("div", { staticClass: "images-item" }, [
+          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
+          _vm._v(" "),
+          _c("button", { staticClass: "btn-plain delete-img" }, [
+            _c("i", { staticClass: "fas fa-times" })
+          ])
+        ])
+      ])
+    ])
+  },
+  function() {
+    var _vm = this
+    var _h = _vm.$createElement
+    var _c = _vm._self._c || _h
     return _c("label", { staticClass: "file-cover" }, [
       _c("img", { attrs: { src: "/index/img/icon/upload.svg", alt: "" } }),
-      _vm._v("\n              Загрузить фотографии объекта\n              "),
+      _vm._v(
+        "\n                                Загрузить фотографии объекта\n                                "
+      ),
       _c("input", { attrs: { type: "file" } })
     ])
   },
@@ -41292,7 +41591,7 @@ var staticRenderFns = [
         },
         [
           _vm._v(
-            "\n                      Выбрать\n                      все\n                    "
+            "\n                                                Выбрать\n                                                все\n                                            "
           )
         ]
       )
@@ -41310,7 +41609,9 @@ var staticRenderFns = [
       },
       [
         _c("img", { attrs: { src: "/index/img/icon/pen.svg", alt: "" } }),
-        _vm._v(" Редактировать\n            время, дату, стоимость\n          ")
+        _vm._v(
+          " Редактировать\n                            время, дату, стоимость\n                        "
+        )
       ]
     )
   },
