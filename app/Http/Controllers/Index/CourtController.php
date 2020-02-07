@@ -15,7 +15,7 @@ class CourtController extends Controller
     {
         $validatedData = $request->validate([
             "c_name" => "required",
-            // "infrastructury" => "required",
+            "infrastructures" => "required",
             "c_open_field" => "required",
             "c_coverage_id" => "required",
             "c_cost" => "required",
@@ -44,12 +44,12 @@ class CourtController extends Controller
                 ]
             );
 
-            // $list = array();
-            // foreach ($request->infrastructury as $value) {
-            //     array_push($list, $value);
-            // }
+            $list = array();
+            foreach ($request->infrastructures as $value) {
+                array_push($list, $value);
+            }
 
-            // $court->infrastructures()->sync($list);
+            $court->infrastructures()->sync($list);
 
             return response()->json([
                 'status' => true,

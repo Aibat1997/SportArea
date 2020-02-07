@@ -2509,134 +2509,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
     AddInventory: _AddInventory_vue__WEBPACK_IMPORTED_MODULE_1__["default"],
-    TheMask: vue_the_mask__WEBPACK_IMPORTED_MODULE_2__["TheMask"]
+    TheMask: vue_the_mask__WEBPACK_IMPORTED_MODULE_2__["TheMask"],
+    Multiselect: window.VueMultiselect["default"]
   },
   data: function data() {
     return {
@@ -2645,13 +2524,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       created_errors: null,
       created_seccsess_msg: "",
       type_coverages: {},
-      infrastructures: {},
-      images: [],
+      infrastructures: [],
       courts: {},
       court: {
         c_name: "",
         infrastructury: [],
-        c_images: [],
+        c_images: {},
         c_open_field: "",
         c_coverage_id: "",
         c_cost: "",
@@ -2676,60 +2554,84 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     }
   },
   methods: {
+    blobImage: function blobImage(item) {
+      return URL.createObjectURL(item);
+    },
     setImage: function setImage(e) {
-      this.images = e.target.files;
+      this.court.c_images = Object.assign({}, e.target.files);
+    },
+    removeImage: function removeImage(index) {
+      Vue["delete"](this.court.c_images, index);
+    },
+    setCourts: function setCourts() {
+      var _this2 = this;
 
-      for (var i = 0; i < e.target.files.length; i++) {
-        this.court.c_images.push(e.target.files[i]);
-        console.log(e.target.files[i]);
-      }
+      axios.get("/courts").then(function (response) {
+        _this2.courts = response.data.courts;
+      });
     },
     submitForm: function () {
       var _submitForm = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee() {
-        var _this2 = this;
+        var _this3 = this;
 
-        var formData, i, file;
+        var formData, infrastructures, i, file;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee$(_context) {
           while (1) {
             switch (_context.prev = _context.next) {
               case 0:
                 formData = new FormData();
+                infrastructures = [];
+                $.each(this.court.infrastructury, function (key, value) {
+                  infrastructures.push(value.inf_id);
+                });
                 _context.t0 = _;
                 _context.t1 = this.court;
-                _context.next = 5;
+                _context.next = 7;
                 return function (value, key) {
                   formData.append(key, value);
                 };
 
-              case 5:
+              case 7:
                 _context.t2 = _context.sent;
 
                 _context.t0.forEach.call(_context.t0, _context.t1, _context.t2);
 
-                for (i = 0; i < this.images.length; i++) {
-                  file = this.images[i];
+                _context.t3 = _;
+                _context.t4 = infrastructures;
+                _context.next = 13;
+                return function (value, key) {
+                  formData.append("infrastructures[" + key + "]", value);
+                };
+
+              case 13:
+                _context.t5 = _context.sent;
+
+                _context.t3.forEach.call(_context.t3, _context.t4, _context.t5);
+
+                for (i = 0; i < _.size(this.court.c_images); i++) {
+                  file = this.court.c_images[i];
                   formData.append("files[" + i + "]", file);
                 }
 
-                _context.next = 10;
+                _context.next = 18;
                 return axios.post("/store-court", formData, {
                   headers: {
                     "content-type": "multipart/form-data"
                   }
                 }).then(function (response) {
-                  _this2.seccsess_msg = response.data.message;
-                  _this2.errors = null;
-                  _this2.court = {};
+                  _this3.seccsess_msg = response.data.message;
+                  _this3.errors = null;
+                  _this3.court = {};
 
-                  _this2.setCourts();
+                  _this3.setCourts();
                 })["catch"](function (error) {
-                  _this2.seccsess_msg = "";
-                  _this2.errors = error.response.data.errors;
+                  _this3.seccsess_msg = "";
+                  _this3.errors = error.response.data.errors;
                 });
 
-              case 10:
+              case 18:
               case "end":
                 return _context.stop();
             }
@@ -2747,7 +2649,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _deleteCourt = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(courtId) {
-        var _this3 = this;
+        var _this4 = this;
 
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
@@ -2757,10 +2659,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 return axios.post("/delete-court", {
                   id: courtId
                 }).then(function (response) {
-                  _this3.setCourts();
+                  _this4.setCourts();
                 })["catch"](function (error) {
-                  _this3.created_seccsess_msg = "";
-                  _this3.created_errors = error.response.data.errors;
+                  _this4.created_seccsess_msg = "";
+                  _this4.created_errors = error.response.data.errors;
                 });
 
               case 2:
@@ -2776,14 +2678,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       }
 
       return deleteCourt;
-    }(),
-    setCourts: function setCourts() {
-      var _this4 = this;
-
-      axios.get("/courts").then(function (response) {
-        _this4.courts = response.data.courts;
-      });
-    }
+    }()
   }
 });
 
@@ -40450,29 +40345,54 @@ var render = function() {
         _vm._v(" "),
         _c("div", { staticClass: "row" }, [
           _c("form", { attrs: { action: "#" } }, [
-            _vm._m(0),
+            _vm.errors
+              ? _c("div", { staticClass: "error-box" }, [
+                  _c(
+                    "ul",
+                    _vm._l(_vm.errors, function(key, error) {
+                      return _c("li", [
+                        _vm._v(_vm._s(error) + " : " + _vm._s(key[0]))
+                      ])
+                    }),
+                    0
+                  )
+                ])
+              : _vm._e(),
             _vm._v(" "),
-            _c("div", { staticClass: "col-md-8 col-sm-8" }, [
-              _vm.errors
-                ? _c("div", { staticClass: "error-box" }, [
+            _vm.seccsess_msg
+              ? _c("div", { staticClass: "error-box success-box" }, [
+                  _vm._v(_vm._s(_vm.seccsess_msg))
+                ])
+              : _vm._e(),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-4 col-sm-4" }, [
+              _c(
+                "div",
+                { staticClass: "images-cover" },
+                _vm._l(_vm.court.c_images, function(file, index) {
+                  return _c("div", { staticClass: "images-item" }, [
+                    _c("img", { attrs: { src: _vm.blobImage(file) } }),
+                    _vm._v(" "),
                     _c(
-                      "ul",
-                      _vm._l(_vm.errors, function(key, error) {
-                        return _c("li", [
-                          _vm._v(_vm._s(error) + " : " + _vm._s(key[0]))
-                        ])
-                      }),
-                      0
+                      "button",
+                      {
+                        staticClass: "btn-plain delete-img",
+                        on: {
+                          click: function($event) {
+                            $event.preventDefault()
+                            return _vm.removeImage(index)
+                          }
+                        }
+                      },
+                      [_c("i", { staticClass: "fas fa-times" })]
                     )
                   ])
-                : _vm._e(),
-              _vm._v(" "),
-              _vm.seccsess_msg
-                ? _c("div", { staticClass: "error-box success-box" }, [
-                    _vm._v(_vm._s(_vm.seccsess_msg))
-                  ])
-                : _vm._e(),
-              _vm._v(" "),
+                }),
+                0
+              )
+            ]),
+            _vm._v(" "),
+            _c("div", { staticClass: "col-md-8 col-sm-8" }, [
               _c("div", { staticClass: "new-object" }, [
                 _c("div", { staticClass: "new-object-head d-flex-justify" }, [
                   _c("h3", [_vm._v("Объект")]),
@@ -40489,9 +40409,7 @@ var render = function() {
                       }
                     },
                     [
-                      _vm._v(
-                        "\n                            Добавить объект\n                            "
-                      ),
+                      _vm._v("\n              Добавить объект\n              "),
                       _c("i", { staticClass: "fas fa-plus" })
                     ]
                   )
@@ -40531,7 +40449,7 @@ var render = function() {
                       }),
                       _vm._v(" "),
                       _vm._v(
-                        "\n                                Загрузить фотографии объекта\n                                "
+                        "\n                Загрузить фотографии объекта\n                "
                       ),
                       _c("input", {
                         attrs: { type: "file", multiple: "" },
@@ -40639,8 +40557,9 @@ var render = function() {
                                 { domProps: { value: item.tc_id } },
                                 [
                                   _vm._v(
-                                    _vm._s(item.tc_name) +
-                                      "\n                                        "
+                                    "\n                      " +
+                                      _vm._s(item.tc_name) +
+                                      "\n                    "
                                   )
                                 ]
                               )
@@ -40782,96 +40701,33 @@ var render = function() {
                   ]),
                   _vm._v(" "),
                   _c("div", { staticClass: "form-item-half d-flex-justify" }, [
-                    _c("div", { staticClass: "dropdown-checkbox" }, [
-                      _c("div", { staticClass: "dropdown" }, [
-                        _c("label", { staticClass: "dropdown-label" }, [
-                          _vm._v("Инфраструктура")
-                        ]),
-                        _vm._v(" "),
-                        _c(
-                          "div",
-                          { staticClass: "dropdown-list" },
-                          [
-                            _vm._m(1),
-                            _vm._v(" "),
-                            _vm._l(_vm.infrastructures, function(item) {
-                              return _c("div", { staticClass: "checkbox" }, [
-                                _c("input", {
-                                  directives: [
-                                    {
-                                      name: "model",
-                                      rawName: "v-model",
-                                      value: _vm.court.infrastructury,
-                                      expression: "court.infrastructury"
-                                    }
-                                  ],
-                                  staticClass: "check checkbox-custom",
-                                  attrs: {
-                                    type: "checkbox",
-                                    id: "infra_" + item.inf_id
-                                  },
-                                  domProps: {
-                                    value: item.inf_id,
-                                    checked: Array.isArray(
-                                      _vm.court.infrastructury
-                                    )
-                                      ? _vm._i(
-                                          _vm.court.infrastructury,
-                                          item.inf_id
-                                        ) > -1
-                                      : _vm.court.infrastructury
-                                  },
-                                  on: {
-                                    change: function($event) {
-                                      var $$a = _vm.court.infrastructury,
-                                        $$el = $event.target,
-                                        $$c = $$el.checked ? true : false
-                                      if (Array.isArray($$a)) {
-                                        var $$v = item.inf_id,
-                                          $$i = _vm._i($$a, $$v)
-                                        if ($$el.checked) {
-                                          $$i < 0 &&
-                                            _vm.$set(
-                                              _vm.court,
-                                              "infrastructury",
-                                              $$a.concat([$$v])
-                                            )
-                                        } else {
-                                          $$i > -1 &&
-                                            _vm.$set(
-                                              _vm.court,
-                                              "infrastructury",
-                                              $$a
-                                                .slice(0, $$i)
-                                                .concat($$a.slice($$i + 1))
-                                            )
-                                        }
-                                      } else {
-                                        _vm.$set(
-                                          _vm.court,
-                                          "infrastructury",
-                                          $$c
-                                        )
-                                      }
-                                    }
-                                  }
-                                }),
-                                _vm._v(" "),
-                                _c(
-                                  "label",
-                                  {
-                                    staticClass: "checkbox-custom-label",
-                                    attrs: { for: "infra_" + item.inf_id }
-                                  },
-                                  [_vm._v(_vm._s(item.inf_name))]
-                                )
-                              ])
-                            })
-                          ],
-                          2
-                        )
-                      ])
-                    ]),
+                    _c(
+                      "div",
+                      { staticClass: "dropdown-checkbox" },
+                      [
+                        _c("multiselect", {
+                          attrs: {
+                            options: _vm.infrastructures,
+                            multiple: true,
+                            "close-on-select": false,
+                            "clear-on-select": false,
+                            "preserve-search": true,
+                            placeholder: "Pick some",
+                            label: "inf_name",
+                            "track-by": "inf_name",
+                            "preselect-first": true
+                          },
+                          model: {
+                            value: _vm.court.infrastructury,
+                            callback: function($$v) {
+                              _vm.$set(_vm.court, "infrastructury", $$v)
+                            },
+                            expression: "court.infrastructury"
+                          }
+                        })
+                      ],
+                      1
+                    ),
                     _vm._v(" "),
                     _c(
                       "label",
@@ -40902,38 +40758,33 @@ var render = function() {
           ])
         ]),
         _vm._v(" "),
-        _c("div", { staticClass: "row" }, [
-          _c("form", { attrs: { action: "#" } }, [
-            _vm._m(2),
-            _vm._v(" "),
-            _c(
-              "div",
-              { staticClass: "col-md-8 col-sm-8" },
-              _vm._l(_vm.courts, function(court) {
-                return _c("div", { staticClass: "new-object" }, [
-                  _vm.created_errors
-                    ? _c("div", { staticClass: "error-box" }, [
-                        _c(
-                          "ul",
-                          _vm._l(_vm.created_errors, function(key, error) {
-                            return _c("li", [
-                              _vm._v(_vm._s(error) + " : " + _vm._s(key[0]))
-                            ])
-                          }),
-                          0
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
-                  _vm.created_seccsess_msg
-                    ? _c("div", { staticClass: "error-box success-box" }, [
-                        _vm._v(
-                          _vm._s(_vm.created_seccsess_msg) +
-                            "\n                    "
-                        )
-                      ])
-                    : _vm._e(),
-                  _vm._v(" "),
+        _c(
+          "div",
+          { staticClass: "row" },
+          _vm._l(_vm.courts, function(court) {
+            return _c("form", { attrs: { action: "#" } }, [
+              _vm.created_errors
+                ? _c("div", { staticClass: "error-box" }, [
+                    _c(
+                      "ul",
+                      _vm._l(_vm.created_errors, function(key, error) {
+                        return _c("li", [
+                          _vm._v(_vm._s(error) + " : " + _vm._s(key[0]))
+                        ])
+                      }),
+                      0
+                    )
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _vm.created_seccsess_msg
+                ? _c("div", { staticClass: "error-box success-box" }, [
+                    _vm._v(_vm._s(_vm.created_seccsess_msg))
+                  ])
+                : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-8 col-sm-8" }, [
+                _c("div", { staticClass: "new-object" }, [
                   _c("div", { staticClass: "new-object-head d-flex-justify" }, [
                     _c("h3", [_vm._v(_vm._s(court.c_name))]),
                     _vm._v(" "),
@@ -40950,7 +40801,7 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n                            Удалить объект\n                            "
+                          "\n              Удалить объект\n              "
                         ),
                         _c("i", { staticClass: "fas fa-minus" })
                       ]
@@ -40988,7 +40839,7 @@ var render = function() {
                           })
                         ]),
                         _vm._v(" "),
-                        _vm._m(3, true)
+                        _vm._m(0, true)
                       ]
                     ),
                     _vm._v(" "),
@@ -41087,8 +40938,9 @@ var render = function() {
                                   { domProps: { value: item.tc_id } },
                                   [
                                     _vm._v(
-                                      _vm._s(item.tc_name) +
-                                        "\n                                        "
+                                      "\n                      " +
+                                        _vm._s(item.tc_name) +
+                                        "\n                    "
                                     )
                                   ]
                                 )
@@ -41245,102 +41097,33 @@ var render = function() {
                       "div",
                       { staticClass: "form-item-half d-flex-justify" },
                       [
-                        _c("div", { staticClass: "dropdown-checkbox" }, [
-                          _c("div", { staticClass: "dropdown" }, [
-                            _c("label", { staticClass: "dropdown-label" }, [
-                              _vm._v("Инфраструктура")
-                            ]),
-                            _vm._v(" "),
-                            _c(
-                              "div",
-                              { staticClass: "dropdown-list" },
-                              [
-                                _vm._m(4, true),
-                                _vm._v(" "),
-                                _vm._l(_vm.infrastructures, function(item) {
-                                  return _c(
-                                    "div",
-                                    { staticClass: "checkbox" },
-                                    [
-                                      _c("input", {
-                                        directives: [
-                                          {
-                                            name: "model",
-                                            rawName: "v-model",
-                                            value: court.infrastructury,
-                                            expression: "court.infrastructury"
-                                          }
-                                        ],
-                                        staticClass: "check checkbox-custom",
-                                        attrs: {
-                                          type: "checkbox",
-                                          id: "infra_" + item.inf_id
-                                        },
-                                        domProps: {
-                                          value: item.inf_id,
-                                          checked: Array.isArray(
-                                            court.infrastructury
-                                          )
-                                            ? _vm._i(
-                                                court.infrastructury,
-                                                item.inf_id
-                                              ) > -1
-                                            : court.infrastructury
-                                        },
-                                        on: {
-                                          change: function($event) {
-                                            var $$a = court.infrastructury,
-                                              $$el = $event.target,
-                                              $$c = $$el.checked ? true : false
-                                            if (Array.isArray($$a)) {
-                                              var $$v = item.inf_id,
-                                                $$i = _vm._i($$a, $$v)
-                                              if ($$el.checked) {
-                                                $$i < 0 &&
-                                                  _vm.$set(
-                                                    court,
-                                                    "infrastructury",
-                                                    $$a.concat([$$v])
-                                                  )
-                                              } else {
-                                                $$i > -1 &&
-                                                  _vm.$set(
-                                                    court,
-                                                    "infrastructury",
-                                                    $$a
-                                                      .slice(0, $$i)
-                                                      .concat(
-                                                        $$a.slice($$i + 1)
-                                                      )
-                                                  )
-                                              }
-                                            } else {
-                                              _vm.$set(
-                                                court,
-                                                "infrastructury",
-                                                $$c
-                                              )
-                                            }
-                                          }
-                                        }
-                                      }),
-                                      _vm._v(" "),
-                                      _c(
-                                        "label",
-                                        {
-                                          staticClass: "checkbox-custom-label",
-                                          attrs: { for: "infra_" + item.inf_id }
-                                        },
-                                        [_vm._v(_vm._s(item.inf_name))]
-                                      )
-                                    ]
-                                  )
-                                })
-                              ],
-                              2
-                            )
-                          ])
-                        ]),
+                        _c(
+                          "div",
+                          { staticClass: "dropdown-checkbox" },
+                          [
+                            _c("multiselect", {
+                              attrs: {
+                                options: _vm.infrastructures,
+                                multiple: true,
+                                "close-on-select": false,
+                                "clear-on-select": false,
+                                "preserve-search": true,
+                                placeholder: "Pick some",
+                                label: "inf_name",
+                                "track-by": "inf_name",
+                                "preselect-first": true
+                              },
+                              model: {
+                                value: court.infrastructury,
+                                callback: function($$v) {
+                                  _vm.$set(court, "infrastructury", $$v)
+                                },
+                                expression: "court.infrastructury"
+                              }
+                            })
+                          ],
+                          1
+                        ),
                         _vm._v(" "),
                         _c(
                           "label",
@@ -41367,16 +41150,16 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._m(5, true),
+                    _vm._m(1, true),
                     _vm._v(" "),
-                    _vm._m(6, true)
+                    _vm._m(2, true)
                   ])
                 ])
-              }),
-              0
-            )
-          ])
-        ])
+              ])
+            ])
+          }),
+          0
+        )
       ])
     : _vm._e()
 }
@@ -41385,212 +41168,12 @@ var staticRenderFns = [
     var _vm = this
     var _h = _vm.$createElement
     var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-4 col-sm-4" }, [
-      _c("div", { staticClass: "images-cover" }, [
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "checkbox" }, [
-      _c("input", {
-        staticClass: "check-all checkbox-custom",
-        attrs: {
-          type: "checkbox",
-          name: "dropdown-group-all",
-          id: "checkbox-main"
-        }
-      }),
-      _vm._v(" "),
-      _c(
-        "label",
-        {
-          staticClass: "checkbox-custom-label",
-          attrs: { for: "checkbox-main" }
-        },
-        [
-          _vm._v(
-            "\n                                                Выбрать\n                                                все\n                                            "
-          )
-        ]
-      )
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "col-md-4 col-sm-4" }, [
-      _c("div", { staticClass: "images-cover" }, [
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ]),
-        _vm._v(" "),
-        _c("div", { staticClass: "images-item" }, [
-          _c("img", { attrs: { src: "/index/img/main/court-1.png", alt: "" } }),
-          _vm._v(" "),
-          _c("button", { staticClass: "btn-plain delete-img" }, [
-            _c("i", { staticClass: "fas fa-times" })
-          ])
-        ])
-      ])
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
     return _c("label", { staticClass: "file-cover" }, [
       _c("img", { attrs: { src: "/index/img/icon/upload.svg", alt: "" } }),
       _vm._v(
-        "\n                                Загрузить фотографии объекта\n                                "
+        "\n                Загрузить фотографии объекта\n                "
       ),
       _c("input", { attrs: { type: "file" } })
-    ])
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "checkbox" }, [
-      _c("input", {
-        staticClass: "check-all checkbox-custom",
-        attrs: {
-          type: "checkbox",
-          name: "dropdown-group-all",
-          id: "checkbox-main1"
-        }
-      }),
-      _vm._v(" "),
-      _c(
-        "label",
-        {
-          staticClass: "checkbox-custom-label",
-          attrs: { for: "checkbox-main1" }
-        },
-        [
-          _vm._v(
-            "\n                                                Выбрать\n                                                все\n                                            "
-          )
-        ]
-      )
     ])
   },
   function() {
@@ -41606,7 +41189,7 @@ var staticRenderFns = [
       [
         _c("img", { attrs: { src: "/index/img/icon/pen.svg", alt: "" } }),
         _vm._v(
-          " Редактировать\n                            время, дату, стоимость\n                        "
+          " Редактировать\n              время, дату, стоимость\n            "
         )
       ]
     )

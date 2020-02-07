@@ -20,10 +20,10 @@ class CreateSportComplexesTable extends Migration
             $table->unsignedBigInteger('sc_creater_id');
             $table->string('sc_name');
             $table->text('sc_addres');
-            $table->text('sc_map');
+            $table->text('sc_map')->nullable();
             $table->string('sc_work_time_weekday');
             $table->string('sc_work_time_weekend');
-            $table->string('sc_phone');
+            $table->string('sc_phone')->nullable();
             $table->boolean('sc_show_phone')->default(true);
             $table->text('sc_description');
             $table->boolean('sc_accept_applications')->default(false);

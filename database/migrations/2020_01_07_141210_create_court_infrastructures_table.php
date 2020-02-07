@@ -16,7 +16,6 @@ class CreateCourtInfrastructuresTable extends Migration
         Schema::create('court_infrastructures', function (Blueprint $table) {
             $table->unsignedBigInteger('ci_court_id');
             $table->unsignedBigInteger('ci_infrasructure_id');
-            $table->timestamps();
 
             $table->foreign('ci_court_id')->references('c_id')->on('courts')->onDelete('cascade');
             $table->foreign('ci_infrasructure_id')->references('inf_id')->on('infrastructures')->onDelete('cascade');

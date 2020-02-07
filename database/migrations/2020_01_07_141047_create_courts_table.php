@@ -31,7 +31,7 @@ class CreateCourtsTable extends Migration
             $table->timestamps();
 
             $table->foreign('c_complex_id')->references('sc_id')->on('sport_complexes')->onDelete('cascade');
-            $table->foreign('c_coverage_id')->references('tc_id')->on('type_coverages')->onDelete('cascade');
+            $table->foreign('c_coverage_id')->references('tc_id')->on('type_coverages');
         });
     }
 

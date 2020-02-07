@@ -11,6 +11,7 @@
     <link rel="stylesheet" href="/index/css/fontawesome-all.min.css">
     <link rel="stylesheet" href="/index/css/main.css">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.ico">
+    <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
 
     @yield('css')
 
@@ -82,6 +83,7 @@
         @include('index.layouts.footer')
     </div>
 
+    <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
     <script src="/js/app.js"></script>
     <script src="/index/js/libs.min.js"></script>
     <script type="text/javascript" src="/index/js/moment.min.js"></script>
