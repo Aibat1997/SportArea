@@ -55,12 +55,17 @@ class HelperController extends Controller
         $courts = Auth::user()->complex()
             ->first()
             ->courts()
-            ->leftJoin('court_infrastructures', 'courts.c_id', '=', 'court_infrastructures.ci_court_id')
-            ->select('c_id', 'c_complex_id', 'c_coverage_id', 'c_name', 'c_images', 'c_open_field', 'c_cost', 'c_prepayment', 'c_prepayment_type', 'c_area', 'ci_infrasructure_id as infrastructury')
+            ->select('c_id', 'c_complex_id', 'c_coverage_id', 'c_name', 'c_images', 'c_open_field', 'c_cost', 'c_prepayment', 'c_prepayment_type', 'c_area')
             ->get();
 
-        return response()->json([
-            'courts' => $courts
-        ]);
+        $data = array();    
+
+        foreach ($courts as $key => $value) {
+            $data[$key]['court'] = $value;
+            $data[$key]['court']['infrastructure'] = $value->infrastructures()->select('inf_id')->get();
+        }
+
+
+        return $data;
     }
 }

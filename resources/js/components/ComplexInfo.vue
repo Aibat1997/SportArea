@@ -16,8 +16,8 @@
         <div class="error-box success-box" v-if="seccsess_msg">{{ seccsess_msg }}</div>
         <div class="col-md-4 col-sm-4">
           <div class="images-cover">
-            <div class="images-item" v-for="(file, index) in court.c_images">
-              <img :src="blobImage(file)" />
+            <div class="images-item" v-for="(file, index) in uploadFiles">
+              <img :src="file" />
               <button class="btn-plain delete-img" @click.prevent="removeImage(index)">
                 <i class="fas fa-times"></i>
               </button>
@@ -40,10 +40,10 @@
                 </label>
                 <label class="file-cover">
                   <img src="/index/img/icon/upload.svg" alt />
-                  <!-- <span v-for="image in court.c_images">{{ image.name }}</span> -->
                   Загрузить фотографии объекта
-                  <input type="file" multiple @change="setImage" />
+                  <input type="file" multiple  ref="files" @change="setImage" />
                 </label>
+                
               </div>
               <div class="form-item-half d-flex-justify">
                 <div class="sidebar-item">
@@ -258,6 +258,7 @@ export default {
   },
   data() {
     return {
+      uploadFiles:[],
       errors: null,
       seccsess_msg: "",
       created_errors: null,
@@ -268,7 +269,7 @@ export default {
       court: {
         c_name: "",
         infrastructury: [],
-        c_images: {},
+        c_images: [],
         c_open_field: "",
         c_coverage_id: "",
         c_cost: "",
@@ -291,14 +292,28 @@ export default {
     }
   },
   methods: {
-    blobImage(item) {
-      return URL.createObjectURL(item);
+    async setImage(e) {
+      let fileList = await Array.prototype.slice.call(e.target.files);
+      await fileList.forEach(f => {
+        if(!f.type.match("image.*")) {
+          return;
+        }
+        let reader = new FileReader();
+        let that = this;
+        reader.onload = async function (e) {
+          await that.uploadFiles.push(e.target.result);
+          // await that.court.c_images.push(fileList);
+        }
+        reader.readAsDataURL(f); 
+      });
+      
+      // await this.court.c_images = 
+      this.$refs.files.value = ''
     },
-    setImage(e) {
-      this.court.c_images = Object.assign({}, e.target.files);
-    },
-    removeImage(index) {
-      Vue.delete(this.court.c_images, index);
+    async removeImage(index) {
+      this.uploadFiles = await this.uploadFiles.filter(function(i,k){
+        return k !==index;
+      });
     },
     setCourts() {
       axios.get("/courts").then(response => {
