@@ -2514,6 +2514,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2565,17 +2571,20 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee2(e) {
         var _this2 = this;
 
-        var fileList;
+        var court_key,
+            fileList,
+            _args2 = arguments;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee2$(_context2) {
           while (1) {
             switch (_context2.prev = _context2.next) {
               case 0:
-                _context2.next = 2;
+                court_key = _args2.length > 1 && _args2[1] !== undefined ? _args2[1] : null;
+                _context2.next = 3;
                 return Array.prototype.slice.call(e.target.files);
 
-              case 2:
+              case 3:
                 fileList = _context2.sent;
-                _context2.next = 5;
+                _context2.next = 6;
                 return fileList.forEach(function (f) {
                   if (!f.type.match("image.*")) {
                     return;
@@ -2594,10 +2603,23 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                         while (1) {
                           switch (_context.prev = _context.next) {
                             case 0:
-                              _context.next = 2;
+                              if (!(court_key != null)) {
+                                _context.next = 5;
+                                break;
+                              }
+
+                              _context.next = 3;
+                              return that.courts[court_key].c_images.push(e.target.result);
+
+                            case 3:
+                              _context.next = 7;
+                              break;
+
+                            case 5:
+                              _context.next = 7;
                               return that.court.c_images.push(e.target.result);
 
-                            case 2:
+                            case 7:
                             case "end":
                               return _context.stop();
                           }
@@ -2613,10 +2635,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   reader.readAsDataURL(f);
                 });
 
-              case 5:
+              case 6:
                 this.$refs.files.value = "";
 
-              case 6:
+              case 7:
               case "end":
                 return _context2.stop();
             }
@@ -2634,13 +2656,21 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _removeImage = _asyncToGenerator(
       /*#__PURE__*/
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee3(index) {
+        var court_key,
+            _args3 = arguments;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee3$(_context3) {
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                this.court.c_images.splice(this.court.c_images.indexOf(index), 1);
+                court_key = _args3.length > 1 && _args3[1] !== undefined ? _args3[1] : null;
 
-              case 1:
+                if (court_key != null) {
+                  this.courts[court_key].c_images.splice(index, 1);
+                } else {
+                  this.court.c_images.splice(index, 1);
+                }
+
+              case 2:
               case "end":
                 return _context3.stop();
             }
@@ -2661,27 +2691,45 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this3.courts = response.data;
       });
     },
-    submitForm: function () {
-      var _submitForm = _asyncToGenerator(
+    submitForm: function submitForm() {
+      this.sendForm("post", "/store-court");
+    },
+    editForm: function editForm(court_key, court_id) {
+      this.sendForm("put", "/update-court/" + court_id, court_key);
+    },
+    sendForm: function () {
+      var _sendForm = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(method, url) {
         var _this4 = this;
 
-        var formData;
+        var court_key,
+            formData,
+            used_court,
+            _args4 = arguments;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
+                court_key = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : null;
                 formData = new FormData();
-                this.court.infrastructury.forEach(function (element, key) {
+                used_court = null;
+
+                if (court_key != null) {
+                  used_court = this.courts[court_key];
+                } else {
+                  used_court = this.court;
+                }
+
+                used_court.infrastructury.forEach(function (element, key) {
                   formData.append("infrastructury[" + key + "]", element.inf_id);
                 });
-                this.court.c_images.forEach(function (element, key) {
-                  formData.append("images[" + key + "]", _this4.court.c_images[key]);
+                used_court.c_images.forEach(function (element, key) {
+                  formData.append("images[" + key + "]", used_court.c_images[key]);
                 });
                 _context4.t0 = _;
-                _context4.t1 = this.court;
-                _context4.next = 7;
+                _context4.t1 = used_court;
+                _context4.next = 10;
                 return function (value, key) {
                   if (key == "c_images" || key == "infrastructury") {
                     return;
@@ -2690,13 +2738,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   formData.append(key, value);
                 };
 
-              case 7:
+              case 10:
                 _context4.t2 = _context4.sent;
 
                 _context4.t0.forEach.call(_context4.t0, _context4.t1, _context4.t2);
 
-                _context4.next = 11;
-                return axios.post("/store-court", formData, {
+                _context4.next = 14;
+                return axios[method](url, formData, {
                   headers: {
                     "content-type": "multipart/form-data"
                   }
@@ -2711,7 +2759,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this4.errors = error.response.data.errors;
                 });
 
-              case 11:
+              case 14:
               case "end":
                 return _context4.stop();
             }
@@ -2719,11 +2767,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee4, this);
       }));
 
-      function submitForm() {
-        return _submitForm.apply(this, arguments);
+      function sendForm(_x4, _x5) {
+        return _sendForm.apply(this, arguments);
       }
 
-      return submitForm;
+      return sendForm;
     }(),
     deleteCourt: function () {
       var _deleteCourt = _asyncToGenerator(
@@ -2753,7 +2801,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee5);
       }));
 
-      function deleteCourt(_x4) {
+      function deleteCourt(_x6) {
         return _deleteCourt.apply(this, arguments);
       }
 
@@ -40796,10 +40844,10 @@ var render = function() {
                             "close-on-select": false,
                             "clear-on-select": false,
                             "preserve-search": true,
-                            placeholder: "Pick some",
+                            placeholder: "Выберите",
                             label: "inf_name",
                             "track-by": "inf_name",
-                            "preselect-first": true
+                            "preselect-first": false
                           },
                           model: {
                             value: _vm.court.infrastructury,
@@ -40845,7 +40893,7 @@ var render = function() {
         _c(
           "div",
           { staticClass: "row" },
-          _vm._l(_vm.courts, function(court) {
+          _vm._l(_vm.courts, function(court, court_index) {
             return _c("form", { attrs: { action: "#" } }, [
               _vm.created_errors
                 ? _c("div", { staticClass: "error-box" }, [
@@ -40882,7 +40930,7 @@ var render = function() {
                           on: {
                             click: function($event) {
                               $event.preventDefault()
-                              return _vm.removeImage(index)
+                              return _vm.removeImage(index, court_index)
                             }
                           }
                         },
@@ -40950,7 +40998,31 @@ var render = function() {
                           })
                         ]),
                         _vm._v(" "),
-                        _vm._m(0, true)
+                        _c("label", { staticClass: "file-cover" }, [
+                          _c("img", {
+                            attrs: {
+                              src: "/index/img/icon/upload.svg",
+                              alt: ""
+                            }
+                          }),
+                          _vm._v(
+                            "\n                Загрузить фотографии объекта\n                "
+                          ),
+                          _c("input", {
+                            ref: "files",
+                            refInFor: true,
+                            attrs: {
+                              type: "file",
+                              multiple: "",
+                              accept: "image/*"
+                            },
+                            on: {
+                              change: function($event) {
+                                return _vm.setImage($event, court_index)
+                              }
+                            }
+                          })
+                        ])
                       ]
                     ),
                     _vm._v(" "),
@@ -41047,13 +41119,7 @@ var render = function() {
                                 return _c(
                                   "option",
                                   { domProps: { value: item.tc_id } },
-                                  [
-                                    _vm._v(
-                                      "\n                      " +
-                                        _vm._s(item.tc_name) +
-                                        "\n                    "
-                                    )
-                                  ]
+                                  [_vm._v(_vm._s(item.tc_name))]
                                 )
                               }),
                               0
@@ -41219,10 +41285,10 @@ var render = function() {
                                 "close-on-select": false,
                                 "clear-on-select": false,
                                 "preserve-search": true,
-                                placeholder: "Pick some",
+                                placeholder: "Выберите",
                                 label: "inf_name",
                                 "track-by": "inf_name",
-                                "preselect-first": true
+                                "preselect-first": false
                               },
                               model: {
                                 value: court.infrastructury,
@@ -41261,9 +41327,25 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._m(1, true),
+                    _vm._m(0, true),
                     _vm._v(" "),
-                    _vm._m(2, true)
+                    _c("div", { staticClass: "form-item-half" }, [
+                      _c("div", { staticClass: "btn-box" }, [
+                        _c(
+                          "button",
+                          {
+                            staticClass: "btn-plain btn-blue",
+                            on: {
+                              click: function($event) {
+                                $event.preventDefault()
+                                return _vm.editForm(court_index, court.c_id)
+                              }
+                            }
+                          },
+                          [_vm._v("Разместить")]
+                        )
+                      ])
+                    ])
                   ])
                 ])
               ])
@@ -41275,18 +41357,6 @@ var render = function() {
     : _vm._e()
 }
 var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("label", { staticClass: "file-cover" }, [
-      _c("img", { attrs: { src: "/index/img/icon/upload.svg", alt: "" } }),
-      _vm._v(
-        "\n                Загрузить фотографии объекта\n                "
-      ),
-      _c("input", { attrs: { type: "file" } })
-    ])
-  },
   function() {
     var _vm = this
     var _h = _vm.$createElement
@@ -41304,20 +41374,6 @@ var staticRenderFns = [
         )
       ]
     )
-  },
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c("div", { staticClass: "form-item-half" }, [
-      _c("div", { staticClass: "btn-box" }, [
-        _c(
-          "button",
-          { staticClass: "btn-plain btn-blue", attrs: { type: "submit" } },
-          [_vm._v("Разместить")]
-        )
-      ])
-    ])
   }
 ]
 render._withStripped = true
@@ -54909,8 +54965,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Aibat\Documents\GitHub\SportArea\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Aibat\Documents\GitHub\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\aibat\Documents\GitHub\SportArea\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\aibat\Documents\GitHub\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

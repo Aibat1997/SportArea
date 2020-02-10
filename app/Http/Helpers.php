@@ -139,11 +139,15 @@ class Helpers
     {
         $resultall = "";
         foreach ($request->input($name) as $coverone) {
-            $real_file_name = rand(1000, 5000);
-            $destinationPath = $request->disk . '/' . date('Y') . '/' . date('m') . '/' . date('d');
-            $file_name = $destinationPath . '/' . $real_file_name;
-            Storage::disk($disk_name)->put($file_name, base64_encode($coverone));
-            $resultall .= $real_file_name . '.jpg,';
+
+            $real_file_name = date("d-m-Y_H-i-s"); 
+
+            if (Storage::disk($disk_name)->exists($real_file_name)) {
+                $real_file_name .= rand(1, 500);
+            }
+
+            Storage::disk($disk_name)->put($real_file_name, base64_encode($coverone));
+            $resultall .= $real_file_name . ',';
         }
         $result = substr($resultall, 0, -1);
 

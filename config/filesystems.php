@@ -69,6 +69,11 @@ return [
             'root'   => storage_path('app/image'),
         ],
 
+        'court_image' => [
+            'driver' => 'local',
+            'root'   => storage_path('app/court_image'),
+        ],
+
         'avatar' => [
             'driver' => 'local',
             'root'   => storage_path('app/avatar'),

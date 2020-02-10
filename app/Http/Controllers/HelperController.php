@@ -66,14 +66,12 @@ class HelperController extends Controller
             $court_images = array();
             $images = explode(",", $value->c_images);
             foreach ($images as $item) {
-                dd(Storage::disk('image')->exists($item));
-                // dd(Storage::disk('image')->exists($item));
-                $result = base64_decode(Storage::get($item));
+                $result = base64_decode(Storage::disk('court_image')->get($item));
                 array_push($court_images, $result);
             }
             $data[$key] = $value;
             $data[$key]['c_images'] = $court_images;
-            $data[$key]['infrastructure'] = $value->infrastructures()->select('inf_id')->get();
+            $data[$key]['infrastructury'] = $value->infrastructures()->select('inf_id', 'inf_name')->get();
         }
 
         return $data;

@@ -106,10 +106,10 @@
                     :close-on-select="false"
                     :clear-on-select="false"
                     :preserve-search="true"
-                    placeholder="Pick some"
+                    placeholder="Выберите"
                     label="inf_name"
                     track-by="inf_name"
-                    :preselect-first="true"
+                    :preselect-first="false"
                   ></multiselect>
                 </div>
                 <label class="f-item">
@@ -128,7 +128,7 @@
       </form>
     </div>
     <div class="row">
-      <form action="#" v-for="court in courts">
+      <form action="#" v-for="(court,court_index) in courts">
         <div class="error-box" v-if="created_errors">
           <ul>
             <li v-for="(key,error) in created_errors">{{error}} : {{ key[0] }}</li>
@@ -139,7 +139,7 @@
           <div class="images-cover">
             <div class="images-item" v-for="(file, index) in court.c_images">
               <img :src="file" />
-              <button class="btn-plain delete-img" @click.prevent="removeImage(index)">
+              <button class="btn-plain delete-img" @click.prevent="removeImage(index, court_index)">
                 <i class="fas fa-times"></i>
               </button>
             </div>
@@ -162,7 +162,13 @@
                 <label class="file-cover">
                   <img src="/index/img/icon/upload.svg" alt />
                   Загрузить фотографии объекта
-                  <input type="file" />
+                  <input
+                    type="file"
+                    multiple
+                    ref="files"
+                    @change="setImage($event, court_index)"
+                    accept="image/*"
+                  />
                 </label>
               </div>
               <div class="form-item-half d-flex-justify">
@@ -178,10 +184,7 @@
                 <div class="sidebar-item">
                   <label class="select-label select">
                     <select v-model="court.c_coverage_id">
-                      <option v-for="item in type_coverages" :value="item.tc_id">
-                        {{ item.tc_name
-                        }}
-                      </option>
+                      <option v-for="item in type_coverages" :value="item.tc_id">{{ item.tc_name }}</option>
                     </select>
                     <i class="fas fa-chevron-down arrow-select"></i>
                   </label>
@@ -219,10 +222,10 @@
                     :close-on-select="false"
                     :clear-on-select="false"
                     :preserve-search="true"
-                    placeholder="Pick some"
+                    placeholder="Выберите"
                     label="inf_name"
                     track-by="inf_name"
-                    :preselect-first="true"
+                    :preselect-first="false"
                   ></multiselect>
                 </div>
                 <label class="f-item">
@@ -241,7 +244,10 @@
               </a>
               <div class="form-item-half">
                 <div class="btn-box">
-                  <button class="btn-plain btn-blue" type="submit">Разместить</button>
+                  <button
+                    class="btn-plain btn-blue"
+                    @click.prevent="editForm(court_index, court.c_id)"
+                  >Разместить</button>
                 </div>
               </div>
             </div>
@@ -296,7 +302,7 @@ export default {
     }
   },
   methods: {
-    async setImage(e) {
+    async setImage(e, court_key = null) {
       let fileList = await Array.prototype.slice.call(e.target.files);
       await fileList.forEach(f => {
         if (!f.type.match("image.*")) {
@@ -305,33 +311,54 @@ export default {
         let reader = new FileReader();
         let that = this;
         reader.onload = async function(e) {
-          await that.court.c_images.push(e.target.result);
+          if (court_key != null) {
+            await that.courts[court_key].c_images.push(e.target.result);
+          } else {
+            await that.court.c_images.push(e.target.result);
+          }
         };
         reader.readAsDataURL(f);
       });
       this.$refs.files.value = "";
     },
-    async removeImage(index) {
-      this.court.c_images.splice(this.court.c_images.indexOf(index), 1);
+    async removeImage(index, court_key = null) {
+      if (court_key != null) {
+        this.courts[court_key].c_images.splice(index, 1);
+      } else {
+        this.court.c_images.splice(index, 1);
+      }
     },
     setCourts() {
       axios.get("/courts").then(response => {
-        this.courts = response.data;        
+        this.courts = response.data;
       });
     },
-    async submitForm() {
+    submitForm() {
+      this.sendForm("post", "/store-court");
+    },
+    editForm(court_key, court_id) {
+      this.sendForm("put", "/update-court/" + court_id, court_key);
+    },
+    async sendForm(method, url, court_key = null) {
       let formData = new FormData();
+      let used_court = null;
 
-      this.court.infrastructury.forEach((element, key) => {
+      if (court_key != null) {
+        used_court = this.courts[court_key];
+      } else {
+        used_court = this.court;
+      }
+
+      used_court.infrastructury.forEach((element, key) => {
         formData.append("infrastructury[" + key + "]", element.inf_id);
       });
 
-      this.court.c_images.forEach((element, key) => {
-        formData.append("images[" + key + "]", this.court.c_images[key]);
+      used_court.c_images.forEach((element, key) => {
+        formData.append("images[" + key + "]", used_court.c_images[key]);
       });
 
       _.forEach(
-        this.court,
+        used_court,
         await function(value, key) {
           if (key == "c_images" || key == "infrastructury") {
             return;
@@ -340,10 +367,9 @@ export default {
         }
       );
 
-      await axios
-        .post("/store-court", formData, {
-          headers: { "content-type": "multipart/form-data" }
-        })
+      await axios[method](url, formData, {
+        headers: { "content-type": "multipart/form-data" }
+      })
         .then(response => {
           this.seccsess_msg = response.data.message;
           this.errors = null;
