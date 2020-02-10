@@ -16,7 +16,7 @@
         <div class="error-box success-box" v-if="seccsess_msg">{{ seccsess_msg }}</div>
         <div class="col-md-4 col-sm-4">
           <div class="images-cover">
-            <div class="images-item" v-for="(file, index) in uploadFiles">
+            <div class="images-item" v-for="(file, index) in court.c_images">
               <img :src="file" />
               <button class="btn-plain delete-img" @click.prevent="removeImage(index)">
                 <i class="fas fa-times"></i>
@@ -41,9 +41,14 @@
                 <label class="file-cover">
                   <img src="/index/img/icon/upload.svg" alt />
                   Загрузить фотографии объекта
-                  <input type="file" multiple  ref="files" @change="setImage" />
+                  <input
+                    type="file"
+                    multiple
+                    ref="files"
+                    @change="setImage"
+                    accept="image/*"
+                  />
                 </label>
-                
               </div>
               <div class="form-item-half d-flex-justify">
                 <div class="sidebar-item">
@@ -130,16 +135,16 @@
           </ul>
         </div>
         <div class="error-box success-box" v-if="created_seccsess_msg">{{ created_seccsess_msg }}</div>
-        <!-- <div class="col-md-4 col-sm-4">
+        <div class="col-md-4 col-sm-4">
           <div class="images-cover">
             <div class="images-item" v-for="(file, index) in court.c_images">
-              <img :src="blobImage(file)" />
+              <img :src="file" />
               <button class="btn-plain delete-img" @click.prevent="removeImage(index)">
                 <i class="fas fa-times"></i>
               </button>
             </div>
           </div>
-        </div>-->
+        </div>
         <div class="col-md-8 col-sm-8">
           <div class="new-object">
             <div class="new-object-head d-flex-justify">
@@ -258,7 +263,6 @@ export default {
   },
   data() {
     return {
-      uploadFiles:[],
       errors: null,
       seccsess_msg: "",
       created_errors: null,
@@ -295,57 +299,46 @@ export default {
     async setImage(e) {
       let fileList = await Array.prototype.slice.call(e.target.files);
       await fileList.forEach(f => {
-        if(!f.type.match("image.*")) {
+        if (!f.type.match("image.*")) {
           return;
         }
         let reader = new FileReader();
         let that = this;
-        reader.onload = async function (e) {
-          await that.uploadFiles.push(e.target.result);
-          // await that.court.c_images.push(fileList);
-        }
-        reader.readAsDataURL(f); 
+        reader.onload = async function(e) {
+          await that.court.c_images.push(e.target.result);
+        };
+        reader.readAsDataURL(f);
       });
-      
-      // await this.court.c_images = 
-      this.$refs.files.value = ''
+      this.$refs.files.value = "";
     },
     async removeImage(index) {
-      this.uploadFiles = await this.uploadFiles.filter(function(i,k){
-        return k !==index;
-      });
+      this.court.c_images.splice(this.court.c_images.indexOf(index), 1);
     },
     setCourts() {
       axios.get("/courts").then(response => {
-        this.courts = response.data.courts;
+        this.courts = response.data;        
       });
     },
     async submitForm() {
       let formData = new FormData();
-      let infrastructures = [];
 
-      $.each(this.court.infrastructury, function(key, value) {
-        infrastructures.push(value.inf_id);
+      this.court.infrastructury.forEach((element, key) => {
+        formData.append("infrastructury[" + key + "]", element.inf_id);
+      });
+
+      this.court.c_images.forEach((element, key) => {
+        formData.append("images[" + key + "]", this.court.c_images[key]);
       });
 
       _.forEach(
         this.court,
         await function(value, key) {
+          if (key == "c_images" || key == "infrastructury") {
+            return;
+          }
           formData.append(key, value);
         }
       );
-
-      _.forEach(
-        infrastructures,
-        await function(value, key) {
-          formData.append("infrastructures[" + key + "]", value);
-        }
-      );
-
-      for (var i = 0; i < _.size(this.court.c_images); i++) {
-        let file = this.court.c_images[i];
-        formData.append("files[" + i + "]", file);
-      }
 
       await axios
         .post("/store-court", formData, {

@@ -5,9 +5,10 @@ namespace App\Http\Controllers\Index;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers;
 use App\Models\Courts;
+use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use Exception;
+use Illuminate\Support\Facades\Storage;
 
 class CourtController extends Controller
 {
@@ -15,20 +16,18 @@ class CourtController extends Controller
     {
         $validatedData = $request->validate([
             "c_name" => "required",
-            "infrastructures" => "required",
+            "infrastructury" => "required",
             "c_open_field" => "required",
             "c_coverage_id" => "required",
             "c_cost" => "required",
             "c_prepayment" => "required",
             "c_prepayment_type" => "required",
             "c_area" => "required",
-            "files" => "required",
+            "images" => "required",
         ]);
 
         try {
-            if ($request->hasFile('files')) {
-                $result = Helpers::storeImages('files', 'image', $request);
-            }
+            $result = Helpers::storeBase64Images('images', 'image', $request);
 
             $court = Courts::create(
                 [
@@ -45,7 +44,7 @@ class CourtController extends Controller
             );
 
             $list = array();
-            foreach ($request->infrastructures as $value) {
+            foreach ($request->infrastructury as $value) {
                 array_push($list, $value);
             }
 

@@ -2,16 +2,15 @@
 
 namespace App\Http;
 
-use Faker\Provider\DateTime;
-use Illuminate\Http\Request;
 use App;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\File;
-use Illuminate\Support\Str;
 use Carbon\Carbon;
+use Faker\Provider\DateTime;
+use Illuminate\Support\Facades\File;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Str;
 
-
-class Helpers {
+class Helpers
+{
 
     public static function getTranslatedSlugRu($text)
     {
@@ -19,11 +18,11 @@ class Helpers {
         return $str;
     }
 
-    public static function getMonthName($number) 
+    public static function getMonthName($number)
     {
         $lang = App::getLocale();
 
-        if($lang == 'ru'){
+        if ($lang == 'ru') {
             $monthAr = array(
                 1 => array('Январь', 'Января'),
                 2 => array('Февраль', 'Февраля'),
@@ -34,12 +33,11 @@ class Helpers {
                 7 => array('Июль', 'Июля'),
                 8 => array('Август', 'Августа'),
                 9 => array('Сентябрь', 'Сентября'),
-                10=> array('Октябрь', 'Октября'),
-                11=> array('Ноябрь', 'Ноября'),
-                12=> array('Декабрь', 'Декабря')
+                10 => array('Октябрь', 'Октября'),
+                11 => array('Ноябрь', 'Ноября'),
+                12 => array('Декабрь', 'Декабря'),
             );
-        }
-        else if($lang == 'kz'){
+        } else if ($lang == 'kz') {
             $monthAr = array(
                 1 => array('Қаңтар', 'Қаңтар'),
                 2 => array('Ақпан', 'Ақпан'),
@@ -50,12 +48,11 @@ class Helpers {
                 7 => array('Шілде', 'Шілде'),
                 8 => array('Тамыз', 'Тамыз'),
                 9 => array('Қыркүйек', 'Қыркүйек'),
-                10=> array('Қазан', 'Қазан'),
-                11=> array('Қараша', 'Қараша'),
-                12=> array('Желтоқсан', 'Желтоқсан')
+                10 => array('Қазан', 'Қазан'),
+                11 => array('Қараша', 'Қараша'),
+                12 => array('Желтоқсан', 'Желтоқсан'),
             );
-        }
-        else {
+        } else {
             $monthAr = array(
                 1 => array('January', 'January'),
                 2 => array('February', 'February'),
@@ -66,21 +63,21 @@ class Helpers {
                 7 => array('July', 'July'),
                 8 => array('August', 'August'),
                 9 => array('September', 'September'),
-                10=> array('October', 'October'),
-                11=> array('November', 'November'),
-                12=> array('December', 'December')
+                10 => array('October', 'October'),
+                11 => array('November', 'November'),
+                12 => array('December', 'December'),
             );
         }
-        if(!isset($monthAr[(int)$number][1])){
+        if (!isset($monthAr[(int) $number][1])) {
             return '';
         }
-        return $monthAr[(int)$number][1];
+        return $monthAr[(int) $number][1];
     }
 
     public static function getDateFormat($date_param)
     {
         $date = Carbon::parse($date_param);
-        return $date->day .' '.Helpers::getMonthName($date->month).', '.$date->year;
+        return $date->day . ' ' . Helpers::getMonthName($date->month) . ', ' . $date->year;
     }
 
     public function simpleDate($date)
@@ -105,9 +102,9 @@ class Helpers {
         Storage::disk($disk_name)->put($image_name, File::get($image));
 
         if ($disk_name == 'avatar') {
-            $result = '/media_avatar' .$image_name;
-        }else{
-            $result = '/media' .$image_name;
+            $result = '/media_avatar' . $image_name;
+        } else {
+            $result = '/media' . $image_name;
         }
 
         return $result;
@@ -132,6 +129,21 @@ class Helpers {
 
             Storage::disk($disk_name)->put($file_name, File::get($coverone));
             $resultall .= '\'/media' . $file_name . '\',';
+        }
+        $result = substr($resultall, 0, -1);
+
+        return $result;
+    }
+
+    public static function storeBase64Images($name, $disk_name, $request)
+    {
+        $resultall = "";
+        foreach ($request->input($name) as $coverone) {
+            $real_file_name = rand(1000, 5000);
+            $destinationPath = $request->disk . '/' . date('Y') . '/' . date('m') . '/' . date('d');
+            $file_name = $destinationPath . '/' . $real_file_name;
+            Storage::disk($disk_name)->put($file_name, base64_encode($coverone));
+            $resultall .= $real_file_name . '.jpg,';
         }
         $result = substr($resultall, 0, -1);
 
@@ -163,4 +175,4 @@ class Helpers {
         return $result;
     }
 
-} 
+}

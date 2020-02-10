@@ -2509,6 +2509,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2519,7 +2524,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   },
   data: function data() {
     return {
-      uploadFiles: [],
       errors: null,
       seccsess_msg: "",
       created_errors: null,
@@ -2591,7 +2595,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                           switch (_context.prev = _context.next) {
                             case 0:
                               _context.next = 2;
-                              return that.uploadFiles.push(e.target.result);
+                              return that.court.c_images.push(e.target.result);
 
                             case 2:
                             case "end":
@@ -2610,8 +2614,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 });
 
               case 5:
-                // await this.court.c_images = 
-                this.$refs.files.value = '';
+                this.$refs.files.value = "";
 
               case 6:
               case "end":
@@ -2635,15 +2638,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
           while (1) {
             switch (_context3.prev = _context3.next) {
               case 0:
-                _context3.next = 2;
-                return this.uploadFiles.filter(function (i, k) {
-                  return k !== index;
-                });
+                this.court.c_images.splice(this.court.c_images.indexOf(index), 1);
 
-              case 2:
-                this.uploadFiles = _context3.sent;
-
-              case 3:
+              case 1:
               case "end":
                 return _context3.stop();
             }
@@ -2661,7 +2658,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       var _this3 = this;
 
       axios.get("/courts").then(function (response) {
-        _this3.courts = response.data.courts;
+        _this3.courts = response.data;
       });
     },
     submitForm: function () {
@@ -2670,20 +2667,26 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4() {
         var _this4 = this;
 
-        var formData, infrastructures, i, file;
+        var formData;
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
                 formData = new FormData();
-                infrastructures = [];
-                $.each(this.court.infrastructury, function (key, value) {
-                  infrastructures.push(value.inf_id);
+                this.court.infrastructury.forEach(function (element, key) {
+                  formData.append("infrastructury[" + key + "]", element.inf_id);
+                });
+                this.court.c_images.forEach(function (element, key) {
+                  formData.append("images[" + key + "]", _this4.court.c_images[key]);
                 });
                 _context4.t0 = _;
                 _context4.t1 = this.court;
                 _context4.next = 7;
                 return function (value, key) {
+                  if (key == "c_images" || key == "infrastructury") {
+                    return;
+                  }
+
                   formData.append(key, value);
                 };
 
@@ -2692,24 +2695,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
                 _context4.t0.forEach.call(_context4.t0, _context4.t1, _context4.t2);
 
-                _context4.t3 = _;
-                _context4.t4 = infrastructures;
-                _context4.next = 13;
-                return function (value, key) {
-                  formData.append("infrastructures[" + key + "]", value);
-                };
-
-              case 13:
-                _context4.t5 = _context4.sent;
-
-                _context4.t3.forEach.call(_context4.t3, _context4.t4, _context4.t5);
-
-                for (i = 0; i < _.size(this.court.c_images); i++) {
-                  file = this.court.c_images[i];
-                  formData.append("files[" + i + "]", file);
-                }
-
-                _context4.next = 18;
+                _context4.next = 11;
                 return axios.post("/store-court", formData, {
                   headers: {
                     "content-type": "multipart/form-data"
@@ -2725,7 +2711,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this4.errors = error.response.data.errors;
                 });
 
-              case 18:
+              case 11:
               case "end":
                 return _context4.stop();
             }
@@ -40463,7 +40449,7 @@ var render = function() {
               _c(
                 "div",
                 { staticClass: "images-cover" },
-                _vm._l(_vm.uploadFiles, function(file, index) {
+                _vm._l(_vm.court.c_images, function(file, index) {
                   return _c("div", { staticClass: "images-item" }, [
                     _c("img", { attrs: { src: file } }),
                     _vm._v(" "),
@@ -40546,7 +40532,11 @@ var render = function() {
                       ),
                       _c("input", {
                         ref: "files",
-                        attrs: { type: "file", multiple: "" },
+                        attrs: {
+                          type: "file",
+                          multiple: "",
+                          accept: "image/*"
+                        },
                         on: { change: _vm.setImage }
                       })
                     ])
@@ -40876,6 +40866,33 @@ var render = function() {
                     _vm._v(_vm._s(_vm.created_seccsess_msg))
                   ])
                 : _vm._e(),
+              _vm._v(" "),
+              _c("div", { staticClass: "col-md-4 col-sm-4" }, [
+                _c(
+                  "div",
+                  { staticClass: "images-cover" },
+                  _vm._l(court.c_images, function(file, index) {
+                    return _c("div", { staticClass: "images-item" }, [
+                      _c("img", { attrs: { src: file } }),
+                      _vm._v(" "),
+                      _c(
+                        "button",
+                        {
+                          staticClass: "btn-plain delete-img",
+                          on: {
+                            click: function($event) {
+                              $event.preventDefault()
+                              return _vm.removeImage(index)
+                            }
+                          }
+                        },
+                        [_c("i", { staticClass: "fas fa-times" })]
+                      )
+                    ])
+                  }),
+                  0
+                )
+              ]),
               _vm._v(" "),
               _c("div", { staticClass: "col-md-8 col-sm-8" }, [
                 _c("div", { staticClass: "new-object" }, [

@@ -8,6 +8,7 @@ use App\Models\SportComplex;
 use App\Models\SportTypes;
 use App\Models\TypeCoverage;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class HelperController extends Controller
 {
@@ -52,19 +53,28 @@ class HelperController extends Controller
 
     public function courts()
     {
+        // $data = base64_decode(Storage::disk('image')->get('test.jpg'));
         $courts = Auth::user()->complex()
             ->first()
             ->courts()
-            ->select('c_id', 'c_complex_id', 'c_coverage_id', 'c_name', 'c_images', 'c_open_field', 'c_cost', 'c_prepayment', 'c_prepayment_type', 'c_area')
+            ->select('c_id', 'c_complex_id', 'c_coverage_id', 'c_name', 'c_open_field', 'c_images', 'c_cost', 'c_prepayment', 'c_prepayment_type', 'c_area')
             ->get();
 
-        $data = array();    
+        $data = array();
 
         foreach ($courts as $key => $value) {
-            $data[$key]['court'] = $value;
-            $data[$key]['court']['infrastructure'] = $value->infrastructures()->select('inf_id')->get();
+            $court_images = array();
+            $images = explode(",", $value->c_images);
+            foreach ($images as $item) {
+                dd(Storage::disk('image')->exists($item));
+                // dd(Storage::disk('image')->exists($item));
+                $result = base64_decode(Storage::get($item));
+                array_push($court_images, $result);
+            }
+            $data[$key] = $value;
+            $data[$key]['c_images'] = $court_images;
+            $data[$key]['infrastructure'] = $value->infrastructures()->select('inf_id')->get();
         }
-
 
         return $data;
     }
