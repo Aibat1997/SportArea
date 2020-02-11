@@ -28,7 +28,7 @@
           <div class="new-object">
             <div class="new-object-head d-flex-justify">
               <h3>Объект</h3>
-              <button class="btn-plain plus-blue" @click.prevent="submitForm">
+              <button class="btn-plain plus-blue" @click.prevent="submitForm(court)">
                 Добавить объект
                 <i class="fas fa-plus"></i>
               </button>
@@ -149,7 +149,7 @@
           <div class="new-object">
             <div class="new-object-head d-flex-justify">
               <h3>{{ court.c_name }}</h3>
-              <button class="btn-plain remove-object" @click.prevent="deleteCourt(court.c_id)">
+              <button class="btn-plain remove-object" @click.prevent="deleteCourt(court)">
                 Удалить объект
                 <i class="fas fa-minus"></i>
               </button>
@@ -244,10 +244,7 @@
               </a>
               <div class="form-item-half">
                 <div class="btn-box">
-                  <button
-                    class="btn-plain btn-blue"
-                    @click.prevent="editForm(court_index, court.c_id)"
-                  >Разместить</button>
+                  <button class="btn-plain btn-blue" @click.prevent="editForm(court)">Разместить</button>
                 </div>
               </div>
             </div>
@@ -333,43 +330,17 @@ export default {
         this.courts = response.data;
       });
     },
-    submitForm() {
-      this.sendForm("post", "/store-court");
+    submitForm(court) {
+      this.sendForm("post", "/store-court", court);
     },
-    editForm(court_key, court_id) {
-      this.sendForm("put", "/update-court/" + court_id, court_key);
+    editForm(court) {
+      this.sendForm("put", "/update-court", court);
     },
-    async sendForm(method, url, court_key = null) {
-      let formData = new FormData();
-      let used_court = null;
-
-      if (court_key != null) {
-        used_court = this.courts[court_key];
-      } else {
-        used_court = this.court;
-      }
-
-      used_court.infrastructury.forEach((element, key) => {
-        formData.append("infrastructury[" + key + "]", element.inf_id);
-      });
-
-      used_court.c_images.forEach((element, key) => {
-        formData.append("images[" + key + "]", used_court.c_images[key]);
-      });
-
-      _.forEach(
-        used_court,
-        await function(value, key) {
-          if (key == "c_images" || key == "infrastructury") {
-            return;
-          }
-          formData.append(key, value);
-        }
-      );
-
-      await axios[method](url, formData, {
-        headers: { "content-type": "multipart/form-data" }
-      })
+    async deleteCourt(court) {
+      this.sendForm("post", "/delete-court", court);
+    },
+    async sendForm(method, url, data) {
+      await axios[method](url, data)
         .then(response => {
           this.seccsess_msg = response.data.message;
           this.errors = null;
@@ -379,17 +350,6 @@ export default {
         .catch(error => {
           this.seccsess_msg = "";
           this.errors = error.response.data.errors;
-        });
-    },
-    async deleteCourt(courtId) {
-      await axios
-        .post("/delete-court", { id: courtId })
-        .then(response => {
-          this.setCourts();
-        })
-        .catch(error => {
-          this.created_seccsess_msg = "";
-          this.created_errors = error.response.data.errors;
         });
     }
   }

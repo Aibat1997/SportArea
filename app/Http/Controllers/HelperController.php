@@ -53,7 +53,6 @@ class HelperController extends Controller
 
     public function courts()
     {
-        // $data = base64_decode(Storage::disk('image')->get('test.jpg'));
         $courts = Auth::user()->complex()
             ->first()
             ->courts()

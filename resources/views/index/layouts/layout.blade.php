@@ -8,6 +8,8 @@
     <link rel="stylesheet" href="/index/css/libs.min.css">
     <link rel="stylesheet" href="/index/css/all.css">
     <link rel="stylesheet" href="/index/css/bootstrap-slider.min.css">
+    <link rel="stylesheet" href="/index/css/daterangepicker.css">
+    <link rel="stylesheet" href="/index/css/jquery-weekdays.min.css">
     <link rel="stylesheet" href="/index/css/fontawesome-all.min.css">
     <link rel="stylesheet" href="/index/css/main.css">
     <link rel="icon" type="image/png" sizes="32x32" href="favicon.ico">

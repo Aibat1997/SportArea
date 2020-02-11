@@ -75,4 +75,9 @@ class ComplexController extends Controller
             return $e->getMessage();
         }
     }
+
+    public function infoById(SportComplex $complex)
+    {
+        return view('index.object-inside', compact('complex'));
+    }
 }

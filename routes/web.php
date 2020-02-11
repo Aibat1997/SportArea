@@ -43,7 +43,8 @@ Route::middleware(['web'])->namespace('Index')->group(function() {
         Route::post('store-inventory', 'InventoryController@store');
         Route::post('update-inventory', 'InventoryController@update');
         Route::post('store-court', 'CourtController@store');
-        Route::put('update-court/{court}', 'CourtController@update');
+        Route::put('update-court', 'CourtController@update');
         Route::post('delete-court', 'CourtController@delete');
+        Route::get('complex/{complex}', 'ComplexController@infoById');
     });
 });

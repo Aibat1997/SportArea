@@ -22,11 +22,11 @@ class CourtController extends Controller
             "c_prepayment" => "required",
             "c_prepayment_type" => "required",
             "c_area" => "required",
-            "images" => "required",
+            "c_images" => "required",
         ]);
 
         try {
-            $result = Helpers::storeBase64Images('images', 'court_image', $request);
+            $result = Helpers::storeBase64Images('c_images', 'court_image', $request);
 
             $court = Courts::create(
                 [
@@ -44,7 +44,7 @@ class CourtController extends Controller
 
             $list = array();
             foreach ($request->infrastructury as $value) {
-                array_push($list, $value);
+                array_push($list, $value['inf_id']);
             }
 
             $court->infrastructures()->sync($list);
@@ -61,9 +61,8 @@ class CourtController extends Controller
 
     public function update(Request $request, Courts $court)
     {
-        dd($request->all());
-
         $validatedData = $request->validate([
+            "c_id" => "required",
             "c_name" => "required",
             "infrastructury" => "required",
             "c_open_field" => "required",
@@ -72,15 +71,15 @@ class CourtController extends Controller
             "c_prepayment" => "required",
             "c_prepayment_type" => "required",
             "c_area" => "required",
-            "images" => "required",
+            "c_images" => "required",
         ]);
 
         try {
-            $result = Helpers::storeBase64Images('images', 'court_image', $request);
+            $court = Courts::find($request->c_id);
+            $result = Helpers::storeBase64Images('c_images', 'court_image', $request);
 
             $court->update(
                 [
-                    // "c_complex_id" => Auth::user()->complex()->first()->sc_id,
                     "c_name" => $request->c_name,
                     "c_open_field" => $request->c_open_field,
                     "c_coverage_id" => $request->c_coverage_id,
@@ -94,7 +93,7 @@ class CourtController extends Controller
 
             $list = array();
             foreach ($request->infrastructury as $value) {
-                array_push($list, $value);
+                array_push($list, $value['inf_id']);
             }
 
             $court->infrastructures()->sync($list);
@@ -111,7 +110,7 @@ class CourtController extends Controller
 
     public function delete(Request $request)
     {
-        Courts::where('c_id', $request->id)->delete();
+        Courts::where('c_id', $request->c_id)->delete();
 
         return response()->json([
             'status' => true,

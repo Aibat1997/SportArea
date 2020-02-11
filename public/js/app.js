@@ -1990,6 +1990,10 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
 
 /* harmony default export */ __webpack_exports__["default"] = ({
   components: {
@@ -1999,7 +2003,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     return {
       cities: {},
       sport_types: {},
-      seccsess_msg: '',
+      seccsess_msg: "",
       image_url: null,
       errors: null,
       complex: {}
@@ -2012,7 +2016,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       _this.cities = response.data.cities;
       _this.sport_types = response.data.sport_type;
 
-      _this.$store.commit('changeStatus', response.data.status);
+      _this.$store.commit("changeStatus", response.data.status);
 
       _this.complex = response.data.complex;
     });
@@ -2052,14 +2056,12 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                     "content-type": "multipart/form-data"
                   }
                 }).then(function (response) {
-                  console.log(response);
-
-                  _this2.$store.commit('changeStatus', response.data.status);
+                  _this2.$store.commit("changeStatus", response.data.status);
 
                   _this2.seccsess_msg = response.data.message;
                   _this2.errors = null;
                 })["catch"](function (error) {
-                  _this2.seccsess_msg = '';
+                  _this2.seccsess_msg = "";
                   _this2.errors = error.response.data.errors;
                 });
 
@@ -2517,9 +2519,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
-//
-//
-//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2691,64 +2690,48 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         _this3.courts = response.data;
       });
     },
-    submitForm: function submitForm() {
-      this.sendForm("post", "/store-court");
+    submitForm: function submitForm(court) {
+      this.sendForm("post", "/store-court", court);
     },
-    editForm: function editForm(court_key, court_id) {
-      this.sendForm("put", "/update-court/" + court_id, court_key);
+    editForm: function editForm(court) {
+      this.sendForm("put", "/update-court", court);
     },
-    sendForm: function () {
-      var _sendForm = _asyncToGenerator(
+    deleteCourt: function () {
+      var _deleteCourt = _asyncToGenerator(
       /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(method, url) {
-        var _this4 = this;
-
-        var court_key,
-            formData,
-            used_court,
-            _args4 = arguments;
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee4(court) {
         return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee4$(_context4) {
           while (1) {
             switch (_context4.prev = _context4.next) {
               case 0:
-                court_key = _args4.length > 2 && _args4[2] !== undefined ? _args4[2] : null;
-                formData = new FormData();
-                used_court = null;
+                this.sendForm("post", "/delete-court", court);
 
-                if (court_key != null) {
-                  used_court = this.courts[court_key];
-                } else {
-                  used_court = this.court;
-                }
+              case 1:
+              case "end":
+                return _context4.stop();
+            }
+          }
+        }, _callee4, this);
+      }));
 
-                used_court.infrastructury.forEach(function (element, key) {
-                  formData.append("infrastructury[" + key + "]", element.inf_id);
-                });
-                used_court.c_images.forEach(function (element, key) {
-                  formData.append("images[" + key + "]", used_court.c_images[key]);
-                });
-                _context4.t0 = _;
-                _context4.t1 = used_court;
-                _context4.next = 10;
-                return function (value, key) {
-                  if (key == "c_images" || key == "infrastructury") {
-                    return;
-                  }
+      function deleteCourt(_x4) {
+        return _deleteCourt.apply(this, arguments);
+      }
 
-                  formData.append(key, value);
-                };
+      return deleteCourt;
+    }(),
+    sendForm: function () {
+      var _sendForm = _asyncToGenerator(
+      /*#__PURE__*/
+      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(method, url, data) {
+        var _this4 = this;
 
-              case 10:
-                _context4.t2 = _context4.sent;
-
-                _context4.t0.forEach.call(_context4.t0, _context4.t1, _context4.t2);
-
-                _context4.next = 14;
-                return axios[method](url, formData, {
-                  headers: {
-                    "content-type": "multipart/form-data"
-                  }
-                }).then(function (response) {
+        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
+          while (1) {
+            switch (_context5.prev = _context5.next) {
+              case 0:
+                _context5.next = 2;
+                return axios[method](url, data).then(function (response) {
                   _this4.seccsess_msg = response.data.message;
                   _this4.errors = null;
                   _this4.court = {};
@@ -2759,40 +2742,6 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   _this4.errors = error.response.data.errors;
                 });
 
-              case 14:
-              case "end":
-                return _context4.stop();
-            }
-          }
-        }, _callee4, this);
-      }));
-
-      function sendForm(_x4, _x5) {
-        return _sendForm.apply(this, arguments);
-      }
-
-      return sendForm;
-    }(),
-    deleteCourt: function () {
-      var _deleteCourt = _asyncToGenerator(
-      /*#__PURE__*/
-      _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.mark(function _callee5(courtId) {
-        var _this5 = this;
-
-        return _babel_runtime_regenerator__WEBPACK_IMPORTED_MODULE_0___default.a.wrap(function _callee5$(_context5) {
-          while (1) {
-            switch (_context5.prev = _context5.next) {
-              case 0:
-                _context5.next = 2;
-                return axios.post("/delete-court", {
-                  id: courtId
-                }).then(function (response) {
-                  _this5.setCourts();
-                })["catch"](function (error) {
-                  _this5.created_seccsess_msg = "";
-                  _this5.created_errors = error.response.data.errors;
-                });
-
               case 2:
               case "end":
                 return _context5.stop();
@@ -2801,11 +2750,11 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         }, _callee5);
       }));
 
-      function deleteCourt(_x6) {
-        return _deleteCourt.apply(this, arguments);
+      function sendForm(_x5, _x6, _x7) {
+        return _sendForm.apply(this, arguments);
       }
 
-      return deleteCourt;
+      return sendForm;
     }()
   }
 });
@@ -7269,7 +7218,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.error-box{\r\n  background-color: #E43027;\r\n  color: white;\r\n  padding: 15px;\r\n  border-radius: 5px;\r\n  margin-bottom: 20px;\n}\n.error-box ul li{\r\n  color: white;\r\n  font-size: 14px;\r\n  margin-bottom: 3px;\n}\n.success-box{\r\n    background-color: #dff0d8!important;\r\n     color: #3c763d!important;\n}\n.success-box ul li{\r\n  color: #3c763d!important;\n}\r\n", ""]);
+exports.push([module.i, "\n.error-box {\r\n  background-color: #e43027;\r\n  color: white;\r\n  padding: 15px;\r\n  border-radius: 5px;\r\n  margin-bottom: 20px;\n}\n.error-box ul li {\r\n  color: white;\r\n  font-size: 14px;\r\n  margin-bottom: 3px;\n}\n.success-box {\r\n  background-color: #dff0d8 !important;\r\n  color: #3c763d !important;\n}\n.success-box ul li {\r\n  color: #3c763d !important;\n}\r\n", ""]);
 
 // exports
 
@@ -39590,7 +39539,7 @@ var render = function() {
         _vm._v(" "),
         _vm.seccsess_msg
           ? _c("div", { staticClass: "error-box success-box" }, [
-              _vm._v("\n      " + _vm._s(_vm.seccsess_msg) + "\n    ")
+              _vm._v(_vm._s(_vm.seccsess_msg))
             ])
           : _vm._e(),
         _vm._v(" "),
@@ -40532,7 +40481,7 @@ var render = function() {
                       on: {
                         click: function($event) {
                           $event.preventDefault()
-                          return _vm.submitForm($event)
+                          return _vm.submitForm(_vm.court)
                         }
                       }
                     },
@@ -40954,7 +40903,7 @@ var render = function() {
                         on: {
                           click: function($event) {
                             $event.preventDefault()
-                            return _vm.deleteCourt(court.c_id)
+                            return _vm.deleteCourt(court)
                           }
                         }
                       },
@@ -41338,7 +41287,7 @@ var render = function() {
                             on: {
                               click: function($event) {
                                 $event.preventDefault()
-                                return _vm.editForm(court_index, court.c_id)
+                                return _vm.editForm(court)
                               }
                             }
                           },
@@ -54965,8 +54914,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\aibat\Documents\GitHub\SportArea\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\aibat\Documents\GitHub\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\Aibat\Documents\GitHub\SportArea\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\Aibat\Documents\GitHub\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

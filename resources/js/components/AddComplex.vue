@@ -18,9 +18,7 @@
           <li v-for="(key,error) in errors">{{error}} : {{ key[0] }}</li>
         </ul>
       </div>
-       <div class="error-box success-box" v-if="seccsess_msg">
-        {{ seccsess_msg }}
-      </div>
+      <div class="error-box success-box" v-if="seccsess_msg">{{ seccsess_msg }}</div>
       <div class="form-item-half d-flex-justify">
         <div class="sidebar-item">
           <label class="select-label select">
@@ -118,7 +116,13 @@
       </div>
       <div class="form-item-half d-flex-justify-end">
         <label class="f-item">
-          <textarea name cols="30" rows="10" placeholder="Описание" v-model="complex.sc_description"></textarea>
+          <textarea
+            name
+            cols="30"
+            rows="10"
+            placeholder="Описание"
+            v-model="complex.sc_description"
+          ></textarea>
         </label>
         <label class="date-label">
           <button class="btn-plain btn-blue">Сохранить</button>
@@ -137,17 +141,17 @@ export default {
     return {
       cities: {},
       sport_types: {},
-      seccsess_msg: '',
+      seccsess_msg: "",
       image_url: null,
       errors: null,
-      complex:{},
+      complex: {}
     };
   },
   created() {
     axios.get("/helpers").then(response => {
       this.cities = response.data.cities;
       this.sport_types = response.data.sport_type;
-      this.$store.commit('changeStatus', response.data.status);
+      this.$store.commit("changeStatus", response.data.status);
       this.complex = response.data.complex;
     });
   },
@@ -167,15 +171,16 @@ export default {
       );
 
       await axios
-        .post("/store-complex", formData, {headers: {"content-type": "multipart/form-data"}})
+        .post("/store-complex", formData, {
+          headers: { "content-type": "multipart/form-data" }
+        })
         .then(response => {
-          console.log(response);
-          this.$store.commit('changeStatus', response.data.status);
+          this.$store.commit("changeStatus", response.data.status);
           this.seccsess_msg = response.data.message;
           this.errors = null;
         })
         .catch(error => {
-          this.seccsess_msg = '';
+          this.seccsess_msg = "";
           this.errors = error.response.data.errors;
         });
     }
@@ -183,23 +188,23 @@ export default {
 };
 </script>
 <style>
-.error-box{
-  background-color: #E43027;
+.error-box {
+  background-color: #e43027;
   color: white;
   padding: 15px;
   border-radius: 5px;
   margin-bottom: 20px;
 }
-.error-box ul li{
+.error-box ul li {
   color: white;
   font-size: 14px;
   margin-bottom: 3px;
 }
-.success-box{
-    background-color: #dff0d8!important;
-     color: #3c763d!important;
+.success-box {
+  background-color: #dff0d8 !important;
+  color: #3c763d !important;
 }
-.success-box ul li{
-  color: #3c763d!important;
+.success-box ul li {
+  color: #3c763d !important;
 }
 </style>   
