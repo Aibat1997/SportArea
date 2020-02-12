@@ -41276,7 +41276,21 @@ var render = function() {
                       ]
                     ),
                     _vm._v(" "),
-                    _vm._m(0, true),
+                    _c(
+                      "a",
+                      {
+                        staticClass: "btn-plain link-dashed",
+                        attrs: { href: "/complex/" + court.c_complex_id }
+                      },
+                      [
+                        _c("img", {
+                          attrs: { src: "/index/img/icon/pen.svg", alt: "" }
+                        }),
+                        _vm._v(
+                          " Редактировать\n              время, дату, стоимость\n            "
+                        )
+                      ]
+                    ),
                     _vm._v(" "),
                     _c("div", { staticClass: "form-item-half" }, [
                       _c("div", { staticClass: "btn-box" }, [
@@ -41305,26 +41319,7 @@ var render = function() {
       ])
     : _vm._e()
 }
-var staticRenderFns = [
-  function() {
-    var _vm = this
-    var _h = _vm.$createElement
-    var _c = _vm._self._c || _h
-    return _c(
-      "a",
-      {
-        staticClass: "btn-plain link-dashed",
-        attrs: { href: "objects-inside.html" }
-      },
-      [
-        _c("img", { attrs: { src: "/index/img/icon/pen.svg", alt: "" } }),
-        _vm._v(
-          " Редактировать\n              время, дату, стоимость\n            "
-        )
-      ]
-    )
-  }
-]
+var staticRenderFns = []
 render._withStripped = true
 
 

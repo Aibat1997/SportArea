@@ -96,7 +96,8 @@
                     <label class="price-current">
                         <input type="text" placeholder="Цена" class="input-attr" disabled>
                         <i class="icon i-tg"></i>
-                        <button class="btn-plain delete-invent"><img src="/index/img/icon/delete-invent.png" alt=""></button>
+                        <button class="btn-plain delete-invent"><img src="/index/img/icon/delete-invent.png"
+                                alt=""></button>
                     </label>
                 </div>
             </div>
@@ -129,7 +130,6 @@
 @section('js')
 <script type="text/javascript" src="/index/js/daterangepicker.js"></script>
 <script type="text/javascript" src="/index/js/jquery.datetimepicker.full.min.js"></script>
-<script type="text/javascript" src="/index/js/jquery-weekdays.min.js"></script>
 <script type="text/javascript">
     window.onload = function () {
         var chart = new CanvasJS.Chart("chartContainer",
@@ -142,26 +142,26 @@
                         type: "line",
                         lineColor: "red", //**Change the color here
                         dataPoints: [
-                            {x: 10, y: 71},
-                            {x: 20, y: 55},
-                            {x: 30, y: 50},
-                            {x: 40, y: 65},
-                            {x: 50, y: 68},
-                            {x: 60, y: 28},
-                            {x: 70, y: 34},
-                            {x: 80, y: 14},
-                            {x: 90, y: 23}
+                            { x: 10, y: 71 },
+                            { x: 20, y: 55 },
+                            { x: 30, y: 50 },
+                            { x: 40, y: 65 },
+                            { x: 50, y: 68 },
+                            { x: 60, y: 28 },
+                            { x: 70, y: 34 },
+                            { x: 80, y: 14 },
+                            { x: 90, y: 23 }
                         ]
                     },
                     {
                         type: "line",
                         lineColor: "blue",
                         dataPoints: [
-                            {x: 10, y: 14},
-                            {x: 20, y: 18},
-                            {x: 30, y: 29},
-                            {x: 40, y: 49},
-                            {x: 50, y: 48}
+                            { x: 10, y: 14 },
+                            { x: 20, y: 18 },
+                            { x: 30, y: 29 },
+                            { x: 40, y: 49 },
+                            { x: 50, y: 48 }
                         ]
                     }
                 ]
@@ -180,14 +180,6 @@
             }
         });
     }
-
-
-    $(function () {
-        $('.weekdays').weekdays({
-            days: ["Пн", "Вт", "Ср", "Чт", "Пт", "Сб", "Вк"]
-        });
-    });
-
 </script>
 <script type="text/javascript" src="https://canvasjs.com/assets/script/canvasjs.min.js"></script>
 <script src="/index/js/common.js"></script>
@@ -265,7 +257,7 @@
         });
 
         $('.datefilter').on('apply.daterangepicker', function (ev, picker) {
-            $(this).val(picker.startDate.format('DD/MM/YYYY') + ' - ' + picker.endDate.format('DD/MM/YYYY'));
+            $(this).val(picker.startDate.format('YYYY-MM-DD') + ' : ' + picker.endDate.format('YYYY-MM-DD'));
         });
 
         $('.datefilter').on('cancel.daterangepicker', function (ev, picker) {
@@ -289,5 +281,34 @@
         datepicker: false,
         format: 'H:i'
     });
+</script>
+<script>
+    $(document).ready(function () {
+        $('.alert-success').hide();
+        $("#btn_f_type").click(
+            function (e) {
+                e.preventDefault();
+                sendAjaxForm('f_type', '/complex/{{ Request::route('complex')->sc_id }}/discount');
+                return false;
+            }
+        );
+    });
+
+    function sendAjaxForm(ajax_form, url) {
+        $.ajax({
+            url: url,
+            type: "POST", 
+            dataType: "html", 
+            data: $("#" + ajax_form).serialize(),  
+            success: function (response) { 
+                $('.alert-success').show();
+                $('.alert-success').html("<strong>" + response + "</strong>");
+                setTimeout(function() { $('.alert-success').hide() }, 5000);
+            },
+            error: function (response) {
+            
+            }
+        });
+    }
 </script>
 @endsection

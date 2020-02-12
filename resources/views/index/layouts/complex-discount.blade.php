@@ -15,63 +15,16 @@
                             </a>
                             <img src="/index/img/icon/discount-elipsis.svg" alt="" class="discount-elipsis">
                         </li>
-                        <li>
-                            <a href="#">
-                                <div class="discount-list-item">
-                                    <h3>Автоматизированная скидка</h3>
-                                    <p>5% скидка при регистрации</p>
-                                    <span>Деактивировать</span>
-                                </div>
-                            </a>
-                            <img src="/index/img/icon/discount-elipsis.svg" alt="" class="discount-elipsis">
-                        </li>
-                        <li>
-                            <a href="#">
-                                <div class="discount-list-item">
-                                    <h3>Автоматизированная скидка</h3>
-                                    <p>5% скидка при регистрации</p>
-                                    <span>Деактивировать</span>
-                                </div>
-                            </a>
-                            <img src="/index/img/icon/discount-elipsis.svg" alt="" class="discount-elipsis">
-                        </li>
-                        <li>
-                            <a href="#">
-                                <div class="discount-list-item">
-                                    <h3>Автоматизированная скидка</h3>
-                                    <p>5% скидка при регистрации</p>
-                                    <span>Деактивировать</span>
-                                </div>
-                            </a>
-                            <img src="/index/img/icon/discount-elipsis.svg" alt="" class="discount-elipsis">
-                        </li>
-                        <li>
-                            <a href="#">
-                                <div class="discount-list-item">
-                                    <h3>Автоматизированная скидка</h3>
-                                    <p>5% скидка при регистрации</p>
-                                    <span>Деактивировать</span>
-                                </div>
-                            </a>
-                            <img src="/index/img/icon/discount-elipsis.svg" alt="" class="discount-elipsis">
-                        </li>
-                        <li>
-                            <a href="#">
-                                <div class="discount-list-item">
-                                    <h3>Автоматизированная скидка</h3>
-                                    <p>5% скидка при регистрации</p>
-                                    <span>Деактивировать</span>
-                                </div>
-                            </a>
-                            <img src="/index/img/icon/discount-elipsis.svg" alt="" class="discount-elipsis">
-                        </li>
                     </ul>
                 </div>
             </div>
             <div class="col-md-9 col-sm-8">
                 <div class="discount-create">
                     <h2>Создание скидки</h2>
-                    <form action="#">
+                    <div class="alert alert-success"></div>
+                    <form action="" method="POST" id="f_type">
+                        @csrf
+                        <input type="hidden" name="cd_type" value="1">
                         <div class="object-filter static-filter d-flex-justify">
                             <div class="sidebar-item">
                                 <label class="input-search">
@@ -80,29 +33,30 @@
                             </div>
                             <div class="sidebar-item">
                                 <label class="select-label input-search">
-                                    <input type="text" placeholder="Сентябрь – Октябрь" class="datefilter">
+                                    <input type="text" name="dates" placeholder="Сентябрь – Октябрь" class="datefilter">
                                     <i class="icon i-calendar"></i>
                                 </label>
                             </div>
                             <div class="sidebar-item">
                                 <label class="select-label input-search">
-                                    <input type="text" placeholder="По времени" class="single_time">
+                                    <input type="text" name="times" placeholder="По времени" class="single_time">
                                     <i class="icon i-clock"></i>
                                 </label>
                             </div>
                             <div class="sidebar-item">
                                 <label class="select-label input-search">
-                                    <input type="text" placeholder="Сумма скидки" class="discount-price">
+                                    <input type="text" name="cd_price" placeholder="Сумма скидки"
+                                        class="discount-price">
                                     <div class="discount-price-cover d-flex">
                                         <label class="checkbox-container">
-                                            <input type="checkbox" checked="checked">
+                                            <input type="radio" name="cd_pay_type" value="1" checked="checked">
                                             <span class="checkmark">
                                                 тг
                                             </span>
                                         </label>
 
                                         <label class="checkbox-container">
-                                            <input type="checkbox">
+                                            <input type="radio" name="cd_pay_type" value="0">
                                             <span class="checkmark">
                                                 %
                                             </span>
@@ -112,10 +66,32 @@
                                 </label>
                             </div>
                             <div class="sidebar-item">
-                                <div class="weekdays"></div>
+                                <div class="weekDays-selector">
+                                    <input type="checkbox" id="weekday-mon" name="cd_week_days[]" value="1"
+                                        class="weekday" />
+                                    <label for="weekday-mon">Пн</label>
+                                    <input type="checkbox" id="weekday-tue" name="cd_week_days[]" value="2"
+                                        class="weekday" />
+                                    <label for="weekday-tue">Вт</label>
+                                    <input type="checkbox" id="weekday-wed" name="cd_week_days[]" value="3"
+                                        class="weekday" />
+                                    <label for="weekday-wed">Ср</label>
+                                    <input type="checkbox" id="weekday-thu" name="cd_week_days[]" value="4"
+                                        class="weekday" />
+                                    <label for="weekday-thu">Чт</label>
+                                    <input type="checkbox" id="weekday-fri" name="cd_week_days[]" value="5"
+                                        class="weekday" />
+                                    <label for="weekday-fri">Пт</label>
+                                    <input type="checkbox" id="weekday-sat" name="cd_week_days[]" value="6"
+                                        class="weekday" />
+                                    <label for="weekday-sat">Сб</label>
+                                    <input type="checkbox" id="weekday-sun" name="cd_week_days[]" value="7"
+                                        class="weekday" />
+                                    <label for="weekday-sun">Вс</label>
+                                </div>
                             </div>
                             <div class="sidebar-item">
-                                <button class="btn-plain btn-blue">Создать скидку</button>
+                                <button class="btn-plain btn-blue" id="btn_f_type">Создать скидку</button>
                             </div>
                         </div>
                     </form>
@@ -144,8 +120,7 @@
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="select-label input-search">
-                                        <input type="text" placeholder="Сумма скидки"
-                                            class="discount-price">
+                                        <input type="text" placeholder="Сумма скидки" class="discount-price">
                                         <div class="discount-price-cover d-flex">
                                             <label class="checkbox-container">
                                                 <input type="checkbox" checked="checked">
@@ -166,8 +141,7 @@
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="select-label input-search">
-                                        <input type="text" placeholder="Сентябрь – Октябрь"
-                                            class="datefilter">
+                                        <input type="text" placeholder="Сентябрь – Октябрь" class="datefilter">
                                         <i class="icon i-calendar"></i>
                                     </label>
                                 </div>
@@ -198,8 +172,7 @@
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="select-label input-search">
-                                        <input type="text" placeholder="Сумма скидки"
-                                            class="discount-price">
+                                        <input type="text" placeholder="Сумма скидки" class="discount-price">
                                         <div class="discount-price-cover d-flex">
                                             <label class="checkbox-container">
                                                 <input type="checkbox" checked="checked">
@@ -220,8 +193,7 @@
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="select-label input-search">
-                                        <input type="text" placeholder="Сентябрь – Октябрь"
-                                            class="datefilter">
+                                        <input type="text" placeholder="Сентябрь – Октябрь" class="datefilter">
                                         <i class="icon i-calendar"></i>
                                     </label>
                                 </div>
@@ -237,7 +209,6 @@
                             </div>
                         </form>
                     </div>
-
                 </div>
             </div>
         </div>

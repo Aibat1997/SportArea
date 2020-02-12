@@ -46,5 +46,6 @@ Route::middleware(['web'])->namespace('Index')->group(function() {
         Route::put('update-court', 'CourtController@update');
         Route::post('delete-court', 'CourtController@delete');
         Route::get('complex/{complex}', 'ComplexController@infoById');
+        Route::post('complex/{complex}/discount', 'ComplexController@storeDiscount');
     });
 });

@@ -3413,7 +3413,7 @@ input[type="checkbox"].ios8-switch:checked + label:before {
   padding: 11px 90px 11px 15px;
 }
 
-.weekdays-list .weekdays-day {
+/* .weekdays-list .weekdays-day {
   padding: 11px 5px;
   background: #FFFFFF;
   border: 1px solid #E5E5E5;
@@ -3430,6 +3430,37 @@ input[type="checkbox"].ios8-switch:checked + label:before {
 
 .weekdays-day:hover, .weekdays-list .weekday-selected {
   background-color: #E5E5E5;
+} */
+.weekDays-selector{
+  display: -webkit-box;
+  display: -webkit-flex;
+  display: -ms-flexbox;
+  display: flex;
+  padding-left: 0;
+  list-style: none;
+}
+.weekDays-selector input {
+  display: none!important;
+}
+
+.weekDays-selector input[type=checkbox] + label {
+  padding: 11px 5px;
+  background: #FFFFFF;
+  border: 1px solid #E5E5E5;
+  -webkit-box-sizing: border-box;
+  box-sizing: border-box;
+  -webkit-border-radius: 3px;
+  border-radius: 3px;
+  font-size: 16px;
+  line-height: 20px;
+  color: #333333;
+  width: 100%;
+  text-align: center;
+}
+
+.weekDays-selector input[type=checkbox]:checked + label {
+  background: #E5E5E5;
+  color: #333333;
 }
 
 .datalist input {
