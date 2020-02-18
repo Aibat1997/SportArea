@@ -7,6 +7,7 @@ use App\Http\Controllers\Controller;
 use App\Models\User;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
+use App\Http\Helpers;
 
 class AuthController extends Controller
 {
@@ -46,6 +47,25 @@ class AuthController extends Controller
     public function profile()
     {
        return view('index.profile');    
+    }
+
+    public function profileChange(Request $request)
+    {
+        if ($request->hasFile('avatar')) {
+            $result = Helpers::storeImg('avatar', 'avatar', $request);
+        }else {
+            $result = Auth::user()->avatar;
+        }
+
+        Auth::user()->update([
+            'user_firstname' => $request->user_firstname,
+            'user_lastname' => $request->user_lastname,
+            'phone' => $request->phone,
+            'avatar' => $result,
+            'password' => $request->has('password') ? Hash::make($request->password) : Auth::user()->password,
+        ]);
+
+        return redirect()->back()->withErrors(['Успешно сохранено!']); 
     }
 
     public function logout()

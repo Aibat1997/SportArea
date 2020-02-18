@@ -21,8 +21,10 @@
             <div class="col-md-9 col-sm-8">
                 <div class="discount-create">
                     <h2>Создание скидки</h2>
-                    <div class="alert alert-success"></div>
-                    <form action="" method="POST" id="f_type">
+                    @if($errors->any())
+                        <div class="alert alert-success dont-show">{{$errors->first()}}</div>
+                    @endif
+                    <form action="/complex/{{ request()->route('complex')->sc_id }}/discount" method="POST">
                         @csrf
                         <input type="hidden" name="cd_type" value="1">
                         <div class="object-filter static-filter d-flex-justify">
@@ -91,12 +93,14 @@
                                 </div>
                             </div>
                             <div class="sidebar-item">
-                                <button class="btn-plain btn-blue" id="btn_f_type">Создать скидку</button>
+                                <button class="btn-plain btn-blue">Создать скидку</button>
                             </div>
                         </div>
                     </form>
                     <div class="discount-ind-cover">
-                        <form action="#">
+                        <form action="/complex/{{ request()->route('complex')->sc_id }}/discount" method="POST">
+                            @csrf
+                        <input type="hidden" name="cd_type" value="2">
                             <div class="object-filter static-filter d-flex-justify">
                                 <div class="sidebar-item">
                                     <label class="input-search">
@@ -106,13 +110,9 @@
                                 <div class="sidebar-item">
                                     <label class="select-label select datalist">
                                         <i class="icon user"></i>
-                                        <input list="browsers" placeholder="Логин клиента">
-                                        <datalist id="browsers">
-                                            <option value="Internet Explorer">
-                                            <option value="Firefox">
-                                            <option value="Chrome">
-                                            <option value="Opera">
-                                            <option value="Safari">
+                                        <input list="options" name="browser" placeholder="Логин клиента">
+                                        <datalist id="options">
+                                            @include('index.layouts.select-user')
                                         </datalist>
                                         <i class="fas fa-chevron-down arrow-select"></i>
                                     </label>

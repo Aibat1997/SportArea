@@ -283,32 +283,17 @@
     });
 </script>
 <script>
-    $(document).ready(function () {
-        $('.alert-success').hide();
-        $("#btn_f_type").click(
-            function (e) {
-                e.preventDefault();
-                sendAjaxForm('f_type', '/complex/{{ Request::route('complex')->sc_id }}/discount');
-                return false;
+    var des = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
+    Object.defineProperty(HTMLInputElement.prototype, 'value', {
+        get: function () {
+            if (this.type === 'text' && this.list) {
+                var value = des.get.call(this);
+                var opt = [].find.call(this.list.options, function (option) {
+                    return option.value === value;
+                });
+                return opt ? opt.dataset.value : value;
             }
-        );
+        }
     });
-
-    function sendAjaxForm(ajax_form, url) {
-        $.ajax({
-            url: url,
-            type: "POST", 
-            dataType: "html", 
-            data: $("#" + ajax_form).serialize(),  
-            success: function (response) { 
-                $('.alert-success').show();
-                $('.alert-success').html("<strong>" + response + "</strong>");
-                setTimeout(function() { $('.alert-success').hide() }, 5000);
-            },
-            error: function (response) {
-            
-            }
-        });
-    }
 </script>
 @endsection

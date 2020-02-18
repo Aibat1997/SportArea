@@ -18,11 +18,12 @@ class CreateUsersTable extends Migration
             $table->string('user_firstname');
             $table->string('user_lastname')->nullable();
             $table->string('phone')->unique();
-            $table->string('avatar')->default('/img/default-user.jpg');
+            $table->string('avatar')->nullable();
             $table->unsignedBigInteger('user_role_id');
             $table->double('user_raiting')->default(0.0);
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
+            $table->boolean('is_admin')->default(false);
             $table->rememberToken();
             $table->timestamps();
 

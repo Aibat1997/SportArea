@@ -38,6 +38,7 @@ Route::middleware(['web'])->namespace('Index')->group(function() {
     Route::middleware(['auth'])->group(function() {
         Route::get('logout', 'AuthController@logout');
         Route::get('profile', 'AuthController@profile');
+        Route::post('profile', 'AuthController@profileChange');
         Route::get('add-complex', 'ComplexController@create');
         Route::post('store-complex', 'ComplexController@store');
         Route::post('store-inventory', 'InventoryController@store');

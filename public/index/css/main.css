@@ -2240,6 +2240,7 @@ input[type="checkbox"].ios8-switch:checked + label:before {
   -webkit-border-radius: 3px;
           border-radius: 3px;
   border: 5px solid #EEEEEE;
+  position: relative;
 }
 
 .profile-info-img img {

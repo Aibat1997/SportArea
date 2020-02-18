@@ -118,7 +118,7 @@ class ComplexController extends Controller
 
         ]);
 
-        return 'Успешно сохранено!';
+        return redirect()->back()->withErrors(['Успешно сохранено!']); 
     }
 
     public function divider($data, $divide)
