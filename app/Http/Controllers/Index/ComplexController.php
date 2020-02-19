@@ -10,6 +10,7 @@ use App\Models\SportTypes;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Str;
 
 class ComplexController extends Controller
 {
@@ -79,7 +80,9 @@ class ComplexController extends Controller
 
     public function infoById(SportComplex $complex)
     {
-        return view('index.object-inside', compact('complex'));
+        $complex_id = Auth::user()->complex()->first()->sc_id;
+        $discounts = ComplexDiscount::where('cd_complex_id', $complex_id)->get();
+        return view('index.object-inside', compact('complex', 'discounts'));
     }
 
     public function storeDiscount(Request $request)
@@ -89,7 +92,7 @@ class ComplexController extends Controller
             "dates" => "required",
             "times" => "required",
             "cd_pay_type" => "required",
-            "cd_price" => "required"
+            "cd_price" => "required",
         ]);
 
         $dates = $this->divider($request->dates, ":");
@@ -103,22 +106,29 @@ class ComplexController extends Controller
             $days = substr($days, 0, -1);
         }
 
-        ComplexDiscount::create([
-            'cd_complex_id' => Auth::user()->complex()->first()->sc_id,
-            'cd_type' => $request->cd_type,
-            'cd_start_date' => $dates[0],
-            'cd_finish_date' => $dates[1],
-            'cd_start_time' => $times[0],
-            'cd_finish_time' => $times[1],
-            'cd_pay_type' => $request->cd_pay_type,
-            'cd_price' => $request->cd_price,
-            'cd_week_days' => $days,
-            'cd_user_id' => $request->has('cd_user_id') ? $request->cd_user_id : null,
-            'cd_hours' => $request->has('cd_hours') ? $request->cd_hours : null,
+        $complex_id = Auth::user()->complex()->first()->sc_id;
 
-        ]);
+        if ($request->cd_type == 2) {
+            $promocode = Str::random(7);
+        }
 
-        return redirect()->back()->withErrors(['Успешно сохранено!']); 
+        ComplexDiscount::updateOrCreate(
+            ['cd_complex_id' => $complex_id, 'cd_type' => $request->cd_type],
+            [
+                'cd_start_date' => $dates[0],
+                'cd_finish_date' => $dates[1],
+                'cd_start_time' => $times[0],
+                'cd_finish_time' => $times[1],
+                'cd_pay_type' => $request->cd_pay_type,
+                'cd_price' => $request->cd_price,
+                'cd_week_days' => $days,
+                'cd_user_id' => $request->cd_user_id,
+                'cd_hours' => $request->cd_hours,
+                'cd_promocode' => $promocode
+            ]
+        );
+
+        return redirect('/complex/'.$complex_id.'?tab=4')->withErrors(['Успешно сохранено!']);
     }
 
     public function divider($data, $divide)
@@ -130,5 +140,12 @@ class ComplexController extends Controller
             array_push($dates, $value);
         }
         return $dates;
+    }
+
+    public function updateDiscount(Request $request)
+    {
+        $discount = ComplexDiscount::find($request->c_id);
+        $discount->update(['cd_status' => $request->cd_status]);
+        return back();
     }
 }

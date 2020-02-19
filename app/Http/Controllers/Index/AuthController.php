@@ -36,6 +36,8 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             return redirect('/profile');
+        }else {
+            return redirect()->back()->withErrors(['Введен неверный логин или пароль']);
         }     
     }
 

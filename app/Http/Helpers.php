@@ -80,7 +80,7 @@ class Helpers
         return $date->day . ' ' . Helpers::getMonthName($date->month) . ', ' . $date->year;
     }
 
-    public function simpleDate($date)
+    public static function simpleDate($date)
     {
         $simple_date = date('d.m.Y', strtotime($date));
         return $simple_date;

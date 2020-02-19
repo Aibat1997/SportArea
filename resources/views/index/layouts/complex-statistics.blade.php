@@ -1,4 +1,4 @@
-<div class="tab-pane" id="tab-3">
+<div class="tab-pane {{ request()->tab == 3 ? 'active' : '' }}" id="tab-3">
     <form action="#">
         <div class="object-filter static-filter d-flex-justify">
             <div class="sidebar-item">

@@ -9,27 +9,27 @@
 <section class="main object-inside">
     <div class="container">
         <ul class="nav nav-tabs object-tab">
-            <li>
+            <li class="{{ request()->tab == 1 ? 'active' : '' }}">
                 <a href="#tab-1" data-toggle="tab">
                     Журнал броней
                 </a>
             </li>
-            <li class="active">
+            <li class="{{ request()->tab == 2 ? 'active' : '' }}">
                 <a href="#tab-2" data-toggle="tab">
                     Заявки
                 </a>
             </li>
-            <li>
+            <li class="{{ request()->tab == 3 ? 'active' : '' }}">
                 <a href="#tab-3" data-toggle="tab">
                     Статистика
                 </a>
             </li>
-            <li>
+            <li class="{{ request()->tab == 4 ? 'active' : '' }}">
                 <a href="#tab-4" data-toggle="tab">
                     Скидки
                 </a>
             </li>
-            <li>
+            <li class="{{ request()->tab == 5 ? 'active' : '' }}">
                 <a href="#tab-5" data-toggle="tab">
                     Редактировать объект
                 </a>
@@ -283,17 +283,10 @@
     });
 </script>
 <script>
-    var des = Object.getOwnPropertyDescriptor(HTMLInputElement.prototype, 'value');
-    Object.defineProperty(HTMLInputElement.prototype, 'value', {
-        get: function () {
-            if (this.type === 'text' && this.list) {
-                var value = des.get.call(this);
-                var opt = [].find.call(this.list.options, function (option) {
-                    return option.value === value;
-                });
-                return opt ? opt.dataset.value : value;
-            }
-        }
+    $('#userchoise').bind('input', function() {
+        let shownVal = $(this).val();
+        let value2send = $("#options option[value='"+shownVal+"']").data('value');
+        $('input[name="cd_user_id"]').val(value2send);
     });
 </script>
 @endsection

@@ -238,7 +238,7 @@
                   />
                 </label>
               </div>
-              <a :href="'/complex/' + court.c_complex_id" class="btn-plain link-dashed">
+              <a :href="'/complex/' + court.c_complex_id + '?tab=2'" class="btn-plain link-dashed">
                 <img src="/index/img/icon/pen.svg" alt /> Редактировать
                 время, дату, стоимость
               </a>

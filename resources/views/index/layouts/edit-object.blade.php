@@ -1,4 +1,4 @@
-<div class="tab-pane" id="tab-5">
+<div class="tab-pane {{ request()->tab == 5 ? 'active' : '' }}" id="tab-5">
     <div class="object-modify">
         <div class="row">
             <div class="col-lg-4 col-md-6 col-sm-6">

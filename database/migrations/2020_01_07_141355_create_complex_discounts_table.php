@@ -26,6 +26,7 @@ class CreateComplexDiscountsTable extends Migration
             $table->integer('cd_price')->unsigned();
             $table->string('cd_week_days')->nullable();
             $table->integer('cd_hours')->unsigned()->nullable();
+            $table->string('cd_promocode', 8)->nullable();
             $table->boolean('cd_status')->default(true);
             $table->timestamps();
 

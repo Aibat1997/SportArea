@@ -1,20 +1,46 @@
-<div class="tab-pane" id="tab-4">
+<div class="tab-pane {{ request()->tab == 4 ? 'active' : '' }}" id="tab-4">
     <div class="discount-box">
         <div class="row">
             <div class="col-md-3 col-sm-4">
                 <div class="discount-cover">
                     <h2>Активные скидки</h2>
                     <ul class="discount-list">
+                        @foreach ($discounts as $discount)
                         <li>
-                            <a href="#">
-                                <div class="discount-list-item">
-                                    <h3>Автоматизированная скидка</h3>
-                                    <p>5% скидка при регистрации</p>
-                                    <span>Деактивировать</span>
-                                </div>
-                            </a>
+                            <div class="discount-list-item">
+                                @if ($discount->cd_type == 1)
+                                <h3>Общая скидка</h3>
+                                <p>{{$discount->cd_price}} {{ $discount->cd_pay_type == 1 ? 'тг.' : '%' }} скидка при регистрации</p>
+                                <form action="/complex/discount/change" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="c_id" value="{{ $discount->cd_id }}">
+                                    <input type="hidden" name="cd_status" value="{{ $discount->cd_status == 1 ? 0 : 1 }}">
+                                    <button class="btn-plain">{{ $discount->cd_status == 0 ? 'Активировать' : 'Деактивировать' }}</button>
+                                </form>
+                                @elseif($discount->cd_type == 2)
+                                <h3>Индивидуальная скидка</h3>
+                                <p>{{$discount->cd_price}} {{ $discount->cd_pay_type == 1 ? 'тг.' : '%' }} скидка по промо-коду</p>
+                                <p>{{$discount->cd_promocode}} - до {{ App\Http\Helpers::simpleDate($discount->cd_finish_date) }}</p>
+                                <form action="/complex/discount/change" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="c_id" value="{{ $discount->cd_id }}">
+                                    <input type="hidden" name="cd_status" value="{{ $discount->cd_status == 1 ? 0 : 1 }}">
+                                    <button class="btn-plain">{{ $discount->cd_status == 0 ? 'Активировать' : 'Деактивировать' }}</button>
+                                </form>
+                                @else
+                                <h3>Автоматизированная скидка</h3>
+                                <p>{{$discount->cd_price}} {{ $discount->cd_pay_type == 1 ? 'тг.' : '%' }} скидка по достижению {{$discount->cd_hours}} часов игры</p>
+                                <form action="/complex/discount/change" method="POST">
+                                    @csrf
+                                    <input type="hidden" name="c_id" value="{{ $discount->cd_id }}">
+                                    <input type="hidden" name="cd_status" value="{{ $discount->cd_status == 1 ? 0 : 1 }}">
+                                    <button class="btn-plain">{{ $discount->cd_status == 0 ? 'Активировать' : 'Деактивировать' }}</button>
+                                </form>
+                                @endif
+                            </div>
                             <img src="/index/img/icon/discount-elipsis.svg" alt="" class="discount-elipsis">
                         </li>
+                        @endforeach
                     </ul>
                 </div>
             </div>
@@ -22,9 +48,10 @@
                 <div class="discount-create">
                     <h2>Создание скидки</h2>
                     @if($errors->any())
-                        <div class="alert alert-success dont-show">{{$errors->first()}}</div>
+                    <div class="alert alert-success dont-show">{{$errors->first()}}</div>
                     @endif
-                    <form action="/complex/{{ request()->route('complex')->sc_id }}/discount" method="POST">
+                    <form action="/complex/{{ request()->route('complex')->sc_id }}/discount" method="POST"
+                        autocomplete="off">
                         @csrf
                         <input type="hidden" name="cd_type" value="1">
                         <div class="object-filter static-filter d-flex-justify">
@@ -98,9 +125,10 @@
                         </div>
                     </form>
                     <div class="discount-ind-cover">
-                        <form action="/complex/{{ request()->route('complex')->sc_id }}/discount" method="POST">
+                        <form action="/complex/{{ request()->route('complex')->sc_id }}/discount" method="POST"
+                            autocomplete="off">
                             @csrf
-                        <input type="hidden" name="cd_type" value="2">
+                            <input type="hidden" name="cd_type" value="2">
                             <div class="object-filter static-filter d-flex-justify">
                                 <div class="sidebar-item">
                                     <label class="input-search">
@@ -110,27 +138,28 @@
                                 <div class="sidebar-item">
                                     <label class="select-label select datalist">
                                         <i class="icon user"></i>
-                                        <input list="options" name="browser" placeholder="Логин клиента">
+                                        <input list="options" id="userchoise" placeholder="Логин клиента">
                                         <datalist id="options">
                                             @include('index.layouts.select-user')
                                         </datalist>
+                                        <input type="hidden" name="cd_user_id">
                                         <i class="fas fa-chevron-down arrow-select"></i>
                                     </label>
-
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="select-label input-search">
-                                        <input type="text" placeholder="Сумма скидки" class="discount-price">
+                                        <input type="text" name="cd_price" placeholder="Сумма скидки"
+                                            class="discount-price">
                                         <div class="discount-price-cover d-flex">
                                             <label class="checkbox-container">
-                                                <input type="checkbox" checked="checked">
+                                                <input type="radio" name="cd_pay_type" value="1" checked="checked">
                                                 <span class="checkmark">
                                                     тг
                                                 </span>
                                             </label>
 
                                             <label class="checkbox-container">
-                                                <input type="checkbox">
+                                                <input type="radio" name="cd_pay_type" value="0">
                                                 <span class="checkmark">
                                                     %
                                                 </span>
@@ -141,13 +170,14 @@
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="select-label input-search">
-                                        <input type="text" placeholder="Сентябрь – Октябрь" class="datefilter">
+                                        <input type="text" name="dates" placeholder="Сентябрь – Октябрь"
+                                            class="datefilter">
                                         <i class="icon i-calendar"></i>
                                     </label>
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="select-label input-search">
-                                        <input type="text" placeholder="По времени" class="single_time">
+                                        <input type="text" name="times" placeholder="По времени" class="single_time">
                                         <i class="icon i-clock"></i>
                                     </label>
                                 </div>
@@ -158,7 +188,10 @@
                         </form>
                     </div>
                     <div class="discount-auto-cover">
-                        <form action="#">
+                        <form action="/complex/{{ request()->route('complex')->sc_id }}/discount" method="POST"
+                            autocomplete="off">
+                            @csrf
+                            <input type="hidden" name="cd_type" value="3">
                             <div class="object-filter static-filter d-flex-justify">
                                 <div class="sidebar-item">
                                     <label class="input-search">
@@ -167,22 +200,23 @@
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="input-search">
-                                        <input type="text" placeholder="После скольки часов">
+                                        <input type="number" name="cd_hours" placeholder="После скольки часов">
                                     </label>
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="select-label input-search">
-                                        <input type="text" placeholder="Сумма скидки" class="discount-price">
+                                        <input type="text" name="cd_price" placeholder="Сумма скидки"
+                                            class="discount-price">
                                         <div class="discount-price-cover d-flex">
                                             <label class="checkbox-container">
-                                                <input type="checkbox" checked="checked">
+                                                <input type="radio" name="cd_pay_type" value="1" checked="checked">
                                                 <span class="checkmark">
                                                     тг
                                                 </span>
                                             </label>
 
                                             <label class="checkbox-container">
-                                                <input type="checkbox">
+                                                <input type="radio" name="cd_pay_type" value="0">
                                                 <span class="checkmark">
                                                     %
                                                 </span>
@@ -193,13 +227,14 @@
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="select-label input-search">
-                                        <input type="text" placeholder="Сентябрь – Октябрь" class="datefilter">
+                                        <input type="text" name="dates" placeholder="Сентябрь – Октябрь"
+                                            class="datefilter">
                                         <i class="icon i-calendar"></i>
                                     </label>
                                 </div>
                                 <div class="sidebar-item">
                                     <label class="select-label input-search">
-                                        <input type="text" placeholder="По времени" class="single_time">
+                                        <input type="text" name="times" placeholder="По времени" class="single_time">
                                         <i class="icon i-clock"></i>
                                     </label>
                                 </div>

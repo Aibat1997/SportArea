@@ -30,7 +30,11 @@
                 <h3>Вход</h3>
                 <button class="btn-plain close-popup"><i class="fas fa-times"></i></button>
             </div>
-
+            @if($errors->any())
+            <div class="alert alert-danger">
+                <strong>{{$errors->first()}}</strong>
+            </div>
+            @endif
             <form action="/login" method="POST" class="control-form">
                 @csrf
                 <input type="tel" class="enter_phone" name="phone" placeholder="Номер телефона">

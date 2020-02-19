@@ -1,4 +1,4 @@
-<div class="tab-pane active" id="tab-2">
+<div class="tab-pane {{ request()->tab == 2 ? 'active' : '' }}" id="tab-2">
     <div class="table-responsive">
         <table class="table table-hover table-object">
             <thead>

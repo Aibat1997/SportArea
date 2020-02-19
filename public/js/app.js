@@ -41280,7 +41280,9 @@ var render = function() {
                       "a",
                       {
                         staticClass: "btn-plain link-dashed",
-                        attrs: { href: "/complex/" + court.c_complex_id }
+                        attrs: {
+                          href: "/complex/" + court.c_complex_id + "?tab=2"
+                        }
                       },
                       [
                         _c("img", {
