@@ -1,10 +1,10 @@
-@extends('index.layouts.layout')    
+@extends('index.layouts.layout')
 
 @section('content')
 <section class="place-top">
     <img src="/index/img/main/main-football.png" alt="">
     <div class="container">
-        <h1>Футбол</h1>
+        <h1>{{ $sporttype->st_name }}</h1>
     </div>
 </section>
 <section class="main">
@@ -15,81 +15,52 @@
                     <i class="fas fa-times"></i>
                     Закрыть фильтр
                 </button>
-                <form action="#">
+                <form action="{{ url()->current() }}" method="GET">
                     <div class="sidebar-item">
                         <label class="select-label select">
-                            <select name="#">
-                                <option value="">По возрастанию цены</option>
-                                <option value="">По возрастанию цены 1</option>
-                                <option value="">По возрастанию цены 2</option>
+                            <select name="by_price">
+                                <option label="Сортировка по"></option>
+                                <option value="1">По возрастанию цены</option>
+                                <option value="0">По убыванию цены</option>
                             </select>
                             <i class="fas fa-chevron-down arrow-select"></i>
                         </label>
                         <label class="select-label select">
-                            <select name="#">
-                                <option value="">Алматы</option>
-                                <option value="">Алматы 1</option>
-                                <option value="">Алматы 2</option>
+                            <select name="city">
+                                @include('index.layouts.select-city')
                             </select>
                             <i class="fas fa-chevron-down arrow-select"></i>
                         </label>
                         <label class="select-label select">
-                            <select name="#">
-                                <option value="">Тип площадки</option>
-                                <option value="">Тип площадки 1</option>
-                                <option value="">Тип площадки 2</option>
+                            <select name="is_open">
+                                <option label="Тип площадки"></option>
+                                <option value="1">Открытое</option>
+                                <option value="0">Закрытое</option>
                             </select>
                             <i class="fas fa-chevron-down arrow-select"></i>
                         </label>
                         <label class="select-label select">
-                            <select name="#">
-                                <option value="">Тип покрытия</option>
-                                <option value="">Тип покрытия 1</option>
-                                <option value="">Тип покрытия 2</option>
+                            <select name="coverage">
+                                @include('index.layouts.select-coverage')
                             </select>
                             <i class="fas fa-chevron-down arrow-select"></i>
                         </label>
                         <label class="input-label">
-                            <input type="text" placeholder="Стоимость от">
-                            <input type="text" placeholder="Стоимость до">
+                            <input type="text" name="cost_from" placeholder="Стоимость от">
+                            <input type="text" name="cost_to" placeholder="Стоимость до">
                         </label>
                     </div>
                     <div class="sidebar-item">
                         <h2>Инфраструктура</h2>
+                        @php
+                            $infrastructure = App\Models\Infrastructure::orderBy('inf_sort_num', 'asc')->get();
+                        @endphp
+                        @foreach ($infrastructure as $item)
                         <div class="checkbox-cover">
-                            <input type='checkbox' class='ios8-switch' id='checkbox-1'>
-                            <label for='checkbox-1'>Тренер</label>
+                            <input type='checkbox' name="infrastructure[]" value="{{ $item->inf_id }}" class='ios8-switch' id='checkbox-1'>
+                            <label for='checkbox-1'>{{ $item->inf_name }}</label>
                         </div>
-                        <div class="checkbox-cover">
-                            <input type='checkbox' class='ios8-switch' id='checkbox-2'>
-                            <label for='checkbox-2'>Туалет</label>
-                        </div>
-                        <div class="checkbox-cover">
-                            <input type='checkbox' class='ios8-switch' id='checkbox-3'>
-                            <label for='checkbox-3'>Трибуны</label>
-                        </div>
-                        <div class="checkbox-cover">
-                            <input type='checkbox' class='ios8-switch' id='checkbox-4'>
-                            <label for='checkbox-4'>Освещение</label>
-                        </div>
-                        <div class="checkbox-cover">
-                            <input type='checkbox' class='ios8-switch' id='checkbox-5'>
-                            <label for='checkbox-5'>Раздевалки</label>
-                        </div>
-                        <div class="checkbox-cover">
-                            <input type='checkbox' class='ios8-switch' id='checkbox-6'>
-                            <label for='checkbox-6'>Сауна</label>
-                        </div>
-                        </div>
-                    <div class="sidebar-item">
-                        <div class="checkbox-cover">
-                            <input type='checkbox' class='ios8-switch' id='checkbox-7'>
-                            <label for='checkbox-7'>Душевая</label>
-                        </div>
-                        <div class="checkbox-cover">
-                            <input type='checkbox' class='ios8-switch' id='checkbox-8'>
-                            <label for='checkbox-8'>Парковка</label>
-                        </div>
+                        @endforeach
                     </div>
                     <div class="sidebar-item">
                         <label class="select-label">
@@ -127,51 +98,47 @@
                     <div class="tab-content">
                         <div class="tab-pane active" id="tab-1">
                             <div class="row">
-
                                 @foreach ($complexes as $item)
-                                    <div class="col-md-4 col-sm-6">
-                                        <a href="#">
-                                            <div class="place-item">
-                                                <div class="place-item-img">
-                                                    <img src="img/main/place.png" alt="">
-                                                    <button class="btn-plain btn-star favorite">
-                                                        <i class="icon i-star"></i>
-                                                    </button>
-                                                </div>
-                                                <div class="place-item-caption">
-                                                    <h3 class="d-flex"> ASA <i class="icon red-fire"></i></h3>
-                                                    <p>от <span>5000</span> 4500 тг/ч</p>
-                                                    <ul class="place-detail">
-                                                        <li>
-                                                            <img src="img/icon/star-blue.png" alt="">
-                                                            4.76 <span>(333 отзыва)</span>
-                                                        </li>
-                                                        <li class="border-bottom">
-                                                            <img src="img/icon/map.svg" alt="">
-                                                            Сейфуллина проспект, 51
-                                                        </li>
-                                                        <li>
-                                                            <img src="img/icon/place-type.png" alt="">
-                                                            Открытое поле
-                                                            <img src="img/icon/size.svg" alt="" class="size">
-                                                            21X41м
-                                                        </li>
-                                                    </ul>
-                                                    <button href="#" class="btn-plain btn-blue">
-                                                        Подробнее
-                                                    </button>
-                                                </div>
+                                <div class="col-md-4 col-sm-6">
+                                    <a href="#">
+                                        <div class="place-item">
+                                            <div class="place-item-img">
+                                                <img src="{{ $item->sc_image }}" alt="">
+                                                <button class="btn-plain btn-star favorite">
+                                                    <i class="icon i-star"></i>
+                                                </button>
                                             </div>
-                                        </a>
-                                    </div>
+                                            <div class="place-item-caption">
+                                                <h3 class="d-flex"> {{ $item->sc_name }} <i class="icon red-fire"></i>
+                                                </h3>
+                                                <p>от {{ $item->courts->min('c_cost') }} тг/ч</p>
+                                                <ul class="place-detail">
+                                                    <li>
+                                                        <img src="img/icon/star-blue.png" alt="">
+                                                        {{ $item->sc_raiting }} <span>(333 отзыва)</span>
+                                                    </li>
+                                                    <li class="border-bottom">
+                                                        <img src="img/icon/map.svg" alt="">
+                                                        {{ $item->sc_addres }}
+                                                    </li>
+                                                    <li>
+                                                        <img src="img/icon/place-type.png" alt="">
+                                                        {{ $item->courts->first()->c_open_field == 1 ? 'Открытое поле' : 'Закрытое поле' }}
+                                                        <img src="img/icon/size.svg" alt="" class="size">
+                                                        {{ $item->courts->first()->c_area }} м
+                                                    </li>
+                                                </ul>
+                                                <button href="#" class="btn-plain btn-blue">
+                                                    Подробнее
+                                                </button>
+                                            </div>
+                                        </div>
+                                    </a>
+                                </div>
                                 @endforeach
-
                             </div>
                         </div>
-                        <div class="tab-pane" id="tab-2">
-
-                        </div>
-
+                        <div class="tab-pane" id="tab-2"></div>
                     </div>
                 </div>
             </div>
