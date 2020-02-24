@@ -31,6 +31,7 @@ Route::middleware(['web'])->namespace('Index')->group(function() {
     Route::get('news', 'NewsController@index');
     Route::get('news/{news}', 'NewsController@showById');
     Route::get('sport-type/{sporttype}', 'ComplexController@showById');
+    Route::get('complex/{complex}/courts', 'ComplexController@showCourts');
     Route::post('register', 'AuthController@register');
     Route::post('login', 'AuthController@login');
     Route::get('login', 'AuthController@loginPage')->name('login');
@@ -49,5 +50,6 @@ Route::middleware(['web'])->namespace('Index')->group(function() {
         Route::get('complex/{complex}', 'ComplexController@infoById');
         Route::post('complex/{complex}/discount', 'ComplexDiscountController@storeDiscount');
         Route::post('complex/discount/change', 'ComplexDiscountController@updateDiscount');
+        Route::post('complex/{complex}/review', 'ReviewsController@store');
     });
 });

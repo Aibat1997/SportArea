@@ -13,4 +13,9 @@ class Courts extends Model
     {
         return $this->belongsToMany('App\Models\Infrastructure', 'court_infrastructures', 'ci_court_id', 'ci_infrasructure_id');
     }
+
+    public function coverage()
+    {
+        return $this->belongsTo('App\Models\TypeCoverage', 'c_coverage_id', 'tc_id');
+    }
 }

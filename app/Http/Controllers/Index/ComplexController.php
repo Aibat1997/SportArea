@@ -5,12 +5,13 @@ namespace App\Http\Controllers\Index;
 use App\Http\Controllers\Controller;
 use App\Http\Helpers;
 use App\Models\ComplexDiscount;
+use App\Models\Courts;
 use App\Models\SportComplex;
 use App\Models\SportTypes;
 use Exception;
+use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
-use App\Models\Courts;
 
 class ComplexController extends Controller
 {
@@ -21,32 +22,53 @@ class ComplexController extends Controller
 
     public function showById(Request $request, SportTypes $sporttype)
     {
-        $courts = Courts::select(\DB::raw("MIN(c_cost) AS min_price"), 'c_complex_id')->groupBy('c_complex_id')->get();
-        $complexes = $sporttype->complexes;
-        $complexes_id = array();
-        if ($request->has('by_price')) {
-            foreach ($complexes as $key => $value) {
-                dd($value->cheapCourt->first());
+        $complexes = $sporttype->complexes();
+
+        if ($request->by_price != null) {
+            if ($request->by_price == 1) {
+                $courts = Courts::select(\DB::raw("MIN(c_cost) AS min_price"), 'c_complex_id')->orderBy('min_price', 'asc')->groupBy('c_complex_id')->get();
+            } else {
+                $courts = Courts::select(\DB::raw("MAX(c_cost) AS max_price"), 'c_complex_id')->orderBy('max_price', 'desc')->groupBy('c_complex_id')->get();
             }
+            $complexes_id = array();
+            foreach ($courts as $key => $court) {
+                array_push($complexes_id, $court->c_complex_id);
+            }
+
+            $ids_ordered = implode(',', $complexes_id);
+            $complexes->whereIn('sc_id', $complexes_id)->orderByRaw("FIELD(sc_id, $ids_ordered)");
         }
-        if ($request->has('city')) {
+        if ($request->city != null) {
             $complexes->where('sc_city_id', $request->city);
         }
-        if ($request->has('is_open')) {
+        if ($request->is_open != null) {
             $complexes->where('c_open_field', $request->is_open);
         }
-        if ($request->has('coverage')) {
-            $complexes->where('c_coverage_id', $request->coverage);
+        if ($request->coverage != null) {
+            $complexes->whereHas('courts', function (Builder $query) use ($request) {
+                $query->where('c_coverage_id', $request->coverage);
+            });
         }
-        if ($request->has('cost_from')) {
-            $complexes->where('c_cost', '>=', $request->cost_from);
+        if ($request->cost_from != null) {
+            $complexes->whereHas('courts', function (Builder $query) use ($request) {
+                $query->where('c_cost', '>=', $request->cost_from);
+            });
         }
-        if ($request->has('cost_to')) {
-            $complexes->where('c_cost', '<=', $request->cost_to);
+        if ($request->cost_to != null) {
+            $complexes->whereHas('courts', function (Builder $query) use ($request) {
+                $query->where('c_cost', '<=', $request->cost_to);
+            });
+        }
+        if ($request->has('infrastructure')) {
+            $complexes->whereHas('courts', function (Builder $query) use ($request) {
+                $query->whereHas('infrastructures', function (Builder $query) use ($request) {
+                    $query->whereIn('inf_id', $request->infrastructure);
+                });
+            });
         }
 
-        $complexes->get();
-        
+        $complexes = $complexes->get();
+
         return view('index.sport-inside', compact('complexes', 'sporttype'));
     }
 
@@ -108,5 +130,11 @@ class ComplexController extends Controller
         $complex_id = Auth::user()->complex()->first()->sc_id;
         $discounts = ComplexDiscount::where('cd_complex_id', $complex_id)->get();
         return view('index.object-inside', compact('complex', 'discounts'));
+    }
+
+    public function showCourts(SportComplex $complex)
+    {
+        $courts = $complex->courts;
+        return view('index.court', compact('complex', 'courts'));
     }
 }

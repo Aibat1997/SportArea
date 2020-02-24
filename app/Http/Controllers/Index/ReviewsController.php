@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\Index;
 
+use App\Http\Controllers\Controller;
 use App\Models\Reviews;
 use Illuminate\Http\Request;
 

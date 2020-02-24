@@ -15,13 +15,16 @@
                     <i class="fas fa-times"></i>
                     Закрыть фильтр
                 </button>
-                <form action="{{ url()->current() }}" method="GET">
+                <form action="{{ url()->current() }}" method="GET" id="filter_form">
                     <div class="sidebar-item">
                         <label class="select-label select">
                             <select name="by_price">
                                 <option label="Сортировка по"></option>
-                                <option value="1">По возрастанию цены</option>
-                                <option value="0">По убыванию цены</option>
+                                <option value="1" {{ request()->by_price == 1 ? 'selected' : '' }}>По возрастанию цены
+                                </option>
+                                <option value="0"
+                                    {{ request()->by_price == 0 && request()->by_price != null ? 'selected' : '' }}>По
+                                    убыванию цены</option>
                             </select>
                             <i class="fas fa-chevron-down arrow-select"></i>
                         </label>
@@ -34,8 +37,10 @@
                         <label class="select-label select">
                             <select name="is_open">
                                 <option label="Тип площадки"></option>
-                                <option value="1">Открытое</option>
-                                <option value="0">Закрытое</option>
+                                <option value="1" {{ request()->is_open == 1 ? 'selected' : '' }}>Открытое</option>
+                                <option value="0"
+                                    {{ request()->is_open == 0 && request()->is_open != null ? 'selected' : '' }}>
+                                    Закрытое</option>
                             </select>
                             <i class="fas fa-chevron-down arrow-select"></i>
                         </label>
@@ -46,26 +51,31 @@
                             <i class="fas fa-chevron-down arrow-select"></i>
                         </label>
                         <label class="input-label">
-                            <input type="text" name="cost_from" placeholder="Стоимость от">
-                            <input type="text" name="cost_to" placeholder="Стоимость до">
+                            <input type="text" name="cost_from"
+                                value="{{ request()->cost_from != null ? request()->cost_from : '' }}"
+                                placeholder="Стоимость от">
+                            <input type="text" name="cost_to"
+                                value="{{ request()->cost_to != null ? request()->cost_to : '' }}"
+                                placeholder="Стоимость до">
                         </label>
                     </div>
                     <div class="sidebar-item">
                         <h2>Инфраструктура</h2>
                         @php
-                            $infrastructure = App\Models\Infrastructure::orderBy('inf_sort_num', 'asc')->get();
+                        $infrastructure = App\Models\Infrastructure::orderBy('inf_sort_num', 'asc')->get();
                         @endphp
                         @foreach ($infrastructure as $item)
                         <div class="checkbox-cover">
-                            <input type='checkbox' name="infrastructure[]" value="{{ $item->inf_id }}" class='ios8-switch' id='checkbox-1'>
-                            <label for='checkbox-1'>{{ $item->inf_name }}</label>
+                            <input type='checkbox' name="infrastructure[]" value="{{ $item->inf_id }}"
+                                class='ios8-switch' id='checkbox-{{ $item->inf_id }}'>
+                            <label for='checkbox-{{ $item->inf_id }}'>{{ $item->inf_name }}</label>
                         </div>
                         @endforeach
                     </div>
                     <div class="sidebar-item">
                         <label class="select-label">
                             <button class="btn-plain btn-blue" type="submit">Применить</button>
-                            <button class="btn-plain btn-silver">Сбросить фильтр</button>
+                            <a class="btn-plain btn-silver" href="{{ url()->current() }}">Сбросить фильтр</a>
                         </label>
 
                     </div>
@@ -100,7 +110,7 @@
                             <div class="row">
                                 @foreach ($complexes as $item)
                                 <div class="col-md-4 col-sm-6">
-                                    <a href="#">
+                                    <a href="/complex/{{ $item->sc_id }}/courts">
                                         <div class="place-item">
                                             <div class="place-item-img">
                                                 <img src="{{ $item->sc_image }}" alt="">
@@ -128,7 +138,7 @@
                                                         {{ $item->courts->first()->c_area }} м
                                                     </li>
                                                 </ul>
-                                                <button href="#" class="btn-plain btn-blue">
+                                                <button href="/complex/{{ $item->sc_id }}/courts" class="btn-plain btn-blue">
                                                     Подробнее
                                                 </button>
                                             </div>

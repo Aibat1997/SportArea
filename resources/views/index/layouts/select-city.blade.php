@@ -4,5 +4,9 @@
 
 <option label="Выберите город"></option>
 @foreach ($cities as $item)
-    <option value="{{ $item->city_id }}">{{ $item->city_name }}</option>
+    @if (request()->city != null)
+        <option value="{{ $item->city_id }}" {{ request()->city == $item->city_id ? 'selected' : '' }}>{{ $item->city_name }}</option>
+    @else
+        <option value="{{ $item->city_id }}">{{ $item->city_name }}</option>
+    @endif
 @endforeach

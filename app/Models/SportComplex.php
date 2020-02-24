@@ -17,6 +17,11 @@ class SportComplex extends Model
         'sc_is_closed' => false
     ];
 
+    public function city()
+    {
+        return $this->belongsTo('App\Models\City', 'sc_city_id', 'city_id');
+    }
+
     public function sporttype()
     {
         return $this->belongsTo('App\Models\SportTypes');
@@ -31,7 +36,8 @@ class SportComplex extends Model
     {
         return $this->hasMany('App\Models\Inventory', 'inv_complex_id', 'sc_id');
     }
-    public function cheapCourt(){
+    public function cheapCourt()
+    {
         return $this->hasMany('App\Models\Courts', 'c_complex_id', 'sc_id')->orderBy('c_cost');
     }
 }
