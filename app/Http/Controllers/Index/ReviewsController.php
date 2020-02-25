@@ -4,7 +4,9 @@ namespace App\Http\Controllers\Index;
 
 use App\Http\Controllers\Controller;
 use App\Models\Reviews;
+use App\Models\SportComplex;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 
 class ReviewsController extends Controller
 {
@@ -34,9 +36,16 @@ class ReviewsController extends Controller
      * @param  \Illuminate\Http\Request  $request
      * @return \Illuminate\Http\Response
      */
-    public function store(Request $request)
+    public function store(Request $request, SportComplex $complex)
     {
-        //
+        Reviews::create([
+            'r_complex_id' => $complex->sc_id,
+            'r_user_id' => Auth::user()->user_id,
+            'r_text' => $request->r_text,
+            'r_raiting' => null,
+        ]);
+
+        return redirect()->back()->with('success_review', 'Отзыв был добавлен');   
     }
 
     /**

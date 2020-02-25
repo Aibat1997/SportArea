@@ -3,6 +3,7 @@
 @section('css')
 <link rel="stylesheet" href="/index/slick/slick.css">
 <link rel="stylesheet" href="/index/slick/slick-theme.css">
+<link rel="stylesheet" href="/index/css/starrr.css">
 <link href="/index/css/lightgallery.min.css" rel="stylesheet" type="text/css">
 <style>
     .main-image {
@@ -15,6 +16,36 @@
         height: 100%;
         object-fit: cover;
         object-position: top;
+    }
+
+    .starrr a {
+        font-size: 25px;
+        margin-right: 10px;
+        color: #0057FF;
+        height: 26px;
+    }
+
+    .starrr a:hover {
+
+        color: #0057FF;
+    }
+
+    .starrr .far {
+        color: #0057FF;
+
+    }
+
+    .starrr .fas {
+        color: #0057FF;
+
+    }
+
+    .fa,
+    .fab,
+    .fal,
+    .far,
+    .fas {
+        line-height: normal;
     }
 </style>
 @endsection
@@ -114,7 +145,7 @@
                                     </li>
                                     @endif
                                     <li>
-                                        <img src="/index/img/icon/court-light.svg" alt=""> 
+                                        <img src="/index/img/icon/court-light.svg" alt="">
                                         <span>{{ $complex->sc_description }}</span>
                                     </li>
                                 </ul>
@@ -129,8 +160,9 @@
                                     <h2 class="d-flex">₸{{ $court->c_cost }} <span></span>
                                         <p>за час</p>
                                     </h2>
-                                    <p class="d-flex"><img src="/index/img/icon/star-blue.png" alt=""> {{ $complex->sc_raiting }}
-                                        <span>(333 отзыва)</span></p>
+                                    <p class="d-flex"><img src="/index/img/icon/star-blue.png" alt="">
+                                        {{ $complex->sc_raiting }}
+                                        <span>({{ $complex->reviews->count() }} отзыва)</span></p>
                                     <span class="discount">-10%</span>
                                 </div>
                                 <div class="court-sticky-body">
@@ -168,7 +200,7 @@
                             <div class="court-review-base d-flex-justify">
                                 <ul class="d-flex">
                                     <li><img src="/index/img/icon/star-blue.png" alt=""> {{ $complex->sc_raiting }}</li>
-                                    <li class="bordered"> 333 <span>отзыва</span></li>
+                                    <li class="bordered"> {{ $complex->reviews->count() }} <span>отзыва</span></li>
                                 </ul>
                                 @auth
                                 <button class="btn-plain leave-review">Оставить отзыв <i
@@ -176,6 +208,14 @@
                                 @endauth
                             </div>
                         </div>
+                        @if (session('success_review'))
+                        <div class="alert alert-warning alert-dismissible warning-popup">
+                            <ul>
+                                <a href="#" class="close" data-dismiss="alert" aria-label="close">&times;</a>
+                                <li>{{ session('success_review') }}</li>
+                            </ul>
+                        </div>
+                        @endif
                         <div class="leave-review-cover">
                             <form action="/complex/{{ $complex->sc_id }}/review" method="POST">
                                 @csrf
@@ -184,57 +224,31 @@
                                 <div class="leave-review-base d-flex-justify">
                                     <div class="rate-cover d-flex">
                                         <p>Ваша оценка:</p>
-                                        <button class="btn-plain btn-rate one">
-                                            <i class="icon grey-star-lg"></i>
-                                        </button>
-                                        <button class="btn-plain btn-rate two">
-                                            <i class="icon grey-star-lg"></i>
-                                        </button>
-                                        <button class="btn-plain btn-rate three">
-                                            <i class="icon grey-star-lg"></i>
-                                        </button>
-                                        <button class="btn-plain btn-rate four">
-                                            <i class="icon grey-star-lg"></i>
-                                        </button>
-                                        <button class="btn-plain btn-rate five">
-                                            <i class="icon grey-star-lg"></i>
-                                        </button>
+                                        <div class='starrr' id='star2'></div>
+
                                     </div>
                                     <button class="btn-blue" type="submit">Отправить</button>
                                 </div>
+                                <input type='text' name='rating' value='0' id='star2_input' />
                             </form>
                         </div>
                         <div class="court-review-body">
+                            @foreach ($complex->reviews as $review)
                             <div class="court-review-item d-flex-justify">
                                 <div class="court-review-item-img">
-                                    <img src="/index/img/icon/prof.png" alt="">
+                                    <img src="{{ $review->author->avatar }}" alt="">
                                 </div>
                                 <div class="court-review-item-caption">
-                                    <h2>Шерхан</h2>
-                                    <span>Октябрь 2019</span>
-                                    <p>Gilian's place is positively perfect. He's thought of everything ladies, no need
-                                        to pack
-                                        your hairdryer or curling iron, he has that. There's also an iron and board to
-                                        press
-                                        your clothes after the journey. His kitchen has everything you need to make your
-                                        own
-                                        food after gathering…
-                                    </p>
-                                    <div class="review-hide">
-                                        <p>
-                                            Gilian's place is positively perfect. He's thought of everything ladies, no
-                                            need to
-                                            pack
-                                            your hairdryer or curling iron, he has that. There's also an iron and board
-                                            to press
-                                            your clothes after the journey. His kitchen has everything you need to make
-                                            your own
-                                            food after gathering…
-                                        </p>
+                                    <h2>{{ $review->author->user_firstname }}</h2>
+                                    <span>{{ App\Http\Helpers::getDateFormat($review->created_at) }}</span>
+                                    <div class="review-text">
+                                        <p>{{ $review->r_text }}</p>
+                        
                                     </div>
                                     <button class="btn-plain review-show">Читать дальше</button>
                                 </div>
                             </div>
+                            @endforeach
                         </div>
                     </div>
                 </div>
@@ -248,13 +262,25 @@
 @section('js')
 <script type="text/javascript" src="/index/js/lightgallery.min.js"></script>
 <script type="text/javascript" src="/index/js/lightgallery-all.min.js"></script>
+<script type="text/javascript" src="/index/js/starrr.js"></script>
 <script type="text/javascript" src="/index/slick/slick.js"></script>
 <script type="text/javascript">
 
-    $('.btn-rate').on('click', function (e) {
-        e.preventDefault();
-        $(this).find('.grey-star-lg').toggleClass('blue-star-lg')
+
+    var $s2input = $('#star2_input');
+    $('#star2').starrr({
+        max: 5,
+        rating: $s2input.val(),
+        change: function (e, value) {
+            $s2input.val(value).trigger('input');
+        }
     });
+
+
+    // $('.btn-rate').on('click', function (e) {
+    //     e.preventDefault();
+    //     $(this).find('.grey-star-lg').toggleClass('blue-star-lg')
+    // });
     $('.court-sl').lightGallery();
     $('.court-sl').slick({
         slidesToShow: 3,
@@ -303,10 +329,29 @@
         timepicker: false,
         format: 'd.m.Y'
     });
+
+  
+    $(function () {
+
+        var s = $(".review-text"), height = 0, arr = [];
+
+        s.each(function (indx, element) {
+
+            arr[indx] = $(this).height();
+            if( $(this).height() < 75 ){
+                console.log($(this));
+                $(this).closest(".court-review-item-caption").find('.review-show').hide();
+            }
+        });
+    });
+
+
+
     $('.review-show').on('click', function () {
-        var answer = $(this).closest(".court-review-item-caption").find(".review-hide");
-        answer.not(answer).slideUp(400);
-        answer.slideToggle(400);
+        var answer = $(this).closest(".court-review-item-caption").find(".review-text");
+        answer.toggleClass('review-text-full');
+        // answer.not(answer).slideUp(400);
+        // answer.slideToggle(400);
         if (this.innerText == "Читать дальше") {
             this.innerText = "Скрыть";
         }
@@ -382,6 +427,8 @@
         });
 
     });
+
+
 
 </script>
 <script src="https://api-maps.yandex.ru/2.1/?apikey=<ваш API-ключ>&lang=ru_RU" type="text/javascript"></script>

@@ -131,12 +131,14 @@
                                                         <img src="img/icon/map.svg" alt="">
                                                         {{ $item->sc_addres }}
                                                     </li>
+                                                    @if(!is_null($item->courts->first()))
                                                     <li>
                                                         <img src="img/icon/place-type.png" alt="">
                                                         {{ $item->courts->first()->c_open_field == 1 ? 'Открытое поле' : 'Закрытое поле' }}
                                                         <img src="img/icon/size.svg" alt="" class="size">
                                                         {{ $item->courts->first()->c_area }} м
                                                     </li>
+                                                    @endif
                                                 </ul>
                                                 <button href="/complex/{{ $item->sc_id }}/courts" class="btn-plain btn-blue">
                                                     Подробнее

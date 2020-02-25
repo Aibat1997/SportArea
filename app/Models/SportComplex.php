@@ -40,4 +40,9 @@ class SportComplex extends Model
     {
         return $this->hasMany('App\Models\Courts', 'c_complex_id', 'sc_id')->orderBy('c_cost');
     }
+
+    public function reviews()
+    {
+        return $this->hasMany('App\Models\Reviews', 'r_complex_id', 'sc_id');
+    }
 }

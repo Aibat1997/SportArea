@@ -17,7 +17,7 @@ class CreateReviewsTable extends Migration
             $table->unsignedBigInteger('r_complex_id');
             $table->unsignedBigInteger('r_user_id');
             $table->text('r_text');
-            $table->integer('r_raiting')->unsigned();
+            $table->double('r_raiting')->unsigned();
             $table->timestamps();
 
             $table->foreign('r_complex_id')->references('sc_id')->on('sport_complexes')->onDelete('cascade');

@@ -1942,7 +1942,14 @@ input[type="checkbox"].ios8-switch:checked + label:before {
 .review-hide {
   display: none;
 }
-
+.review-text{
+  max-height: 75px;
+  overflow: hidden;
+  transition: all 0.4s ease;
+}
+.review-text-full{
+  max-height: 100%;
+}
 .review-show {
   color: #0057FF;
   margin-right: 5px;
@@ -2215,6 +2222,26 @@ input[type="checkbox"].ios8-switch:checked + label:before {
   color: #0000FF;
   padding: 10px 30px;
   font-weight: 600;
+}
+
+.warning-popup {
+  position: fixed;
+  background: #555;
+  background: rgba(0,0,0,.8);
+  top: 30%;
+  left: 0;
+  right: 0;
+  margin: 0 auto 10px;
+  z-index: 99999999;
+  width: 100%;
+  max-width: 30%;
+  color: #fff;
+  /* padding: 20px; */
+  height: auto;
+  border-radius: 4px;
+  -webkit-box-shadow: 0 0 15px -5px #eee;
+  box-shadow: 0 0 15px -5px #eee;
+  line-height: 1.25;
 }
 
 .profile-info {
