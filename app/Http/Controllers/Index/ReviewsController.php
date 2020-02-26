@@ -42,8 +42,13 @@ class ReviewsController extends Controller
             'r_complex_id' => $complex->sc_id,
             'r_user_id' => Auth::user()->user_id,
             'r_text' => $request->r_text,
-            'r_raiting' => null,
+            'r_raiting' => $request->r_raiting
         ]);
+
+        $reviews = $complex->reviews()->whereNotNull('r_raiting')->get();
+        $raiting = $reviews->sum('r_raiting')/$reviews->count();
+        $complex_rating = number_format((float)$raiting, 2, '.', '');
+        $complex->update(['sc_raiting' => $complex_rating]);
 
         return redirect()->back()->with('success_review', 'Отзыв был добавлен');   
     }

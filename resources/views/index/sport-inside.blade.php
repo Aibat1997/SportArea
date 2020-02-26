@@ -110,12 +110,14 @@
                             <div class="row">
                                 @foreach ($complexes as $item)
                                 <div class="col-md-4 col-sm-6">
-                                    <a href="/complex/{{ $item->sc_id }}/courts">
+                                    <div>
                                         <div class="place-item">
                                             <div class="place-item-img">
                                                 <img src="{{ $item->sc_image }}" alt="">
-                                                <button class="btn-plain btn-star favorite">
-                                                    <i class="icon i-star"></i>
+                                                <button class="btn-plain btn-star favorite"
+                                                    onclick="makefavorite({{ $item->sc_id }})">
+                                                    <i id="favorite-{{ $item->sc_id }}"
+                                                        class="icon {{ Auth::user()->isFavorite($item->sc_id) ? 'i-star-red' : 'i-star' }}"></i>
                                                 </button>
                                             </div>
                                             <div class="place-item-caption">
@@ -124,28 +126,30 @@
                                                 <p>от {{ $item->courts->min('c_cost') }} тг/ч</p>
                                                 <ul class="place-detail">
                                                     <li>
-                                                        <img src="img/icon/star-blue.png" alt="">
-                                                        {{ $item->sc_raiting }} <span>(333 отзыва)</span>
+                                                        <img src="/index/img/icon/star-blue.png" alt="">
+                                                        {{ $item->sc_raiting }} <span>({{ $item->reviews->count() }}
+                                                            отзыва)</span>
                                                     </li>
                                                     <li class="border-bottom">
-                                                        <img src="img/icon/map.svg" alt="">
+                                                        <img src="/index/img/icon/map.svg" alt="">
                                                         {{ $item->sc_addres }}
                                                     </li>
                                                     @if(!is_null($item->courts->first()))
                                                     <li>
-                                                        <img src="img/icon/place-type.png" alt="">
+                                                        <img src="/index/img/icon/place-type.png" alt="">
                                                         {{ $item->courts->first()->c_open_field == 1 ? 'Открытое поле' : 'Закрытое поле' }}
-                                                        <img src="img/icon/size.svg" alt="" class="size">
+                                                        <img src="/index/img/icon/size.svg" alt="" class="size">
                                                         {{ $item->courts->first()->c_area }} м
                                                     </li>
                                                     @endif
                                                 </ul>
-                                                <button href="/complex/{{ $item->sc_id }}/courts" class="btn-plain btn-blue">
+                                                <a href="/complex/{{ $item->sc_id }}/courts"
+                                                    class="btn-plain btn-blue">
                                                     Подробнее
-                                                </button>
+                                                </a>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
                                 @endforeach
                             </div>
@@ -157,4 +161,26 @@
         </div>
     </div>
 </section>
+@endsection
+
+@section('js')
+<script>
+    function makefavorite(complex_id) {
+        let button = $(this);
+        axios.post('/user-favorite', {
+            complex: complex_id,
+        })
+            .then(function (response) {
+                console.log(response);
+                if (response.data.status) {
+                    $('#favorite-' + response.data.id).removeClass("i-star").addClass("i-star-red");
+                } else {
+                    $('#favorite-' + response.data.id).removeClass("i-star-red").addClass("i-star");
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
+    }
+</script>
 @endsection

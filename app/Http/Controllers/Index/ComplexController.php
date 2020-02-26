@@ -134,6 +134,7 @@ class ComplexController extends Controller
 
     public function showCourts(SportComplex $complex)
     {
+        $complex->increment('sc_views');
         $courts = $complex->courts;
         return view('index.court', compact('complex', 'courts'));
     }

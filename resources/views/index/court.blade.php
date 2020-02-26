@@ -67,9 +67,10 @@
                     {{ $complex->sc_name }}
                     <i class="icon red-fire"></i>
                 </h1>
-                <button class="btn-plain favorite-plain d-flex">
-                    <i class="icon i-star"></i>
-                    Добавить в избранное
+                <button class="btn-plain favorite-plain d-flex" onclick="makefavorite({{ $complex->sc_id }})">
+                    <i id="favorite-{{ $complex->sc_id }}"
+                        class="icon {{ Auth::user()->isFavorite($complex->sc_id) ? 'i-star-red' : 'i-star' }}"></i>
+                        Добавить в избранное
                 </button>
             </div>
             <div class="court-tab-cover">
@@ -169,7 +170,7 @@
                                     <div class="sidebar-item">
                                         <label class="select-label">
                                             <a href="create-match.html" class="btn-plain btn-blue">Забронировать</a>
-                                            <a href="match-step-3.html"
+                                            <a href="/match-1"
                                                 class="btn-plain btn-silver btn-blue-light">Создать матч
                                             </a>
                                             <p>Пока вы ни за что не платите</p>
@@ -206,6 +207,10 @@
                                 <button class="btn-plain leave-review">Оставить отзыв <i
                                         class="fas fa-plus"></i></button>
                                 @endauth
+                                @guest
+                                <a href="/login" class="btn-plain">Оставить отзыв <i
+                                    class="fas fa-plus"></i></a>
+                                @endguest
                             </div>
                         </div>
                         @if (session('success_review'))
@@ -224,12 +229,11 @@
                                 <div class="leave-review-base d-flex-justify">
                                     <div class="rate-cover d-flex">
                                         <p>Ваша оценка:</p>
-                                        <div class='starrr' id='star2'></div>
-
+                                        <div class="starrr" id="star2"></div>
+                                        <input type="hidden" name="r_raiting" value="0" id="star2_input" />
                                     </div>
                                     <button class="btn-blue" type="submit">Отправить</button>
                                 </div>
-                                <input type='text' name='rating' value='0' id='star2_input' />
                             </form>
                         </div>
                         <div class="court-review-body">
@@ -507,6 +511,25 @@
             }));
 
 
+    }
+</script>
+<script>
+    function makefavorite(complex_id) {
+        let button = $(this);
+        axios.post('/user-favorite', {
+            complex: complex_id,
+        })
+            .then(function (response) {
+                console.log(response);
+                if (response.data.status) {
+                    $('#favorite-' + response.data.id).removeClass("i-star").addClass("i-star-red");
+                } else {
+                    $('#favorite-' + response.data.id).removeClass("i-star-red").addClass("i-star");
+                }
+            })
+            .catch(function (error) {
+                console.log(error);
+            });
     }
 </script>
 @endsection

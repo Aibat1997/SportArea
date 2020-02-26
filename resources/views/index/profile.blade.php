@@ -55,7 +55,7 @@
                     <div class="tab-content prof-content">
                         <div class="tab-pane active" id="tab-1">
                             @if($errors->any())
-                                <div class="alert alert-success dont-show">{{$errors->first()}}</div>
+                            <div class="alert alert-success dont-show">{{$errors->first()}}</div>
                             @endif
                             <form action="/profile" method="POST" enctype="multipart/form-data">
                                 @csrf
@@ -185,21 +185,22 @@
                         </div>
                         <div class="tab-pane" id="tab-4">
                             <div class="row">
+                                @foreach (Auth::user()->favoriteFields() as $item)
+                                {{ dd($item->courts) }}
                                 <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <a href="#">
+                                    <div>
                                         <div class="place-item">
                                             <div class="place-item-img">
-                                                <img src="/index/img/main/place.png" alt="">
-                                                <button class="btn-plain btn-star favorite">
-                                                    <i class="icon i-star-red"></i>
+                                                <img src="{{ $item->sc_image }}" alt="">
+                                                <button class="btn-plain btn-star favorite"
+                                                    onclick="makefavorite({{ $item->sc_id }})">
+                                                    <i id="favorite-{{ $item->sc_id }}"
+                                                        class="icon {{ Auth::user()->isFavorite($item->sc_id) ? 'i-star-red' : 'i-star' }}"></i>
                                                 </button>
-                                                <span class="discount">
-                                                    -10%
-                                                </span>
                                             </div>
                                             <div class="place-item-caption">
-                                                <h3 class="d-flex"> ASA <i class="icon red-fire"></i></h3>
-                                                <p>от <span>5000</span> 4500 тг/ч</p>
+                                                <h3 class="d-flex"> {{ $item->sc_name }} <i class="icon red-fire"></i></h3>
+                                                <p>от <span>{{ $item->courts->min('c_cost') }}</span> 4500 тг/ч</p>
                                                 <ul class="place-detail">
                                                     <li>
                                                         <img src="/index/img/icon/star-blue.png" alt="">
@@ -216,89 +217,14 @@
                                                         21X41м
                                                     </li>
                                                 </ul>
-                                                <button href="#" class="btn-plain btn-blue">
+                                                <button href="/complex/{{ $item->sc_id }}/courts" class="btn-plain btn-blue">
                                                     Подробнее
                                                 </button>
                                             </div>
                                         </div>
-                                    </a>
+                                    </div>
                                 </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <a href="#">
-                                        <div class="place-item">
-                                            <div class="place-item-img">
-                                                <img src="/index/img/main/place.png" alt="">
-                                                <button class="btn-plain btn-star favorite">
-                                                    <i class="icon i-star-red"></i>
-                                                </button>
-                                                <span class="discount">
-                                                    -10%
-                                                </span>
-                                            </div>
-                                            <div class="place-item-caption">
-                                                <h3 class="d-flex"> ASA <i class="icon red-fire"></i></h3>
-                                                <p>от <span>5000</span> 4500 тг/ч</p>
-                                                <ul class="place-detail">
-                                                    <li>
-                                                        <img src="/index/img/icon/star-blue.png" alt="">
-                                                        4.76 <span>(333 отзыва)</span>
-                                                    </li>
-                                                    <li class="border-bottom">
-                                                        <img src="/index/img/icon/map.svg" alt="">
-                                                        Сейфуллина проспект, 51
-                                                    </li>
-                                                    <li>
-                                                        <img src="/index/img/icon/place-type.png" alt="">
-                                                        Открытое поле
-                                                        <img src="/index/img/icon/size.svg" alt="" class="size">
-                                                        21X41м
-                                                    </li>
-                                                </ul>
-                                                <button href="#" class="btn-plain btn-blue">
-                                                    Подробнее
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
-                                <div class="col-lg-4 col-md-6 col-sm-6">
-                                    <a href="#">
-                                        <div class="place-item">
-                                            <div class="place-item-img">
-                                                <img src="/index/img/main/place.png" alt="">
-                                                <button class="btn-plain btn-star favorite">
-                                                    <i class="icon i-star-red"></i>
-                                                </button>
-                                                <span class="discount">
-                                                    -10%
-                                                </span>
-                                            </div>
-                                            <div class="place-item-caption">
-                                                <h3 class="d-flex"> ASA <i class="icon red-fire"></i></h3>
-                                                <p>от <span>5000</span> 4500 тг/ч</p>
-                                                <ul class="place-detail">
-                                                    <li>
-                                                        <img src="/index/img/icon/star-blue.png" alt="">
-                                                        4.76 <span>(333 отзыва)</span>
-                                                    </li>
-                                                    <li class="border-bottom">
-                                                        <img src="/index/img/icon/map.svg" alt="">
-                                                        Сейфуллина проспект, 51
-                                                    </li>
-                                                    <li>
-                                                        <img src="/index/img/icon/place-type.png" alt="">
-                                                        Открытое поле
-                                                        <img src="/index/img/icon/size.svg" alt="" class="size">
-                                                        21X41м
-                                                    </li>
-                                                </ul>
-                                                <button href="#" class="btn-plain btn-blue">
-                                                    Подробнее
-                                                </button>
-                                            </div>
-                                        </div>
-                                    </a>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                         <div class="tab-pane" id="tab-5">

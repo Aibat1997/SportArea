@@ -51,5 +51,8 @@ Route::middleware(['web'])->namespace('Index')->group(function() {
         Route::post('complex/{complex}/discount', 'ComplexDiscountController@storeDiscount');
         Route::post('complex/discount/change', 'ComplexDiscountController@updateDiscount');
         Route::post('complex/{complex}/review', 'ReviewsController@store');
+        Route::post('user-favorite', 'FavoriteFieldController@store');
+        Route::get('match-1', 'MatchController@step1');
+        Route::get('match-2/{type}', 'MatchController@step2');
     });
 });

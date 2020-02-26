@@ -1315,6 +1315,9 @@ input[type="checkbox"].ios8-switch:checked + label:before {
 
 .i-star-red {
   background: url("../img/icon/star-red.png");
+  width: 18px;
+  height: 18px;
+  margin: 0 auto;
 }
 
 .star-blue {
