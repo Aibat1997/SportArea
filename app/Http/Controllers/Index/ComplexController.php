@@ -66,6 +66,9 @@ class ComplexController extends Controller
                 });
             });
         }
+        if ($request->has('search')) {
+            $complexes->where('sc_name', 'like', '%'.$request->search.'%');
+        }
 
         $complexes = $complexes->get();
 

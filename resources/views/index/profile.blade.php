@@ -185,8 +185,7 @@
                         </div>
                         <div class="tab-pane" id="tab-4">
                             <div class="row">
-                                @foreach (Auth::user()->favoriteFields() as $item)
-                                {{ dd($item->courts) }}
+                                @foreach ($favorite_complexes as $item)
                                 <div class="col-lg-4 col-md-6 col-sm-6">
                                     <div>
                                         <div class="place-item">
@@ -200,22 +199,24 @@
                                             </div>
                                             <div class="place-item-caption">
                                                 <h3 class="d-flex"> {{ $item->sc_name }} <i class="icon red-fire"></i></h3>
-                                                <p>от <span>{{ $item->courts->min('c_cost') }}</span> 4500 тг/ч</p>
+                                                <p>от {{ $item->courts->min('c_cost') }} тг/ч</p>
                                                 <ul class="place-detail">
                                                     <li>
                                                         <img src="/index/img/icon/star-blue.png" alt="">
-                                                        4.76 <span>(333 отзыва)</span>
+                                                        {{ $item->sc_raiting }} <span>({{ $item->reviews->count() }} отзыва)</span>
                                                     </li>
                                                     <li class="border-bottom">
                                                         <img src="/index/img/icon/map.svg" alt="">
-                                                        Сейфуллина проспект, 51
+                                                        {{ $item->sc_addres }}
                                                     </li>
+                                                    @if(!is_null($item->courts->first()))
                                                     <li>
                                                         <img src="/index/img/icon/place-type.png" alt="">
-                                                        Открытое поле
+                                                        {{ $item->courts->first()->c_open_field == 1 ? 'Открытое поле' : 'Закрытое поле' }}
                                                         <img src="/index/img/icon/size.svg" alt="" class="size">
-                                                        21X41м
+                                                        {{ $item->courts->first()->c_area }} м
                                                     </li>
+                                                    @endif
                                                 </ul>
                                                 <button href="/complex/{{ $item->sc_id }}/courts" class="btn-plain btn-blue">
                                                     Подробнее

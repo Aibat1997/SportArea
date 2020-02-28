@@ -114,11 +114,18 @@
                                         <div class="place-item">
                                             <div class="place-item-img">
                                                 <img src="{{ $item->sc_image }}" alt="">
-                                                <button class="btn-plain btn-star favorite"
-                                                    onclick="makefavorite({{ $item->sc_id }})">
-                                                    <i id="favorite-{{ $item->sc_id }}"
-                                                        class="icon {{ Auth::user()->isFavorite($item->sc_id) ? 'i-star-red' : 'i-star' }}"></i>
-                                                </button>
+                                                    @auth
+                                                    <button class="btn-plain btn-star favorite"
+                                                        onclick="makefavorite({{ $item->sc_id }})">
+                                                        <i id="favorite-{{ $item->sc_id }}"
+                                                            class="icon {{ Auth::user()->isFavorite($item->sc_id) ? 'i-star-red' : 'i-star' }}"></i>
+                                                    </button>
+                                                    @endauth
+                                                    @guest
+                                                    <a href="/login" class="btn-plain btn-star favorite">
+                                                        <i class="icon i-star"></i>
+                                                    </a>
+                                                    @endguest
                                             </div>
                                             <div class="place-item-caption">
                                                 <h3 class="d-flex"> {{ $item->sc_name }} <i class="icon red-fire"></i>
@@ -143,8 +150,7 @@
                                                     </li>
                                                     @endif
                                                 </ul>
-                                                <a href="/complex/{{ $item->sc_id }}/courts"
-                                                    class="btn-plain btn-blue">
+                                                <a href="/complex/{{ $item->sc_id }}/courts" class="btn-plain btn-blue">
                                                     Подробнее
                                                 </a>
                                             </div>

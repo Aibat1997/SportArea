@@ -63,4 +63,11 @@ class User extends Authenticatable
         ->leftJoin('sport_complexes as complex', 'favorite_fields.ff_complex_id', '=', 'complex.sc_id')      
         ->get();
     }
+
+    public function favoriteFieldsId()
+    {
+        return FavoriteField::where('ff_user_id', $this->user_id)
+        ->leftJoin('sport_complexes as complex', 'favorite_fields.ff_complex_id', '=', 'complex.sc_id')     
+        ->pluck('sc_id')->toArray();
+    }
 }

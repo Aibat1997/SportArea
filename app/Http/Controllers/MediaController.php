@@ -32,7 +32,7 @@ class MediaController extends Controller
         return response()->file($contents);
     }
 
-    public static function storeContentImage(Request $request)
+    public function storeContentImage(Request $request)
     {
         $image = $request->file('upload');
         $image_name = $image->getClientOriginalName();

@@ -2,12 +2,13 @@
 
 namespace App\Http\Controllers\Index;
 
-use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Http\Helpers;
 use App\Models\User;
+use App\Models\SportComplex;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
-use App\Http\Helpers;
 
 class AuthController extends Controller
 {
@@ -15,7 +16,7 @@ class AuthController extends Controller
     {
         $request->validate([
             'user_firstname' => 'required|string',
-            'phone' => 'required|string|unique:users'
+            'phone' => 'required|string|unique:users',
         ]);
 
         $sms_code = mt_rand(10000, 99999);
@@ -24,7 +25,7 @@ class AuthController extends Controller
             'user_firstname' => $request->user_firstname,
             'phone' => $request->phone,
             'user_role_id' => 2,
-            'password' => Hash::make($sms_code)
+            'password' => Hash::make($sms_code),
         ]);
 
         return $sms_code;
@@ -36,26 +37,27 @@ class AuthController extends Controller
 
         if (Auth::attempt($credentials)) {
             return redirect('/profile');
-        }else {
+        } else {
             return redirect()->back()->withErrors(['Введен неверный логин или пароль']);
-        }     
+        }
     }
 
     public function loginPage()
     {
-       return view('index.login');    
+        return view('index.login');
     }
 
     public function profile()
     {
-       return view('index.profile');    
+        $favorite_complexes = SportComplex::find(Auth::user()->favoriteFieldsId());
+        return view('index.profile', compact('favorite_complexes'));
     }
 
     public function profileChange(Request $request)
     {
         if ($request->hasFile('avatar')) {
             $result = Helpers::storeImg('avatar', 'avatar', $request);
-        }else {
+        } else {
             $result = Auth::user()->avatar;
         }
 
@@ -67,7 +69,7 @@ class AuthController extends Controller
             'password' => $request->has('password') ? Hash::make($request->password) : Auth::user()->password,
         ]);
 
-        return redirect()->back()->withErrors(['Успешно сохранено!']); 
+        return redirect()->back()->withErrors(['Успешно сохранено!']);
     }
 
     public function logout()

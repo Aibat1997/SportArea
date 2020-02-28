@@ -15,8 +15,12 @@ class CreateEntrancesNumbersTable extends Migration
     {
         Schema::create('entrances_numbers', function (Blueprint $table) {
             $table->unsignedBigInteger('en_user_id');
+            $table->unsignedBigInteger('en_complex_id');
             $table->integer('en_number_entrances')->unsigned();
             $table->timestamps();
+
+            $table->foreign('en_complex_id')->references('sc_id')->on('sport_complexes')->onDelete('cascade');
+            $table->foreign('en_user_id')->references('user_id')->on('users')->onDelete('cascade');
         });
     }
 

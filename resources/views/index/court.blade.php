@@ -4,6 +4,7 @@
 <link rel="stylesheet" href="/index/slick/slick.css">
 <link rel="stylesheet" href="/index/slick/slick-theme.css">
 <link rel="stylesheet" href="/index/css/starrr.css">
+<link rel="stylesheet" href="/index/css/jquery.datetimepicker.min.css">
 <link href="/index/css/lightgallery.min.css" rel="stylesheet" type="text/css">
 <style>
     .main-image {
@@ -167,6 +168,53 @@
                                     <span class="discount">-10%</span>
                                 </div>
                                 <div class="court-sticky-body">
+                                    @if ($complex->sc_accept_applications == 1)
+                                    <form action="#">
+                                        <label class="date-label">
+                                            <i class="icon i-calendar"></i>
+                                            <input type="text" id="datetimepicker">
+                                        </label>
+                                        <label class="half-label d-flex-justify">
+                                            <label class="select-labeled">
+                                                <i class="icon i-clock"></i>
+                                                <select name="">
+                                                    <option>18</option>
+                                                    <option>19</option>
+                                                    <option>20</option>
+                                                </select>
+                                                <i class="icon d-arrow"></i>
+                                            </label>
+                                            <label class="select-labeled">
+                                                <button class="btn-plain btn-time decrease">-</button>
+                                                <input type="text" value="00" class="input-time">
+                                                <button class="btn-plain btn-time increase">+</button>
+                                            </label>
+
+                                        </label>
+                                        <label class="half-label d-flex-justify">
+                                            <label class="select-labeled">
+                                                <i class="icon i-clock"></i>
+                                                <select name="">
+                                                    <option>18</option>
+                                                    <option>19</option>
+                                                    <option>20</option>
+                                                </select>
+                                                <i class="icon d-arrow"></i>
+                                            </label>
+                                            <label class="select-labeled">
+                                                <button class="btn-plain btn-time decrease">-</button>
+                                                <input type="text" value="00" class="input-time">
+                                                <button class="btn-plain btn-time increase">+</button>
+                                            </label>
+
+                                        </label>
+                                        <div class="sidebar-item">
+                                            <label class="select-label">
+                                                <button class="btn-plain btn-blue" type="submit">Оставить заявку</button>
+                                            </label>
+                                        </div>
+                                    </form>
+                                    @endif
                                     <div class="sidebar-item">
                                         <label class="select-label">
                                             <a href="create-match.html" class="btn-plain btn-blue">Забронировать</a>
@@ -266,11 +314,10 @@
 @section('js')
 <script type="text/javascript" src="/index/js/lightgallery.min.js"></script>
 <script type="text/javascript" src="/index/js/lightgallery-all.min.js"></script>
+<script type="text/javascript" src="/index/js/jquery.datetimepicker.full.min.js"></script>
 <script type="text/javascript" src="/index/js/starrr.js"></script>
 <script type="text/javascript" src="/index/slick/slick.js"></script>
 <script type="text/javascript">
-
-
     var $s2input = $('#star2_input');
     $('#star2').starrr({
         max: 5,
@@ -285,6 +332,22 @@
     //     e.preventDefault();
     //     $(this).find('.grey-star-lg').toggleClass('blue-star-lg')
     // });
+
+    $('.decrease').on('click', function () {
+        $(this).closest(".select-labeled").find(".input-time").val(00);
+        $(this).attr("disabled", true);
+        $(this).closest(".select-labeled").find(".increase").attr("disabled", false);
+    });
+    $('.increase').on('click', function () {
+        $(this).closest(".select-labeled").find(".input-time").val(30);
+        $(this).attr("disabled", true);
+        $(this).closest(".select-labeled").find(".decrease").attr("disabled", false);
+    });
+
+    $('.btn-rate').on('click', function (e) {
+        e.preventDefault();
+        $(this).find('.grey-star-lg').toggleClass('blue-star-lg')
+    });
     $('.court-sl').lightGallery();
     $('.court-sl').slick({
         slidesToShow: 3,
@@ -329,7 +392,7 @@
     });
     jQuery.datetimepicker.setLocale('ru');
 
-    jQuery('.datetimepicker').datetimepicker({
+    jQuery('#datetimepicker').datetimepicker({
         timepicker: false,
         format: 'd.m.Y'
     });
@@ -354,8 +417,8 @@
     $('.review-show').on('click', function () {
         var answer = $(this).closest(".court-review-item-caption").find(".review-text");
         answer.toggleClass('review-text-full');
-        // answer.not(answer).slideUp(400);
-        // answer.slideToggle(400);
+        answer.not(answer).slideUp(400);
+        answer.slideToggle(400);
         if (this.innerText == "Читать дальше") {
             this.innerText = "Скрыть";
         }
