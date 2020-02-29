@@ -18,7 +18,7 @@ class CreateComplexSportTypesTable extends Migration
             $table->unsignedBigInteger('cst_sport_type_id');
             $table->timestamps();
 
-            $table->foreign('co_complex_id')->references('sc_id')->on('sport_complexes')->onDelete('cascade');
+            $table->foreign('cst_complex_id')->references('sc_id')->on('sport_complexes')->onDelete('cascade');
             $table->foreign('cst_sport_type_id')->references('st_id')->on('sport_types');
         });
     }

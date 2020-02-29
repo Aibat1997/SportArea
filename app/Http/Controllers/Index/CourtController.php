@@ -8,6 +8,7 @@ use App\Models\Courts;
 use Exception;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use DB;
 
 class CourtController extends Controller
 {
@@ -30,7 +31,7 @@ class CourtController extends Controller
 
             $court = Courts::create(
                 [
-                    "c_complex_id" => Auth::user()->complex()->first()->sc_id,
+                    "c_complex_id" => $request->c_complex_id,
                     "c_name" => $request->c_name,
                     "c_open_field" => $request->c_open_field,
                     "c_coverage_id" => $request->c_coverage_id,
@@ -42,12 +43,25 @@ class CourtController extends Controller
                 ]
             );
 
+            if ($request->is_purtable == 'true'){
+                for ($i = 1; $i<=$request->part_count; $i++){
+                    DB::table('curt_part')->insert(['cp_court_id' => $court->c_id]);
+                }
+            }
+
             $list = array();
             foreach ($request->infrastructury as $value) {
                 array_push($list, $value['inf_id']);
             }
 
             $court->infrastructures()->sync($list);
+
+            $list = array();
+            foreach ($request->sc_sport_type_id as $value) {
+                array_push($list, $value['st_id']);
+            }
+
+            $court->sporttypes()->sync($list);
 
             return response()->json([
                 'status' => true,

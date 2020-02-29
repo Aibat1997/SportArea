@@ -217,7 +217,7 @@
                                     @endif
                                     <div class="sidebar-item">
                                         <label class="select-label">
-                                            <a href="create-match.html" class="btn-plain btn-blue">Забронировать</a>
+                                            <a href="/book-calendar?court={{ $court->c_id }}" class="btn-plain btn-blue">Забронировать</a>
                                             <a href="/match-1"
                                                 class="btn-plain btn-silver btn-blue-light">Создать матч
                                             </a>
@@ -295,7 +295,7 @@
                                     <span>{{ App\Http\Helpers::getDateFormat($review->created_at) }}</span>
                                     <div class="review-text">
                                         <p>{{ $review->r_text }}</p>
-                        
+
                                     </div>
                                     <button class="btn-plain review-show">Читать дальше</button>
                                 </div>
@@ -397,7 +397,7 @@
         format: 'd.m.Y'
     });
 
-  
+
     $(function () {
 
         var s = $(".review-text"), height = 0, arr = [];

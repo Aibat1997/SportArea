@@ -22,7 +22,10 @@ class ComplexController extends Controller
 
     public function showById(Request $request, SportTypes $sporttype)
     {
-        $complexes = $sporttype->complexes();
+        $complexes = SportComplex::leftJoin('courts', 'sport_complexes.sc_id', '=', 'courts.c_complex_id')
+                                    ->leftJoin('curt_sport_types', 'courts.c_id', '=', 'curt_sport_types.court_id')
+                                    ->where('curt_sport_types.sport_type_id', $sporttype->st_id)
+                                    ->groupBy('sport_complexes.sc_id');
 
         if ($request->by_price != null) {
             if ($request->by_price == 1) {
@@ -79,7 +82,6 @@ class ComplexController extends Controller
     {
         $validatedData = $request->validate([
             "sc_city_id" => "required",
-            "sc_sport_type_id" => "required",
             "sc_name" => "required",
             "sc_addres" => "required",
             "sc_work_time_weekday" => "required",
@@ -99,11 +101,10 @@ class ComplexController extends Controller
                 $result = $request->sc_image;
             }
 
-            $complex = SportComplex::updateOrCreate(
-                ['sc_creater_id' => Auth::user()->user_id],
+
+            $complex = SportComplex::create(
                 [
                     'sc_city_id' => $request->sc_city_id,
-                    'sc_sport_type_id' => $request->sc_sport_type_id,
                     'sc_name' => $request->sc_name,
                     'sc_addres' => $request->sc_addres,
                     'sc_work_time_weekday' => $request->sc_work_time_weekday,
@@ -116,6 +117,9 @@ class ComplexController extends Controller
                     'sc_image' => $result,
                 ]
             );
+
+            Auth::user()->complex()->attach($complex->sc_id);
+
 
             return response()->json([
                 'status' => true,

@@ -2018,6 +2018,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
       _this.$store.commit("changeStatus", response.data.status);
 
+      _this.$store.commit("changecomplexId", response.data.complex.sc_id);
+
       _this.complex = response.data.complex;
     });
   },
@@ -2519,6 +2521,31 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 /* harmony default export */ __webpack_exports__["default"] = ({
@@ -2536,8 +2563,13 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       type_coverages: {},
       infrastructures: [],
       courts: {},
+      sport_types: {},
       court: {
+        is_purtable: false,
+        part_count: 0,
+        c_complex_id: null,
         c_name: "",
+        sc_sport_type_id: "",
         infrastructury: [],
         c_images: [],
         c_open_field: "",
@@ -2554,6 +2586,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
 
     axios.get("/helpers").then(function (response) {
       _this.type_coverages = response.data.type_coverages;
+      _this.sport_types = response.data.sport_type;
       _this.infrastructures = response.data.infrastructures;
     });
     this.setCourts();
@@ -2561,6 +2594,9 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   computed: {
     status: function status() {
       return this.$store.getters.status;
+    },
+    complexId: function complexId() {
+      return this.$store.getters.complexId;
     }
   },
   methods: {
@@ -2691,6 +2727,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
       });
     },
     submitForm: function submitForm(court) {
+      this.court.c_complex_id = this.complexId;
       this.sendForm("post", "/store-court", court);
     },
     editForm: function editForm(court) {
@@ -2733,8 +2770,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                 _context5.next = 2;
                 return axios[method](url, data).then(function (response) {
                   _this4.seccsess_msg = response.data.message;
-                  _this4.errors = null;
-                  _this4.court = {};
+                  _this4.errors = null; // this.court = {};
 
                   _this4.setCourts();
                 })["catch"](function (error) {
@@ -7218,7 +7254,7 @@ exports = module.exports = __webpack_require__(/*! ../../../node_modules/css-loa
 
 
 // module
-exports.push([module.i, "\n.error-box {\r\n  background-color: #e43027;\r\n  color: white;\r\n  padding: 15px;\r\n  border-radius: 5px;\r\n  margin-bottom: 20px;\n}\n.error-box ul li {\r\n  color: white;\r\n  font-size: 14px;\r\n  margin-bottom: 3px;\n}\n.success-box {\r\n  background-color: #dff0d8 !important;\r\n  color: #3c763d !important;\n}\n.success-box ul li {\r\n  color: #3c763d !important;\n}\r\n", ""]);
+exports.push([module.i, "\n.error-box {\n  background-color: #e43027;\n  color: white;\n  padding: 15px;\n  border-radius: 5px;\n  margin-bottom: 20px;\n}\n.error-box ul li {\n  color: white;\n  font-size: 14px;\n  margin-bottom: 3px;\n}\n.success-box {\n  background-color: #dff0d8 !important;\n  color: #3c763d !important;\n}\n.success-box ul li {\n  color: #3c763d !important;\n}\n", ""]);
 
 // exports
 
@@ -39593,57 +39629,6 @@ var render = function() {
               _vm._v(" "),
               _c("i", { staticClass: "fas fa-chevron-down arrow-select" })
             ])
-          ]),
-          _vm._v(" "),
-          _c("div", { staticClass: "sidebar-item" }, [
-            _c("label", { staticClass: "select-label select" }, [
-              _c(
-                "select",
-                {
-                  directives: [
-                    {
-                      name: "model",
-                      rawName: "v-model",
-                      value: _vm.complex.sc_sport_type_id,
-                      expression: "complex.sc_sport_type_id"
-                    }
-                  ],
-                  on: {
-                    change: function($event) {
-                      var $$selectedVal = Array.prototype.filter
-                        .call($event.target.options, function(o) {
-                          return o.selected
-                        })
-                        .map(function(o) {
-                          var val = "_value" in o ? o._value : o.value
-                          return val
-                        })
-                      _vm.$set(
-                        _vm.complex,
-                        "sc_sport_type_id",
-                        $event.target.multiple
-                          ? $$selectedVal
-                          : $$selectedVal[0]
-                      )
-                    }
-                  }
-                },
-                [
-                  _c("option", { attrs: { value: "default" } }, [
-                    _vm._v("Вид спорта")
-                  ]),
-                  _vm._v(" "),
-                  _vm._l(_vm.sport_types, function(type) {
-                    return _c("option", { domProps: { value: type.st_id } }, [
-                      _vm._v(_vm._s(type.st_name))
-                    ])
-                  })
-                ],
-                2
-              ),
-              _vm._v(" "),
-              _c("i", { staticClass: "fas fa-chevron-down arrow-select" })
-            ])
           ])
         ]),
         _vm._v(" "),
@@ -40486,7 +40471,9 @@ var render = function() {
                       }
                     },
                     [
-                      _vm._v("\n              Добавить объект\n              "),
+                      _vm._v(
+                        "\n                            Добавить объект\n                            "
+                      ),
                       _c("i", { staticClass: "fas fa-plus" })
                     ]
                   )
@@ -40525,7 +40512,7 @@ var render = function() {
                         attrs: { src: "/index/img/icon/upload.svg", alt: "" }
                       }),
                       _vm._v(
-                        "\n                Загрузить фотографии объекта\n                "
+                        "\n                                Загрузить фотографии объекта\n                                "
                       ),
                       _c("input", {
                         ref: "files",
@@ -40638,9 +40625,9 @@ var render = function() {
                                 { domProps: { value: item.tc_id } },
                                 [
                                   _vm._v(
-                                    "\n                      " +
+                                    "\n                                            " +
                                       _vm._s(item.tc_name) +
-                                      "\n                    "
+                                      "\n                                        "
                                   )
                                 ]
                               )
@@ -40832,6 +40819,121 @@ var render = function() {
                       ],
                       1
                     )
+                  ]),
+                  _vm._v(" "),
+                  _c("div", { staticClass: "form-item-half d-flex-justify" }, [
+                    _c(
+                      "div",
+                      { staticClass: "dropdown-checkbox" },
+                      [
+                        _c("multiselect", {
+                          attrs: {
+                            options: _vm.sport_types,
+                            multiple: true,
+                            "close-on-select": false,
+                            "clear-on-select": false,
+                            "preserve-search": true,
+                            placeholder: "Выберите",
+                            label: "st_name",
+                            "track-by": "st_name",
+                            "preselect-first": false
+                          },
+                          model: {
+                            value: _vm.court.sc_sport_type_id,
+                            callback: function($$v) {
+                              _vm.$set(_vm.court, "sc_sport_type_id", $$v)
+                            },
+                            expression: "court.sc_sport_type_id"
+                          }
+                        })
+                      ],
+                      1
+                    ),
+                    _vm._v(" "),
+                    _c(
+                      "label",
+                      { staticClass: "f-item", attrs: { for: "purtable" } },
+                      [
+                        _vm._v(" ДА\n                                "),
+                        _c("input", {
+                          directives: [
+                            {
+                              name: "model",
+                              rawName: "v-model",
+                              value: _vm.court.is_purtable,
+                              expression: "court.is_purtable"
+                            }
+                          ],
+                          attrs: {
+                            type: "checkbox",
+                            name: "is_purtable",
+                            id: "purtable"
+                          },
+                          domProps: {
+                            checked: Array.isArray(_vm.court.is_purtable)
+                              ? _vm._i(_vm.court.is_purtable, null) > -1
+                              : _vm.court.is_purtable
+                          },
+                          on: {
+                            change: function($event) {
+                              var $$a = _vm.court.is_purtable,
+                                $$el = $event.target,
+                                $$c = $$el.checked ? true : false
+                              if (Array.isArray($$a)) {
+                                var $$v = null,
+                                  $$i = _vm._i($$a, $$v)
+                                if ($$el.checked) {
+                                  $$i < 0 &&
+                                    _vm.$set(
+                                      _vm.court,
+                                      "is_purtable",
+                                      $$a.concat([$$v])
+                                    )
+                                } else {
+                                  $$i > -1 &&
+                                    _vm.$set(
+                                      _vm.court,
+                                      "is_purtable",
+                                      $$a
+                                        .slice(0, $$i)
+                                        .concat($$a.slice($$i + 1))
+                                    )
+                                }
+                              } else {
+                                _vm.$set(_vm.court, "is_purtable", $$c)
+                              }
+                            }
+                          }
+                        })
+                      ]
+                    ),
+                    _vm._v(" "),
+                    _c("label", { staticClass: "f-item" }, [
+                      _c("input", {
+                        directives: [
+                          {
+                            name: "model",
+                            rawName: "v-model",
+                            value: _vm.court.part_count,
+                            expression: "court.part_count"
+                          }
+                        ],
+                        attrs: { type: "number", name: "part_count" },
+                        domProps: { value: _vm.court.part_count },
+                        on: {
+                          input: function($event) {
+                            if ($event.target.composing) {
+                              return
+                            }
+                            _vm.$set(
+                              _vm.court,
+                              "part_count",
+                              $event.target.value
+                            )
+                          }
+                        }
+                      })
+                    ])
                   ])
                 ])
               ])
@@ -40909,7 +41011,7 @@ var render = function() {
                       },
                       [
                         _vm._v(
-                          "\n              Удалить объект\n              "
+                          "\n                            Удалить объект\n                            "
                         ),
                         _c("i", { staticClass: "fas fa-minus" })
                       ]
@@ -40955,7 +41057,7 @@ var render = function() {
                             }
                           }),
                           _vm._v(
-                            "\n                Загрузить фотографии объекта\n                "
+                            "\n                                Загрузить фотографии объекта\n                                "
                           ),
                           _c("input", {
                             ref: "files",
@@ -41068,7 +41170,12 @@ var render = function() {
                                 return _c(
                                   "option",
                                   { domProps: { value: item.tc_id } },
-                                  [_vm._v(_vm._s(item.tc_name))]
+                                  [
+                                    _vm._v(
+                                      _vm._s(item.tc_name) +
+                                        "\n                                        "
+                                    )
+                                  ]
                                 )
                               }),
                               0
@@ -41289,7 +41396,7 @@ var render = function() {
                           attrs: { src: "/index/img/icon/pen.svg", alt: "" }
                         }),
                         _vm._v(
-                          " Редактировать\n              время, дату, стоимость\n            "
+                          " Редактировать\n                            время, дату, стоимость\n                        "
                         )
                       ]
                     ),
@@ -41307,7 +41414,11 @@ var render = function() {
                               }
                             }
                           },
-                          [_vm._v("Разместить")]
+                          [
+                            _vm._v(
+                              "Разместить\n                                "
+                            )
+                          ]
                         )
                       ])
                     ])
@@ -54876,16 +54987,23 @@ __webpack_require__.r(__webpack_exports__);
 __webpack_require__.r(__webpack_exports__);
 /* harmony default export */ __webpack_exports__["default"] = ({
   state: {
-    status: false
+    status: false,
+    complex_id: null
   },
   getters: {
     status: function status(state) {
       return state.status;
+    },
+    complexId: function complexId(state) {
+      return state.complex_id;
     }
   },
   mutations: {
     changeStatus: function changeStatus(state, flag) {
       state.status = flag;
+    },
+    changecomplexId: function changecomplexId(state, id) {
+      state.complex_id = id;
     }
   },
   actions: {}
@@ -54911,8 +55029,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Aibat\Documents\GitHub\SportArea\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Aibat\Documents\GitHub\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\xampp\htdocs\server\sportarea\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\xampp\htdocs\server\sportarea\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

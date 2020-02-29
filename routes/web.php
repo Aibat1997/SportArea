@@ -48,6 +48,9 @@ Route::middleware(['web'])->namespace('Index')->group(function() {
         Route::put('update-court', 'CourtController@update');
         Route::post('delete-court', 'CourtController@delete');
         Route::get('complex/{complex}', 'ComplexController@infoById');
+        Route::get('book-calendar', 'BookController@index');
+        Route::get('add-book', 'BookController@create');
+        Route::post('store-book', 'BookController@store');
         Route::post('complex/{complex}/discount', 'ComplexDiscountController@storeDiscount');
         Route::post('complex/discount/change', 'ComplexDiscountController@updateDiscount');
         Route::post('complex/{complex}/review', 'ReviewsController@store');

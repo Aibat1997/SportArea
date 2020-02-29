@@ -29,15 +29,15 @@
             <i class="fas fa-chevron-down arrow-select"></i>
           </label>
         </div>
-        <div class="sidebar-item">
-          <label class="select-label select">
-            <select v-model="complex.sc_sport_type_id">
-              <option value="default">Вид спорта</option>
-              <option v-for="type in sport_types" :value="type.st_id">{{ type.st_name }}</option>
-            </select>
-            <i class="fas fa-chevron-down arrow-select"></i>
-          </label>
-        </div>
+<!--        <div class="sidebar-item">-->
+<!--          <label class="select-label select">-->
+<!--            <select v-model="complex.sc_sport_type_id">-->
+<!--              <option value="default">Вид спорта</option>-->
+<!--              <option v-for="type in sport_types" :value="type.st_id">{{ type.st_name }}</option>-->
+<!--            </select>-->
+<!--            <i class="fas fa-chevron-down arrow-select"></i>-->
+<!--          </label>-->
+<!--        </div>-->
       </div>
       <div class="form-item-half d-flex-justify">
         <label class="f-item">
@@ -152,6 +152,7 @@ export default {
       this.cities = response.data.cities;
       this.sport_types = response.data.sport_type;
       this.$store.commit("changeStatus", response.data.status);
+      this.$store.commit("changecomplexId", response.data.complex.sc_id);
       this.complex = response.data.complex;
     });
   },
@@ -207,4 +208,4 @@ export default {
 .success-box ul li {
   color: #3c763d !important;
 }
-</style>   
+</style>

@@ -17,7 +17,7 @@ class HelperController extends Controller
         $cities = City::select('city_id', 'city_name')->orderBy('city_sort_num', 'asc')->get();
         $sport_type = SportTypes::select('st_id', 'st_name')->orderBy('st_sort_num', 'asc')->get();
         $complex = Auth::user()->complex()->select(
-            'sc_city_id', 'sc_sport_type_id', 'sc_name', 'sc_addres', 'sc_work_time_weekday',
+            'sc_id', 'sc_city_id', 'sc_name', 'sc_addres', 'sc_work_time_weekday',
             'sc_work_time_weekend', 'sc_phone', 'sc_show_phone', 'sc_description',
             'sc_accept_applications', 'sc_is_closed', 'sc_image'
         )->first();

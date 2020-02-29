@@ -39,17 +39,17 @@ class User extends Authenticatable
         'email_verified_at' => 'datetime',
     ];
 
-    public function complex()
-    {
-        return $this->hasOne('App\Models\SportComplex', 'sc_creater_id', 'user_id');
-    }
-
     public function isFavorite($complex_id)
     {
         return FavoriteField::where([
             ['ff_complex_id', $complex_id],
             ['ff_user_id', $this->user_id],
         ])->exists();
+    }
+
+    public function complex()
+    {
+        return $this->belongsToMany('App\Models\SportComplex', 'complex_owners', 'co_user_id', 'co_complex_id');
     }
 
     public function favorites()
@@ -60,14 +60,14 @@ class User extends Authenticatable
     public function favoriteFields()
     {
         return FavoriteField::where('ff_user_id', $this->user_id)
-        ->leftJoin('sport_complexes as complex', 'favorite_fields.ff_complex_id', '=', 'complex.sc_id')      
+        ->leftJoin('sport_complexes as complex', 'favorite_fields.ff_complex_id', '=', 'complex.sc_id')
         ->get();
     }
 
     public function favoriteFieldsId()
     {
         return FavoriteField::where('ff_user_id', $this->user_id)
-        ->leftJoin('sport_complexes as complex', 'favorite_fields.ff_complex_id', '=', 'complex.sc_id')     
+        ->leftJoin('sport_complexes as complex', 'favorite_fields.ff_complex_id', '=', 'complex.sc_id')
         ->pluck('sc_id')->toArray();
     }
 }
