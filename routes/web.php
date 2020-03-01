@@ -41,6 +41,7 @@ Route::middleware(['web'])->namespace('Index')->group(function() {
         Route::get('profile', 'AuthController@profile');
         Route::post('profile', 'AuthController@profileChange');
         Route::get('add-complex', 'ComplexController@create');
+        Route::get('complex/{complex}/edit', 'ComplexController@edit');
         Route::post('store-complex', 'ComplexController@store');
         Route::post('store-inventory', 'InventoryController@store');
         Route::post('update-inventory', 'InventoryController@update');

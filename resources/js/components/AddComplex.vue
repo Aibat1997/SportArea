@@ -178,6 +178,7 @@ export default {
         .then(response => {
           this.$store.commit("changeStatus", response.data.status);
           this.seccsess_msg = response.data.message;
+          this.complex.sc_id = response.data.content;
           this.errors = null;
         })
         .catch(error => {

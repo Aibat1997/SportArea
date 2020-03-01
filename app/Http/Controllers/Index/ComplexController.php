@@ -102,7 +102,8 @@ class ComplexController extends Controller
             }
 
 
-            $complex = SportComplex::create(
+            $complex = SportComplex::updateOrCreate(
+                ['sc_id' => $request->sc_id],
                 [
                     'sc_city_id' => $request->sc_city_id,
                     'sc_name' => $request->sc_name,
@@ -118,7 +119,7 @@ class ComplexController extends Controller
                 ]
             );
 
-            Auth::user()->complex()->attach($complex->sc_id);
+            Auth::user()->complex()->sync([$complex->sc_id]);
 
 
             return response()->json([

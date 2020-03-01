@@ -10,6 +10,7 @@ class SportComplex extends Model
     protected $guarded = [];
 
     protected $attributes = [
+        'sc_id' => null,
         'sc_city_id' => "default",
         'sc_show_phone' => false,
         'sc_accept_applications' => false,

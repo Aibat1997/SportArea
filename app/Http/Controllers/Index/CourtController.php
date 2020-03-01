@@ -40,6 +40,7 @@ class CourtController extends Controller
                     "c_prepayment_type" => $request->c_prepayment_type,
                     "c_area" => $request->c_area,
                     "c_images" => $result,
+                    "c_is_purtable" => $request->is_purtable 
                 ]
             );
 
@@ -102,8 +103,15 @@ class CourtController extends Controller
                     "c_prepayment_type" => $request->c_prepayment_type,
                     "c_area" => $request->c_area,
                     "c_images" => $result,
+                    "c_is_purtable" => $request->is_purtable
                 ]
             );
+
+            if ($request->is_purtable == 'true'){
+                for ($i = 1; $i<=$request->part_count; $i++){
+                    DB::table('curt_part')->insert(['cp_court_id' => $court->c_id]);
+                }
+            }
 
             $list = array();
             foreach ($request->infrastructury as $value) {
@@ -111,6 +119,13 @@ class CourtController extends Controller
             }
 
             $court->infrastructures()->sync($list);
+
+            $list = array();
+            foreach ($request->sc_sport_type_id as $value) {
+                array_push($list, $value['st_id']);
+            }
+
+            $court->sporttypes()->sync($list);
 
             return response()->json([
                 'status' => true,
