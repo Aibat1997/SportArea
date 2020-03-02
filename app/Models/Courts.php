@@ -28,4 +28,9 @@ class Courts extends Model
     {
         return $this->belongsTo('App\Models\TypeCoverage', 'c_coverage_id', 'tc_id');
     }
+
+    public function parts()
+    {
+        return $this->hasMany('App\Models\CourtsPart', 'cp_court_id', 'c_id');
+    }
 }

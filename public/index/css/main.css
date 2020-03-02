@@ -980,7 +980,12 @@ input[type="checkbox"].ios8-switch:checked + label:before {
   margin-bottom: 10px;
   position: relative;
 }
-
+.btn-blue:disabled{
+  background:#bbbdc1!important;
+}
+.sidebar-item .btn-blue:disabled{
+  background:#bbbdc1!important;
+}
 .select-label .fa-chevron-down {
   color: #b8b8b8;
   position: absolute;
@@ -990,7 +995,46 @@ input[type="checkbox"].ios8-switch:checked + label:before {
   -o-transition: all 0.4s ease;
   transition: all 0.4s ease;
 }
+.courtCount-list{
+  display: flex;
+  align-items:center;
+  margin: 15px 0;
+}
 
+.btn-blueBorder{
+  font-size: 18px;
+  padding: 5px 10px;
+  color: #0057FF;
+  display: inline-block;
+  border:1px solid #0057FF;
+  border-radius: 4px;
+  margin-right: 5px;
+  text-align: center;
+  transition: all .4s ease;
+  position: relative;
+}
+.btn-blueBorder:hover,.btn-blueBorder:focus{
+  border:1px solid #0057FF;
+  color: white;
+  background-color:#0057FF;
+}
+.btn-blueBorder input[type="radio"]{
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 2;
+  opacity: 0;
+}
+#book-court{
+  display: none;
+}
+.blueBorder-active{
+  border:1px solid #0057FF;
+  color: white;
+  background-color:#0057FF;
+}
 .arrow-up {
   -webkit-transform: rotate(180deg);
   -ms-transform: rotate(180deg);
@@ -1436,7 +1480,7 @@ input[type="checkbox"].ios8-switch:checked + label:before {
   -webkit-border-radius: 3px;
           border-radius: 3px;
   display: inline-block;
-  margin: 30px 0 40px 0;
+  margin: 30px 0 0 0;
   overflow: hidden;
 }
 

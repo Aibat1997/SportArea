@@ -94,6 +94,13 @@
                             <div class="tab-pane {{ $key == 0 ? 'active' : '' }}" id="tab-{{ $court->c_id }}">
                                 <div class="row">
                                     <div class="col-md-8 col-sm-8">
+                                        @if ($court->c_is_purtable)
+                                        <ul class="courtCount-list">
+                                            @foreach ($court->parts as $key=>$item)
+                                            <li><button class="btn-plain btn-blueBorder">{{$key+1}}-Часть <input type="radio" name="#" value="{{ $item->cp_id }}"></button></li>
+                                            @endforeach
+                                        </ul>
+                                        @endif
                                         @php
                                             $pieces = explode(",", $court->c_images);
                                         @endphp
@@ -216,7 +223,7 @@
                                                     </label>
                                                     <div class="sidebar-item">
                                                         <label class="select-label">
-                                                            <button class="btn-plain btn-blue" type="submit">Оставить
+                                                            <button class="btn-plain btn-blue leave-order" type="submit" disabled>Оставить
                                                                 заявку
                                                             </button>
                                                         </label>
@@ -226,7 +233,7 @@
                                             <div class="sidebar-item">
                                                 <label class="select-label">
                                                     <a href="/book-calendar?court={{ $court->c_id }}"
-                                                       class="btn-plain btn-blue">Забронировать</a>
+                                                       class="btn-plain btn-blue book-court">Забронировать</a>
                                                     <a href="/match-1"
                                                        class="btn-plain btn-silver btn-blue-light">Создать матч
                                                     </a>
@@ -584,6 +591,13 @@
         }
     </script>
     <script>
+        $('.courtCount-list .btn-blueBorder').on('click', function(){
+            $('.btn-blueBorder').removeClass('blueBorder-active');
+            $(this).toggleClass('blueBorder-active');
+            
+            $('.leave-order').prop( "disabled", false );
+            $('.book-court').fadeIn("slow").css('display','block');
+        });
         function makefavorite(complex_id) {
             let button = $(this);
             axios.post('/user-favorite', {
