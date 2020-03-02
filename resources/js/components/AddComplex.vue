@@ -137,6 +137,7 @@ import { TheMask } from "vue-the-mask";
 
 export default {
   components: { TheMask },
+  props: ['complex_id'],
   data() {
     return {
       cities: {},
@@ -148,7 +149,7 @@ export default {
     };
   },
   created() {
-    axios.get("/helpers").then(response => {
+    axios.get("/helpers?complex="+this.complex_id).then(response => {
       this.cities = response.data.cities;
       this.sport_types = response.data.sport_type;
       this.$store.commit("changeStatus", response.data.status);
@@ -177,6 +178,7 @@ export default {
         })
         .then(response => {
           this.$store.commit("changeStatus", response.data.status);
+          this.$store.commit("changecomplexId", response.data.content);
           this.seccsess_msg = response.data.message;
           this.complex.sc_id = response.data.content;
           this.errors = null;

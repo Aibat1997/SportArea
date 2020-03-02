@@ -125,7 +125,7 @@
               <div class="form-item-half d-flex-justify">
                 <div class="dropdown-checkbox">
                   <multiselect
-                    v-model="court.sc_sport_type_id"
+                    v-model="court.c_sport_type"
                     :options="sport_types"
                     :multiple="true"
                     :close-on-select="false"
@@ -274,7 +274,7 @@
               <div class="form-item-half d-flex-justify">
                 <div class="dropdown-checkbox">
                   <multiselect
-                    v-model="court.sc_sport_type_id"
+                    v-model="court.c_sport_type"
                     :options="sport_types"
                     :multiple="true"
                     :close-on-select="false"
@@ -290,10 +290,10 @@
                   <input
                     type="checkbox"
                     class="ios8-switch checkbox-attr"
-                    id="checkbox-1"
+                    :id="court.c_id"
                     v-model="court.c_is_purtable"
                   />
-                  <label for="checkbox-1">Делимый</label>
+                  <label :for="court.c_id">Делимый</label>
                 </div>
               </div>
               <div class="form-item-half d-flex-justify" v-if="court.c_is_purtable">
@@ -327,6 +327,7 @@ export default {
     TheMask,
     Multiselect: window.VueMultiselect.default
   },
+  props: ['complex_id'],
   data() {
     return {
       errors: null,
@@ -342,7 +343,7 @@ export default {
         part_count: 0,
         c_complex_id: null,
         c_name: "",
-        sc_sport_type_id: "",
+        c_sport_type: [],
         infrastructury: [],
         c_images: [],
         c_open_field: "",
@@ -398,9 +399,15 @@ export default {
       }
     },
     setCourts() {
-      axios.get("/courts").then(response => {
-        this.courts = response.data;
-      });
+      if (this.complex_id == 0) {
+        axios.get("/courts?complex="+this.complexId).then(response => {
+          this.courts = response.data;
+        });
+      } else {
+        axios.get("/courts?complex="+this.complex_id).then(response => {
+          this.courts = response.data;
+        });
+      }
     },
     submitForm(court) {
       this.court.c_complex_id = this.complexId;

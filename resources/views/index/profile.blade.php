@@ -13,7 +13,7 @@
         <div class="row">
             <div class="col-lg-2 col-md-3 col-sm-3">
                 <ul class="nav nav-tabs profile-tab">
-                    <li class="active">
+                    <li>
                         <a href="#tab-1" data-toggle="tab">
                             Мои данные
                         </a>
@@ -43,7 +43,7 @@
                             Мои заказы
                         </a>
                     </li>
-                    <li>
+                    <li class="{{ request()->tab == 7 ? 'active' : '' }}">
                         <a href="#tab-7" data-toggle="tab">
                             Мои объекты
                         </a>
@@ -53,7 +53,7 @@
             <div class="col-lg-10 col-md-9 col-sm-9">
                 <div class="content">
                     <div class="tab-content prof-content">
-                        <div class="tab-pane active" id="tab-1">
+                        <div class="tab-pane" id="tab-1">
                             @if($errors->any())
                             <div class="alert alert-success dont-show">{{$errors->first()}}</div>
                             @endif
@@ -198,12 +198,14 @@
                                                 </button>
                                             </div>
                                             <div class="place-item-caption">
-                                                <h3 class="d-flex"> {{ $item->sc_name }} <i class="icon red-fire"></i></h3>
+                                                <h3 class="d-flex"> {{ $item->sc_name }} <i class="icon red-fire"></i>
+                                                </h3>
                                                 <p>от {{ $item->courts->min('c_cost') }} тг/ч</p>
                                                 <ul class="place-detail">
                                                     <li>
                                                         <img src="/index/img/icon/star-blue.png" alt="">
-                                                        {{ $item->sc_raiting }} <span>({{ $item->reviews->count() }} отзыва)</span>
+                                                        {{ $item->sc_raiting }} <span>({{ $item->reviews->count() }}
+                                                            отзыва)</span>
                                                     </li>
                                                     <li class="border-bottom">
                                                         <img src="/index/img/icon/map.svg" alt="">
@@ -218,7 +220,8 @@
                                                     </li>
                                                     @endif
                                                 </ul>
-                                                <button href="/complex/{{ $item->sc_id }}/courts" class="btn-plain btn-blue">
+                                                <button href="/complex/{{ $item->sc_id }}/courts"
+                                                    class="btn-plain btn-blue">
                                                     Подробнее
                                                 </button>
                                             </div>
@@ -472,101 +475,40 @@
                                 </div>
                             </div>
                         </div>
-                        <div class="tab-pane orders" id="tab-7">
+                        <div class="tab-pane orders {{ request()->tab == 7 ? 'active' : '' }}" id="tab-7">
                             <div class="row">
+                                @foreach (Auth::user()->complex as $item)
                                 <div class="col-md-4 col-sm-6">
                                     <div class="place-item">
                                         <div class="place-item-img">
-                                            <img src="/index/img/main/place.png" alt="">
+                                            <img src="{{ $item->sc_image }}" alt="">
                                         </div>
                                         <div class="place-item-caption">
-                                            <h3>ASA</h3>
+                                            <h3>{{ $item->sc_name }}</h3>
                                             <div class="place-info">
                                                 <span class="span-title">Адрес</span>
-                                                <p>Алматы, микрорайон Таугуль-3, улица Беркимбая Паримбетова, 64</p>
-                                            </div>
-                                            <div class="place-info">
-                                                <span class="span-title">Статус бронирования</span>
-                                                <p class="wait-grey d-flex-justify">В обработке <i
-                                                        class="icon i-load"></i></p>
+                                                <p>{{ $item->city->city_name }}, {{ $item->sc_addres }}</p>
                                             </div>
                                             <div class="place-info">
                                                 <span class="span-title">Стоимость</span>
-                                                <p>5000 тг/ч</p>
+                                                <p>от {{ $item->courts->min('c_cost') }} тг/ч</p>
                                             </div>
-                                            <div class="place-info">
-                                                <span class="span-title">Дата и время бронирования</span>
-                                                <p>19 октября 2019 года, с 18:00 до 19:30</p>
-                                            </div>
-                                            <a href="#"><button href="#" class="btn-plain btn-blue">
+                                            <a href="/complex/{{ $item->sc_id }}/edit">
+                                                <button href="#"
+                                                    class="btn-plain btn-blue">
                                                     Подробнее
-                                                </button></a>
-
+                                                </button>
+                                            </a>
+                                            <a href="/complex/{{ $item->sc_id }}/destroy">
+                                                <button href="#"  style="margin-top:15px;"
+                                                    class="btn-plain btn-blue">
+                                                    Удалить
+                                                </button>
+                                            </a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="col-md-4 col-sm-6">
-                                    <div class="place-item">
-                                        <div class="place-item-img">
-                                            <img src="/index/img/main/place.png" alt="">
-                                        </div>
-                                        <div class="place-item-caption">
-                                            <h3>ASA</h3>
-                                            <div class="place-info">
-                                                <span class="span-title">Адрес</span>
-                                                <p>Алматы, микрорайон Таугуль-3, улица Беркимбая Паримбетова, 64</p>
-                                            </div>
-                                            <div class="place-info">
-                                                <span class="span-title">Статус бронирования</span>
-                                                <p class="wait-blue d-flex-justify"><a href="#">Ожидает оплаты</a> <i
-                                                        class="icon arr-blue"></i></p>
-                                            </div>
-                                            <div class="place-info">
-                                                <span class="span-title">Стоимость</span>
-                                                <p>5000 тг/ч</p>
-                                            </div>
-                                            <div class="place-info">
-                                                <span class="span-title">Дата и время бронирования</span>
-                                                <p>19 октября 2019 года, с 18:00 до 19:30</p>
-                                            </div>
-                                            <a href="#"><button href="#" class="btn-plain btn-blue">
-                                                    Подробнее
-                                                </button></a>
-
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="col-md-4 col-sm-6">
-                                    <div class="place-item">
-                                        <div class="place-item-img">
-                                            <img src="/index/img/main/place.png" alt="">
-                                        </div>
-                                        <div class="place-item-caption">
-                                            <h3>ASA</h3>
-                                            <div class="place-info">
-                                                <span class="span-title">Адрес</span>
-                                                <p>Алматы, микрорайон Таугуль-3, улица Беркимбая Паримбетова, 64</p>
-                                            </div>
-                                            <div class="place-info">
-                                                <span class="span-title">Статус бронирования</span>
-                                                <p class="wait-red d-flex-justify">Отменен <i class="icon arr-x"></i>
-                                                </p>
-                                            </div>
-                                            <div class="place-info">
-                                                <span class="span-title">Стоимость</span>
-                                                <p>5000 тг/ч</p>
-                                            </div>
-                                            <div class="place-info">
-                                                <span class="span-title">Дата и время бронирования</span>
-                                                <p>19 октября 2019 года, с 18:00 до 19:30</p>
-                                            </div>
-                                            <a href="#"><button href="#" class="btn-plain btn-blue">
-                                                    Подробнее
-                                                </button></a>
-
-                                        </div>
-                                    </div>
-                                </div>
+                                @endforeach
                             </div>
                         </div>
                     </div>

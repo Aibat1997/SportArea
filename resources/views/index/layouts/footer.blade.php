@@ -26,7 +26,7 @@
                 </a>
             </li>
             <li>
-                <a href="#" class="d-flex">
+                <a href="/profile?tab=7" class="d-flex">
                     <img src="/index/img/icon/5.svg" alt="">
                     <span>Мои объекты</span>
                 </a>

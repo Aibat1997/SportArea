@@ -8,6 +8,7 @@ use App\Models\ComplexDiscount;
 use App\Models\Courts;
 use App\Models\SportComplex;
 use App\Models\SportTypes;
+use App\Models\ComplexOwner;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\Request;
@@ -101,7 +102,6 @@ class ComplexController extends Controller
                 $result = $request->sc_image;
             }
 
-
             $complex = SportComplex::updateOrCreate(
                 ['sc_id' => $request->sc_id],
                 [
@@ -119,7 +119,7 @@ class ComplexController extends Controller
                 ]
             );
 
-            Auth::user()->complex()->sync([$complex->sc_id]);
+            ComplexOwner::updateOrCreate(['co_complex_id' => $complex->sc_id, 'co_user_id' => Auth::user()->user_id]);
 
 
             return response()->json([
@@ -145,5 +145,16 @@ class ComplexController extends Controller
         $complex->increment('sc_views');
         $courts = $complex->courts;
         return view('index.court', compact('complex', 'courts'));
+    }
+
+    public function edit(SportComplex $complex)
+    {
+        return view('index.complex-create', compact('complex'));
+    }
+
+    public function destroy(SportComplex $complex)
+    {
+        $complex->delete();
+        return redirect()->back();
     }
 }

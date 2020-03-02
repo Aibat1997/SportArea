@@ -1999,6 +1999,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   components: {
     TheMask: vue_the_mask__WEBPACK_IMPORTED_MODULE_1__["TheMask"]
   },
+  props: ['complex_id'],
   data: function data() {
     return {
       cities: {},
@@ -2012,7 +2013,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
   created: function created() {
     var _this = this;
 
-    axios.get("/helpers").then(function (response) {
+    axios.get("/helpers?complex=" + this.complex_id).then(function (response) {
       _this.cities = response.data.cities;
       _this.sport_types = response.data.sport_type;
 
@@ -2059,6 +2060,8 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
                   }
                 }).then(function (response) {
                   _this2.$store.commit("changeStatus", response.data.status);
+
+                  _this2.$store.commit("changecomplexId", response.data.content);
 
                   _this2.seccsess_msg = response.data.message;
                   _this2.complex.sc_id = response.data.content;
@@ -2593,6 +2596,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     TheMask: vue_the_mask__WEBPACK_IMPORTED_MODULE_2__["TheMask"],
     Multiselect: window.VueMultiselect["default"]
   },
+  props: ['complex_id'],
   data: function data() {
     return {
       errors: null,
@@ -2608,7 +2612,7 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
         part_count: 0,
         c_complex_id: null,
         c_name: "",
-        sc_sport_type_id: "",
+        c_sport_type: [],
         infrastructury: [],
         c_images: [],
         c_open_field: "",
@@ -2761,9 +2765,15 @@ function _asyncToGenerator(fn) { return function () { var self = this, args = ar
     setCourts: function setCourts() {
       var _this3 = this;
 
-      axios.get("/courts").then(function (response) {
-        _this3.courts = response.data;
-      });
+      if (this.complex_id == 0) {
+        axios.get("/courts?complex=" + this.complexId).then(function (response) {
+          _this3.courts = response.data;
+        });
+      } else {
+        axios.get("/courts?complex=" + this.complex_id).then(function (response) {
+          _this3.courts = response.data;
+        });
+      }
     },
     submitForm: function submitForm(court) {
       this.court.c_complex_id = this.complexId;
@@ -40877,11 +40887,11 @@ var render = function() {
                             "preselect-first": false
                           },
                           model: {
-                            value: _vm.court.sc_sport_type_id,
+                            value: _vm.court.c_sport_type,
                             callback: function($$v) {
-                              _vm.$set(_vm.court, "sc_sport_type_id", $$v)
+                              _vm.$set(_vm.court, "c_sport_type", $$v)
                             },
-                            expression: "court.sc_sport_type_id"
+                            expression: "court.c_sport_type"
                           }
                         })
                       ],
@@ -41448,11 +41458,11 @@ var render = function() {
                                 "preselect-first": false
                               },
                               model: {
-                                value: court.sc_sport_type_id,
+                                value: court.c_sport_type,
                                 callback: function($$v) {
-                                  _vm.$set(court, "sc_sport_type_id", $$v)
+                                  _vm.$set(court, "c_sport_type", $$v)
                                 },
-                                expression: "court.sc_sport_type_id"
+                                expression: "court.c_sport_type"
                               }
                             })
                           ],
@@ -41470,7 +41480,7 @@ var render = function() {
                               }
                             ],
                             staticClass: "ios8-switch checkbox-attr",
-                            attrs: { type: "checkbox", id: "checkbox-1" },
+                            attrs: { type: "checkbox", id: court.c_id },
                             domProps: {
                               checked: Array.isArray(court.c_is_purtable)
                                 ? _vm._i(court.c_is_purtable, null) > -1
@@ -41508,7 +41518,7 @@ var render = function() {
                             }
                           }),
                           _vm._v(" "),
-                          _c("label", { attrs: { for: "checkbox-1" } }, [
+                          _c("label", { attrs: { for: court.c_id } }, [
                             _vm._v("Делимый")
                           ])
                         ])
@@ -55195,8 +55205,8 @@ __webpack_require__.r(__webpack_exports__);
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-__webpack_require__(/*! C:\Users\Aibat\Documents\GitHub\SportArea\resources\js\app.js */"./resources/js/app.js");
-module.exports = __webpack_require__(/*! C:\Users\Aibat\Documents\GitHub\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
+__webpack_require__(/*! C:\Users\aibat\Documents\GitHub\SportArea\resources\js\app.js */"./resources/js/app.js");
+module.exports = __webpack_require__(/*! C:\Users\aibat\Documents\GitHub\SportArea\resources\sass\app.scss */"./resources/sass/app.scss");
 
 
 /***/ })

@@ -10,8 +10,8 @@
         <div class="container">
             <div class="add-object-cover">
                 <div class="row">
-                    <add-complex></add-complex>
-                    <complex-information></complex-information>
+                    <add-complex :complex_id="{{ !empty($complex) ? $complex->sc_id : 0 }}"></add-complex>
+                    <complex-information :complex_id="{{ !empty($complex) ? $complex->sc_id : 0 }}"></complex-information>
                 </div>
             </div>
         </div>
