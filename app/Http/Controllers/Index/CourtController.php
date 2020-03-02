@@ -40,14 +40,15 @@ class CourtController extends Controller
                     "c_prepayment_type" => $request->c_prepayment_type,
                     "c_area" => $request->c_area,
                     "c_images" => $result,
-                    "c_is_purtable" => $request->c_is_purtable == 'true' ? 1 : 0
+                    "c_is_purtable" => $request->c_is_purtable == 'true' || $request->c_is_purtable == 1 ? 1 : 0
                 ]
             );
 
-            if ($request->c_is_purtable == 'true'){
+            if ($request->c_is_purtable == 'true' || $request->c_is_purtable == 1){
                 DB::table('curt_part')->where('cp_court_id', $court->c_id)->delete();
-                for ($i = 1; $i<=$request->part_count; $i++){
-                    DB::table('curt_part')->updateOrInsert(['cp_court_id' => $court->c_id]);
+                $count = (int)$request->part_count;
+                for ($i = 1; $i<=$count; $i++){
+                    DB::table('curt_part')->insert(['cp_court_id' => $court->c_id]);
                 }
             }
 
@@ -104,14 +105,15 @@ class CourtController extends Controller
                     "c_prepayment_type" => $request->c_prepayment_type,
                     "c_area" => $request->c_area,
                     "c_images" => $result,
-                    "c_is_purtable" => $request->c_is_purtable == 'true' ? 1 : 0
+                    "c_is_purtable" => $request->c_is_purtable == 'true' || $request->c_is_purtable == 1 ? 1 : 0
                 ]
             );
 
-            if ($request->c_is_purtable == 'true'){
+            if ($request->c_is_purtable == 'true' || $request->c_is_purtable == 1){
+                $count = (int)$request->part_count;
                 DB::table('curt_part')->where('cp_court_id', $court->c_id)->delete();
-                for ($i = 1; $i<=$request->part_count; $i++){
-                    DB::table('curt_part')->updateOrInsert(['cp_court_id' => $court->c_id]);
+                for ($i = 1; $i<=$count; $i++){
+                    DB::table('curt_part')->insert(['cp_court_id' => $court->c_id]);
                 }
             }
 

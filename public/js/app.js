@@ -41542,7 +41542,8 @@ var render = function() {
                                 ],
                                 attrs: {
                                   type: "number",
-                                  placeholder: "Кол-во частей"
+                                  placeholder: "Кол-во частей",
+                                  required: ""
                                 },
                                 domProps: { value: court.part_count },
                                 on: {

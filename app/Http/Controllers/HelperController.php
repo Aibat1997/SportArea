@@ -68,10 +68,8 @@ class HelperController extends Controller
     public function courts(Request $request)
     {
         $courts = Courts::where('c_complex_id', $request->complex)
-            ->join('curt_part as cp', 'courts.c_id', '=', 'cp.cp_court_id')
-            ->groupBy('c_id')
-            ->select('c_id', 'c_complex_id', 'c_coverage_id', 'c_name', 'c_open_field', 'c_images', 'c_cost', 'c_prepayment', 'c_prepayment_type', 'c_area', 'c_is_purtable',
-                    \DB::raw('count(cp.cp_court_id) as part_count'))
+            ->select('c_id', 'c_complex_id', 'c_coverage_id', 'c_name', 'c_open_field', 'c_images', 'c_cost', 'c_prepayment', 'c_prepayment_type', 'c_area', 'c_is_purtable')
+            ->groupBy('courts.c_id')
             ->get();
 
         $data = array();
@@ -84,6 +82,7 @@ class HelperController extends Controller
                 array_push($court_images, $result);
             }
             $data[$key] = $value;
+            $data[$key]['part_count'] = $value->parts->count('cp_court_id');
             $data[$key]['c_images'] = $court_images;
             $data[$key]['infrastructury'] = $value->infrastructures()->select('inf_id', 'inf_name')->get();
             $data[$key]['c_sport_type'] = $value->sporttypes()->select('st_id', 'st_name')->get();

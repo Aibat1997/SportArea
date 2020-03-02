@@ -298,7 +298,7 @@
               </div>
               <div class="form-item-half d-flex-justify" v-if="court.c_is_purtable">
                 <label class="f-item">
-                  <input type="number" v-model="court.part_count" placeholder="Кол-во частей" />
+                  <input type="number" v-model="court.part_count" placeholder="Кол-во частей" required/>
                 </label>
               </div>
               <a :href="'/complex/' + court.c_complex_id + '?tab=2'" class="btn-plain link-dashed">

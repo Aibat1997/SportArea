@@ -96,6 +96,7 @@
                                     <div class="col-md-8 col-sm-8">
                                         @if ($court->c_is_purtable)
                                         <ul class="courtCount-list">
+                                            <li><button class="btn-plain btn-blueBorder">Цельное <input type="radio" name="#" value=""></button></li>
                                             @foreach ($court->parts as $key=>$item)
                                             <li><button class="btn-plain btn-blueBorder">{{$key+1}}-Часть <input type="radio" name="#" value="{{ $item->cp_id }}"></button></li>
                                             @endforeach
