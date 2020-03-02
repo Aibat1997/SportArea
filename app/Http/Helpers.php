@@ -143,7 +143,8 @@ class Helpers
             $real_file_name = date("d-m-Y_H-i-s"); 
 
             if (Storage::disk($disk_name)->exists($real_file_name)) {
-                $real_file_name .= rand(1, 500);
+                // $real_file_name .= rand(1, 500);
+                continue;
             }
 
             Storage::disk($disk_name)->put($real_file_name, base64_encode($coverone));

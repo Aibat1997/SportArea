@@ -40,13 +40,14 @@ class CourtController extends Controller
                     "c_prepayment_type" => $request->c_prepayment_type,
                     "c_area" => $request->c_area,
                     "c_images" => $result,
-                    "c_is_purtable" => $request->c_is_purtable == 'false' || $request->c_is_purtable == '0' ? 0 : 1
+                    "c_is_purtable" => $request->c_is_purtable == 'true' ? 1 : 0
                 ]
             );
 
             if ($request->c_is_purtable == 'true'){
+                DB::table('curt_part')->where('cp_court_id', $court->c_id)->delete();
                 for ($i = 1; $i<=$request->part_count; $i++){
-                    DB::table('curt_part')->insert(['cp_court_id' => $court->c_id]);
+                    DB::table('curt_part')->updateOrInsert(['cp_court_id' => $court->c_id]);
                 }
             }
 
@@ -103,13 +104,14 @@ class CourtController extends Controller
                     "c_prepayment_type" => $request->c_prepayment_type,
                     "c_area" => $request->c_area,
                     "c_images" => $result,
-                    "c_is_purtable" => $request->c_is_purtable == 'false' || $request->c_is_purtable == '0' ? 0 : 1
+                    "c_is_purtable" => $request->c_is_purtable == 'true' ? 1 : 0
                 ]
             );
 
-            if ($request->c_is_purtable == 'true' || $request->c_is_purtable == '1'){
+            if ($request->c_is_purtable == 'true'){
+                DB::table('curt_part')->where('cp_court_id', $court->c_id)->delete();
                 for ($i = 1; $i<=$request->part_count; $i++){
-                    DB::table('curt_part')->insert(['cp_court_id' => $court->c_id]);
+                    DB::table('curt_part')->updateOrInsert(['cp_court_id' => $court->c_id]);
                 }
             }
 

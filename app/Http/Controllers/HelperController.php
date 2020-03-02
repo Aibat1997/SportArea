@@ -68,7 +68,10 @@ class HelperController extends Controller
     public function courts(Request $request)
     {
         $courts = Courts::where('c_complex_id', $request->complex)
-            ->select('c_id', 'c_complex_id', 'c_coverage_id', 'c_name', 'c_open_field', 'c_images', 'c_cost', 'c_prepayment', 'c_prepayment_type', 'c_area', 'c_is_purtable')
+            ->join('curt_part as cp', 'courts.c_id', '=', 'cp.cp_court_id')
+            ->groupBy('c_id')
+            ->select('c_id', 'c_complex_id', 'c_coverage_id', 'c_name', 'c_open_field', 'c_images', 'c_cost', 'c_prepayment', 'c_prepayment_type', 'c_area', 'c_is_purtable',
+                    \DB::raw('count(cp.cp_court_id) as part_count'))
             ->get();
 
         $data = array();
